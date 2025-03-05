@@ -39,6 +39,7 @@
     "baseUrl": ".",
     "paths": {
       "@/vibes/*": ["./vibes/*"],
+      "@/arizon/*": ["./arizon/*"],
       "~/*": ["./*"]
     },
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
