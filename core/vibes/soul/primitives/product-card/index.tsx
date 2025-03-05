@@ -61,7 +61,7 @@ export function ProductCard({
   imageSizes = '(min-width: 80rem) 20vw, (min-width: 64rem) 25vw, (min-width: 42rem) 33vw, (min-width: 24rem) 50vw, 100vw',
 }: Props) {
   return (
-    <div className={clsx('@container', className)}>
+    <div className={clsx('@container border border-gray-300', className)}>
       <Link
         aria-label={title}
         className="group flex cursor-pointer flex-col gap-2 rounded-[var(--product-card-border-radius,1rem)] ring-[var(--product-card-focus,hsl(var(--primary)))] ring-offset-4 focus-visible:outline-0 focus-visible:ring-2"
