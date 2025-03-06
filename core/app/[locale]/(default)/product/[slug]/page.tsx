@@ -17,6 +17,7 @@ import { ProductSchema } from './_components/product-schema';
 import { ProductViewed } from './_components/product-viewed';
 import { PaginationSearchParamNames, Reviews } from './_components/reviews';
 import { getProductData } from './page-data';
+import TabComponent from '@/vibes/soul/sections/product-detail/tab';
 
 const cachedProductDataVariables = cache(
   async (productId: string, searchParams: Props['searchParams']) => {
@@ -125,6 +126,7 @@ const getProduct = async (props: Props) => {
     subtitle: product.brand?.name,
     rating: product.reviewSummary.averageRating,
     accordions,
+    sku: product.sku,
   };
 };
 
@@ -157,7 +159,7 @@ const getCtaLabel = async (props: Props) => {
 
   return t('addToCart');
 };
-
+console.log("getCtaLabel", getCtaLabel)
 const getCtaDisabled = async (props: Props) => {
   const { slug } = await props.params;
   const variables = await cachedProductDataVariables(slug, props.searchParams);
@@ -177,6 +179,7 @@ const getCtaDisabled = async (props: Props) => {
 
   return false;
 };
+console.log("getCtaDisabled", getCtaDisabled)
 
 const getRelatedProducts = async (props: Props) => {
   const format = await getFormatter();
@@ -253,6 +256,7 @@ export default async function Product(props: Props) {
         productId={productId}
         quantityLabel={t('ProductDetails.quantity')}
         thumbnailLabel={t('ProductDetails.thumbnail')}
+        sku={props?.sku}
       />
 
       <FeaturedProductsCarousel
@@ -266,8 +270,8 @@ export default async function Product(props: Props) {
         title={t('RelatedProducts.title')}
       />
 
-      <Reviews productId={productId} searchParams={parsedSearchParams} />
-
+      {/* <Reviews productId={productId} searchParams={parsedSearchParams} /> */}
+    <TabComponent />
       <Stream fallback={null} value={getProductData(variables)}>
         {(product) => (
           <>

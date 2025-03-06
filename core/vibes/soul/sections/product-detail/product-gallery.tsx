@@ -54,7 +54,7 @@ export function ProductGallery({ images, className, thumbnailLabel = 'View image
           ))}
         </div>
       </div>
-      <div className="flex max-w-full shrink-0 flex-row gap-2 overflow-x-auto @2xl:order-1 @2xl:flex-col">
+      {/* <div className="flex max-w-full shrink-0 flex-row gap-2 overflow-x-auto @2xl:order-1 @2xl:flex-col">
         {images.map((image, index) => (
           <button
             aria-label={`${thumbnailLabel} ${index + 1}`}
@@ -76,7 +76,7 @@ export function ProductGallery({ images, className, thumbnailLabel = 'View image
             />
           </button>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

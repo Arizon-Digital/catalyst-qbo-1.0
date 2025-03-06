@@ -25,6 +25,7 @@ interface ProductDetailProduct {
       content: React.ReactNode;
     }>
   >;
+  sku ?: String;
 }
 
 interface Props<F extends Field> {
@@ -56,6 +57,7 @@ export function ProductDetail<F extends Field>({
   thumbnailLabel,
   additionalInformationLabel = 'Additional information',
 }: Props<F>) {
+  console.log("kjkjlkjlkj",streamableCtaLabel)
   return (
     <section className="@container">
       <div className="mx-auto w-full max-w-screen-2xl px-4 py-10 @xl:px-6 @xl:py-14 @4xl:px-8 @4xl:py-20">
@@ -64,7 +66,7 @@ export function ProductDetail<F extends Field>({
         <Stream fallback={<ProductDetailSkeleton />} value={streamableProduct}>
           {(product) =>
             product && (
-              <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @2xl:grid-cols-2 @5xl:gap-x-12">
+              <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @2xl:grid-cols-2 @5xl:gap-x-12 bg-white border border-[#dcdcdc] rounded-md shadow-[0_3px_0_#dcdcdc]">
                 <div className="hidden @2xl:block">
                   <Stream fallback={<ProductGallerySkeleton />} value={product.images}>
                     {(images) => <ProductGallery images={images} />}
@@ -80,10 +82,11 @@ export function ProductDetail<F extends Field>({
                   <h1 className="mb-3 mt-2 font-heading text-2xl font-medium leading-none @xl:mb-4 @xl:text-3xl @4xl:text-4xl">
                     {product.title}
                   </h1>
+                  <h1 className="mb-3 mt-2 font-heading text-2xl font-medium leading-none @xl:mb-4 @xl:text-3xl @4xl:text-4xl">
+                    sku : {product.sku}
+                  </h1>
 
-                  <Stream fallback={<RatingSkeleton />} value={product.rating}>
-                    {(rating) => <Rating rating={rating ?? 0} />}
-                  </Stream>
+                  
 
                   <Stream fallback={<PriceLabelSkeleton />} value={product.price}>
                     {(price) => (
