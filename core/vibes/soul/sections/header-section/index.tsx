@@ -2,7 +2,7 @@
 
 import { forwardRef, useEffect, useState } from 'react';
 import Headroom from 'react-headroom';
-import { Phone, Mail, ChevronDown, Search, User, ShoppingCart } from 'lucide-react';
+import { Phone, Mail, ChevronDown, Search, User, ShoppingCart, Menu, X } from 'lucide-react';
 import { clsx } from 'clsx';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useTransition } from 'react';
@@ -32,6 +32,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
     const [bannerElement, setBannerElement] = useState<HTMLElement | null>(null);
     const [bannerHeight, setBannerHeight] = useState(0);
     const [isFloating, setIsFloating] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
     
     useEffect(() => {
       if (!bannerElement) return;
@@ -48,6 +50,28 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
         resizeObserver.disconnect();
       };
     }, [bannerElement]);
+
+    // Close mobile menu when resizing to desktop
+    useEffect(() => {
+      const handleResize = () => {
+        if (window.innerWidth >= 1024) {
+          setMobileMenuOpen(false);
+        }
+      };
+
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }, []);
+    
+    const toggleMobileMenu = () => {
+      setMobileMenuOpen(!mobileMenuOpen);
+      // Reset active dropdown when closing menu
+      if (mobileMenuOpen) setActiveDropdown(null);
+    };
+
+    const toggleDropdown = (index: number) => {
+      setActiveDropdown(activeDropdown === index ? null : index);
+    };
     
     return (
       <div ref={ref}>
@@ -57,19 +81,16 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
           onUnfix={() => setIsFloating(false)}
           onUnpin={() => setIsFloating(true)}
           pinStart={bannerHeight}
+          disable={mobileMenuOpen} // Disable headroom when mobile menu is open
         >
           {/* Top black bar */}
           <div className="bg-black text-white py-2 px-4">
-            <div className="container mx-auto flex justify-between items-center">
-              <div>
-                <Link href="/about-us" className="text-white hover:text-gray-300 font-medium">About Us</Link>
-              </div>
-              
-              <div className="flex items-center gap-6">
+            <div className="container mx-auto flex justify-end items-center">
+              <div className="flex items-center gap-2 md:gap-6 flex-wrap justify-end">
                 {/* Currency selector */}
                 {navigation.currencies && navigation.currencies.length > 1 && navigation.currencyAction && (
                   <div className="flex items-center gap-1">
-                    <span className="font-medium">Select Currency:</span>
+                    <span className="font-medium hidden sm:inline">Select Currency:</span>
                     <CurrencySelector 
                       currencies={navigation.currencies} 
                       activeCurrencyId={navigation.activeCurrencyId} 
@@ -78,94 +99,121 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   </div>
                 )}
                 
-                <Link href="/contact-us" className="flex items-center gap-1 text-white hover:text-gray-300 font-medium">
-                  <Mail size={16} />
+                <Link href="/about-us" className="flex items-center gap-1 text-white hover:text-gray-300 font-medium text-xs sm:text-sm">
+                  <span>About Us</span>
+                </Link>
+                
+                <Link href="/contact-us" className="flex items-center gap-1 text-white hover:text-gray-300 font-medium text-xs sm:text-sm">
+                  <Mail size={14} className="hidden sm:inline" />
                   <span>Contact Us</span>
                 </Link>
                 
-                <Link href="tel:+14388002658" className="flex items-center gap-1 text-white hover:text-gray-300 font-medium">
-                  <Phone size={16} />
-                  <span>CAN: 438 800 2658</span>
+                <Link href="tel:+14388002658" className="flex items-center gap-1 text-white hover:text-gray-300 font-medium text-xs sm:text-sm">
+                  <Phone size={14} className="hidden sm:inline" />
+                  <span className="hidden sm:inline">CAN:</span>
+                  <span>438 800 2658</span>
                 </Link>
               </div>
             </div>
           </div>
           
           <div className={clsx(
-            "bg-white transition-shadow",
+            "bg-white transition-shadow relative",
             isFloating && "shadow-lg"
           )}>
             {/* Main header with logo, search, account and cart */}
-            <div className="container mx-auto py-5 flex items-center justify-between px-4">
-              {/* Logo section */}
-              <div className="flex-shrink-0 mr-6">
-                <Link href={navigation.logoHref || '/'} className="block">
-                  <img 
-                    src="/quality-bearings-online-logo.png" 
-                    alt="Quality Bearings Online"
-                    width={250}
-                    height={60}
-                    className="h-16 w-auto"
+            <div className="container mx-auto py-3 md:py-5 flex items-center justify-between px-4">
+              {/* Hamburger menu for mobile */}
+              <button 
+                className="lg:hidden flex items-center mr-2"
+                onClick={toggleMobileMenu}
+                aria-label="Toggle mobile menu"
+              >
+                {mobileMenuOpen ? (
+                  <X size={24} className="text-blue-900" />
+                ) : (
+                  <Menu size={24} className="text-blue-900" />
+                )}
+              </button>
+              
+              {/* Logo section - Updated with larger sizes */}
+              <div className="flex-shrink-0">
+                <Logo
+                  className={clsx(navigation.mobileLogo != null ? 'hidden md:flex' : 'flex')}
+                  height={navigation.logoHeight || 130} 
+                  href={navigation.logoHref || '/'}
+                  label={navigation.logoLabel || 'Quality Bearings Online'}
+                  logo={navigation.logo}
+                  width={navigation.logoWidth || 280}
+                />
+                {navigation.mobileLogo != null && (
+                  <Logo
+                    className="flex md:hidden"
+                    height={navigation.mobileLogoHeight || 70} // Increased to 70px for mobile
+                    href={navigation.logoHref || '/'}
+                    label={navigation.logoLabel || 'Quality Bearings Online'} 
+                    logo={navigation.mobileLogo}
+                    width={navigation.mobileLogoWidth || 180}
                   />
-                </Link>
+                )}
               </div>
               
-              {/* Search bar */}
-              <div className="flex-grow max-w-xl mx-4">
+              {/* Search bar - hidden on smallest screens */}
+              <div className="hidden sm:flex flex-grow max-w-xl mx-4">
                 <form 
                   action={navigation.searchHref || '/search'}
                   method="get"
-                  className="relative"
+                  className="relative w-full"
                 >
                   <input
                     type="text"
                     name={navigation.searchParamName || 'query'}
                     placeholder={navigation.searchInputPlaceholder || 'Search by reference'}
-                    className="w-full border border-gray-300 rounded-l px-4 py-3 focus:outline-none focus:ring-1 focus:ring-blue-800"
+                    className="w-full border border-gray-300 rounded-l px-4 py-2 md:py-3 focus:outline-none focus:ring-1 focus:ring-blue-800"
                   />
                   <button 
                     type="submit" 
-                    className="absolute right-0 top-0 h-full bg-blue-900 text-white px-4 rounded-r"
+                    className="absolute right-0 top-0 h-full bg-blue-900 text-white px-3 md:px-4 rounded-r"
                     aria-label={navigation.searchLabel || 'Search'}
                   >
-                    <Search size={22} />
+                    <Search size={20} />
                   </button>
                 </form>
               </div>
               
-              {/* User authentication and cart */}
-              <div className="flex items-center gap-8">
-                {/* Sign In/Register */}
-                <Link href="/account" className="flex items-center gap-4">
+              {/* User authentication and cart - simplified for mobile */}
+              <div className="flex items-center gap-2 md:gap-6 lg:gap-8">
+                {/* Sign In/Register - simplified on mobile */}
+                <Link href="/account" className="flex items-center gap-2">
                   <div className="flex-shrink-0">
-                    <User size={28} className="text-blue-900" />
+                    <User size={24} className="text-blue-900" />
                   </div>
-                  <div className="text-sm">
+                  <div className="text-xs md:text-sm hidden sm:block">
                     <div className="font-medium">Sign In</div>
                     <div>Register</div>
                   </div>
                 </Link>
                 
-                {/* Recently viewed */}
-                <Link href="/recently-viewed" className="flex items-center gap-4">
+                {/* Recently viewed - hide text on mobile */}
+                <Link href="/recently-viewed" className="flex items-center gap-2">
                   <div className="flex-shrink-0">
-                    <svg viewBox="0 0 24 24" width="28" height="28" className="text-blue-900" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg viewBox="0 0 24 24" width="24" height="24" className="text-blue-900" fill="none" stroke="currentColor" strokeWidth="2">
                       <rect x="2" y="3" width="20" height="18" rx="2" />
                       <line x1="8" y1="10" x2="16" y2="10" />
                       <line x1="8" y1="14" x2="16" y2="14" />
                       <line x1="8" y1="18" x2="16" y2="18" />
                     </svg>
                   </div>
-                  <div className="text-sm">
+                  <div className="text-xs md:text-sm hidden sm:block">
                     <div className="font-medium">Recently</div>
                     <div>Viewed</div>
                   </div>
                 </Link>
                 
                 {/* Cart with count */}
-                <Link href="/cart" className="flex items-center gap-4">
+                <Link href="/cart" className="flex items-center gap-2">
                   <div className="flex-shrink-0 relative">
-                    <ShoppingCart size={28} className="text-blue-900" />
+                    <ShoppingCart size={24} className="text-blue-900" />
                     <Stream value={navigation.cartCount || 2}>
                       {(count) => (
                         count && count > 0 ? (
@@ -176,24 +224,47 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                       )}
                     </Stream>
                   </div>
-                  <div className="text-sm">
+                  <div className="text-xs md:text-sm hidden sm:block">
                     <div className="font-medium">Cart</div>
                   </div>
                 </Link>
               </div>
             </div>
             
+            {/* Search bar for mobile - full width under header */}
+            <div className="sm:hidden px-4 pb-3">
+              <form 
+                action={navigation.searchHref || '/search'}
+                method="get"
+                className="relative w-full"
+              >
+                <input
+                  type="text"
+                  name={navigation.searchParamName || 'query'}
+                  placeholder={navigation.searchInputPlaceholder || 'Search by reference'}
+                  className="w-full border border-gray-300 rounded-l px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-800"
+                />
+                <button 
+                  type="submit" 
+                  className="absolute right-0 top-0 h-full bg-blue-900 text-white px-3 rounded-r"
+                  aria-label={navigation.searchLabel || 'Search'}
+                >
+                  <Search size={18} />
+                </button>
+              </form>
+            </div>
+            
             {/* Blue Category Navigation with full-width dropdown */}
-            <nav className="bg-blue-950 relative">
+            <nav className="bg-blue-950 relative hidden lg:block">
               <div className="container mx-auto">
                 <Stream value={navigation.links || []}>
                   {(links) => (
-                    <ul className="m-0 p-0 list-none flex justify-start">
+                    <ul className="m-0 p-0 list-none flex justify-center">
                       {links.map((item, index) => (
                         <li key={index} className="static group">
                           <Link 
                             href={item.href} 
-                            className="block text-white py-4 px-5 hover:bg-blue-900 transition-colors font-medium text-sm"
+                            className="block text-white py-4 px-3 xl:px-5 hover:bg-blue-900 transition-colors font-medium text-sm whitespace-nowrap"
                           >
                             {item.label}
                             {item.groups && item.groups.length > 0 && <ChevronDown className="inline-block ml-1" size={14} />}
@@ -202,7 +273,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                           {item.groups && item.groups.length > 0 && (
                             <div className="absolute left-0 w-full hidden group-hover:block bg-white shadow-lg z-50 border-t border-gray-200">
                               <div className="container mx-auto py-6">
-                                <div className="grid grid-cols-4 gap-6">
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                   {item.groups.map((group, groupIndex) => (
                                     <div key={groupIndex} className="mb-4">
                                       {group.label && (
@@ -238,12 +309,197 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               </div>
             </nav>
             
+            {/* Mobile Navigation Menu - Slide in from left */}
+            {mobileMenuOpen && (
+              <div className="lg:hidden fixed inset-0 z-50 flex">
+                {/* Backdrop - darken the background */}
+                <div 
+                  className="fixed inset-0 bg-black bg-opacity-50" 
+                  onClick={toggleMobileMenu}
+                ></div>
+                
+                {/* Slide-in menu */}
+                <div className="relative flex-1 flex flex-col w-full max-w-xs bg-white overflow-y-auto">
+                  <div className="px-4 py-3 border-b border-gray-200">
+                    <h2 className="text-lg font-medium text-blue-900">Menu</h2>
+                  </div>
+                  
+                  <Stream value={navigation.links || []}>
+                    {(links) => (
+                      <div className="divide-y divide-gray-100">
+                        {links.map((item, index) => (
+                          <div key={index} className="py-2">
+                            <div className="flex items-center justify-between px-4">
+                              <Link 
+                                href={item.href || '#'} 
+                                className="py-2 text-gray-900 font-medium"
+                                onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
+                              >
+                                {item.label}
+                              </Link>
+                              
+                              {item.groups && item.groups.length > 0 && (
+                                <button
+                                  className="p-2 text-gray-500" 
+                                  onClick={() => toggleDropdown(index)}
+                                  aria-expanded={activeDropdown === index}
+                                >
+                                  <ChevronDown 
+                                    className={clsx(
+                                      "h-5 w-5 transition-transform",
+                                      activeDropdown === index ? "rotate-180" : ""
+                                    )} 
+                                  />
+                                </button>
+                              )}
+                            </div>
+                            
+                            {activeDropdown === index && item.groups && (
+                              <div className="mt-2 pl-4 pr-2 pb-2">
+                                {item.groups.map((group, groupIndex) => (
+                                  <div key={groupIndex} className="mb-3">
+                                    {group.label && (
+                                      <Link 
+                                        href={group.href || '#'} 
+                                        className="block font-semibold text-gray-800 mb-2 hover:text-blue-800"
+                                        onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
+                                      >
+                                        {group.label}
+                                      </Link>
+                                    )}
+                                    <div className="space-y-1 pl-2">
+                                      {group.links.map((link, linkIndex) => (
+                                        <Link 
+                                          key={linkIndex} 
+                                          href={link.href}
+                                          className="block text-gray-600 py-1 text-sm hover:text-blue-800"
+                                          onClick={() => setMobileMenuOpen(false)}
+                                        >
+                                          {link.label}
+                                        </Link>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </Stream>
+                  
+                  {/* Additional mobile menu links */}
+                  <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
+                    <Link href="/about-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
+                      About Us
+                    </Link>
+                    <Link href="/contact-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
+                      Contact Us
+                    </Link>
+                    <Link href="tel:+14388002658" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
+                      Call Us: 438 800 2658
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             {/* Gold border below navigation */}
             <div className="h-[6px] w-full" style={{
               background: '#ca9618'
             }}></div>
           </div>
         </Headroom>
+        
+        {/* Banner Section - Hidden on mobile */}
+        <div className="border-t border-b border-gray-200 bg-white py-4 shadow-md hidden md:block">
+          <div className="container mx-auto">
+            <div className="flex flex-wrap justify-center md:justify-between items-center px-4">
+              {/* Free Delivery */}
+              <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
+                <div className="flex items-center">
+                  <img
+                    src="https://www.qualitybearingsonline.com/content/NewSite/Customer-Service.png"
+                    alt="Customer Service"
+                    className="w-12 h-12 mr-3"
+                  />
+                  <div className="text-sm font-medium">
+                    <Link href="/customer-service/" className="hover:text-blue-800">
+                      Free Delivery<br />
+                      Over $300.00
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              
+              {/* 1-3 Day Delivery */}
+              <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
+                <div className="flex items-center">
+                  <img
+                    src="https://www.qualitybearingsonline.com/content/NewSite/UK-Delivery.png"
+                    alt="USA Delivery"
+                    className="w-12 h-12 mr-3"
+                  />
+                  <div className="text-sm font-medium">
+                    <Link href="/delivery-information/" className="hover:text-blue-800">
+                      1-3 Day DHL & UPS<br />
+                      Delivery
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Queen's Award */}
+              <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
+                <div className="flex items-center">
+                  <img
+                    className="w-12 h-12 mr-3"
+                    src="https://store-03842.mybigcommerce.com/content/Queens_Award_Logo_black.png"
+                    alt="Queen's Award For Enterprise For International Trade"
+                  />
+                  <div className="text-sm font-medium">
+                    <Link href="/blog/9/" className="hover:text-blue-800">
+                      Queen's Award For<br />
+                      Enterprise Winners
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              
+              {/* ISO Certificate */}
+              <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
+                <div className="flex items-center">
+                  <img
+                    src="https://www.qualitybearingsonline.com/content/NewSite/qms.png"
+                    alt="ISO Certificate"
+                    className="w-12 h-12 mr-3"
+                  />
+                  <div className="text-sm font-medium">
+                    <Link href="https://store-03842.mybigcommerce.com/content/ISO_9001_2015_Certificate.pdf" target="_blank" className="hover:text-blue-800">
+                      ISO 9001 : 2015<br />
+                      Cert. No.291342018
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Feefo Rating */}
+              <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start">
+                <div className="flex items-center">
+                  <Link href="https://www.feefo.com/reviews/quality-bearings-online" target="_blank" rel="noopener noreferrer">
+                    <img
+                      className="h-10"
+                      alt="Feefo logo"
+                      src="https://api.feefo.com/api/logo?merchantidentifier=quality-bearings-online&template=Service-Stars-Yellow-150x38.png"
+                      title="Our customer Feefo rating"
+                    />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   },
@@ -270,11 +526,11 @@ function CurrencySelector({
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
-        className="flex items-center gap-1 text-white uppercase transition-opacity [&:disabled]:opacity-30 font-medium"
+        className="flex items-center gap-1 text-white uppercase transition-opacity [&:disabled]:opacity-30 font-medium text-xs sm:text-sm"
         disabled={isPending}
       >
         {activeCurrency?.label ?? currencies[0].label}
-        <ChevronDown size={16} strokeWidth={1.5} />
+        <ChevronDown size={14} strokeWidth={1.5} />
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content

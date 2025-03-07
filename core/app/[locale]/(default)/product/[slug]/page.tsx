@@ -271,7 +271,7 @@ export default async function Product(props: Props) {
       />
 
       {/* <Reviews productId={productId} searchParams={parsedSearchParams} /> */}
-    <TabComponent />
+    {/* <TabComponent /> */}
       <Stream fallback={null} value={getProductData(variables)}>
         {(product) => (
           <>
