@@ -509,6 +509,10 @@
         "cart": "Cart",
         "search": "Search"
       },
+      "LocaleSwitcher": {
+        "chooseCountryAndLanguage": "Choose your country and language",
+        "goToSite": "Go to site"
+      },
       "Account": {
         "account": "Account",
         "orders": "Orders",

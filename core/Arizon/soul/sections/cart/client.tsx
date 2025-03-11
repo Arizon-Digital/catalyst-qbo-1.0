@@ -89,7 +89,7 @@ export function CartClient<LineItem extends CartLineItem>({
   summaryTitle,
 }: Props<LineItem>) {
   const [state, formAction] = useActionState(lineItemAction, {
-    lineItems: cart.lineItems,
+    lineItems: cart?.lineItems,
     lastResult: null,
   });
 
@@ -139,7 +139,7 @@ export function CartClient<LineItem extends CartLineItem>({
     },
   );
 
-  const optimisticQuantity = optimisticLineItems.reduce((total, item) => total + item.quantity, 0);
+  const optimisticQuantity = optimisticLineItems?.reduce((total, item) => total + item.quantity, 0);
 
   if (optimisticQuantity === 0) {
     return <CartEmptyState {...emptyState} />;
@@ -154,7 +154,7 @@ export function CartClient<LineItem extends CartLineItem>({
           </h2>
           <dl aria-label="Receipt Summary" className="w-full">
             <div className="divide-y divide-contrast-100">
-              {cart.summaryItems.map((summaryItem, index) => (
+              {cart?.summaryItems.map((summaryItem, index) => (
                 <div className="flex justify-between py-4" key={index}>
                   <dt>{summaryItem.label}</dt>
                   <dd>{summaryItem.value}</dd>
@@ -175,8 +175,8 @@ export function CartClient<LineItem extends CartLineItem>({
             )}
 
             <div className="flex justify-between border-t border-contrast-100 py-6 text-xl font-bold">
-              <dt>{cart.totalLabel ?? 'Total'}</dt>
-              <dl>{cart.total}</dl>
+              <dt>{cart?.totalLabel ?? 'Total'}</dt>
+              <dl>{cart?.total}</dl>
             </div>
           </dl>
 
@@ -199,18 +199,18 @@ export function CartClient<LineItem extends CartLineItem>({
 
         {/* Cart Items */}
         <ul className="flex flex-col gap-5">
-          {optimisticLineItems.map((lineItem) => (
+          {optimisticLineItems?.map((lineItem) => (
             <li
               className="flex flex-col items-start gap-x-5 gap-y-4 @container @sm:flex-row"
               key={lineItem.id}
             >
               <div className="relative aspect-square w-full max-w-24 overflow-hidden rounded-xl bg-contrast-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4">
                 <Image
-                  alt={lineItem.image.alt}
+                  alt={lineItem?.image.alt}
                   className="object-cover"
                   fill
                   sizes="(min-width: 28rem) 9rem, (min-width: 24rem) 6rem, 100vw"
-                  src={lineItem.image.src}
+                  src={lineItem?.image.src}
                 />
               </div>
               <div className="flex flex-grow flex-col flex-wrap justify-between gap-y-2 @xl:flex-row">
