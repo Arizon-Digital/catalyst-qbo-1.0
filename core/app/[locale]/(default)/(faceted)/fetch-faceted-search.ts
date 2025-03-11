@@ -1,13 +1,15 @@
 import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
 import { cache } from 'react';
 import { z } from 'zod';
+import { cookies } from 'next/headers';
 
 import { getSessionCustomerAccessToken } from '~/auth';
 import { client } from '~/client';
 import { PaginationFragment } from '~/client/fragments/pagination';
 import { graphql, VariablesOf } from '~/client/graphql';
+import { revalidate } from '~/client/revalidate-target';
 import { ProductCardFragment } from '~/components/product-card/fragment';
-import { getPreferredCurrencyCode } from '~/lib/currency';
+import { CurrencyCode } from '../product/[slug]/page-data';
 
 const GetProductSearchResultsQuery = graphql(
   `
@@ -159,23 +161,26 @@ type SearchProductsSortInput = Variables['sort'];
 type SearchProductsFiltersInput = Variables['filters'];
 
 interface ProductSearch {
-  limit?: number | null;
-  before?: string | null;
-  after?: string | null;
-  sort?: SearchProductsSortInput | null;
+  limit?: number;
+  before?: string;
+  after?: string;
+  sort?: SearchProductsSortInput;
   filters: SearchProductsFiltersInput;
 }
 
 const getProductSearchResults = cache(
   async ({ limit = 9, after, before, sort, filters }: ProductSearch) => {
     const customerAccessToken = await getSessionCustomerAccessToken();
-    const currencyCode = await getPreferredCurrencyCode();
+    const cookieStore = await cookies();
+    const currencyCode = cookieStore.get('currencyCode')?.value as CurrencyCode || 'CAD';
     const filterArgs = { filters, sort };
     const paginationArgs = before ? { last: limit, before } : { first: limit, after };
 
+   console.log('----filter----', JSON.stringify(filterArgs))
+   
     const response = await client.fetch({
       document: GetProductSearchResultsQuery,
-      variables: { ...filterArgs, ...paginationArgs, currencyCode },
+      variables: { ...filterArgs, ...paginationArgs, currencyCode: currencyCode },
       customerAccessToken,
       fetchOptions: customerAccessToken ? { cache: 'no-store' } : { next: { revalidate: 300 } },
     });
@@ -186,6 +191,7 @@ const getProductSearchResults = cache(
 
     const items = removeEdgesAndNodes(searchResults.products).map((product) => ({
       ...product,
+      fetchOptions: { next: { revalidate } },
     }));
 
     return {
@@ -237,7 +243,7 @@ const SearchParamToArray = SearchParamSchema.transform((value) => {
     return value;
   }
 
-  if (typeof value === 'string' && value !== '') {
+  if (typeof value === 'string') {
     return [value];
   }
 
@@ -259,18 +265,18 @@ const PrivateSortParam = z.union([
 const PublicSortParam = z.string().toUpperCase().pipe(PrivateSortParam);
 
 const SearchProductsFiltersInputSchema = z.object({
-  brandEntityIds: z.array(z.number()).nullish(),
-  categoryEntityId: z.number().nullish(),
-  categoryEntityIds: z.array(z.number()).nullish(),
-  hideOutOfStock: z.boolean().nullish(),
-  isFeatured: z.boolean().nullish(),
-  isFreeShipping: z.boolean().nullish(),
+  brandEntityIds: z.array(z.number()).optional(),
+  categoryEntityId: z.number().optional(),
+  categoryEntityIds: z.array(z.number()).optional(),
+  hideOutOfStock: z.boolean().optional(),
+  isFeatured: z.boolean().optional(),
+  isFreeShipping: z.boolean().optional(),
   price: z
     .object({
-      maxPrice: z.number().nullish(),
-      minPrice: z.number().nullish(),
+      maxPrice: z.number().optional(),
+      minPrice: z.number().optional(),
     })
-    .nullish(),
+    .optional(),
   productAttributes: z
     .array(
       z.object({
@@ -278,54 +284,54 @@ const SearchProductsFiltersInputSchema = z.object({
         values: z.array(z.string()),
       }),
     )
-    .nullish(),
+    .optional(),
   rating: z
     .object({
-      maxRating: z.number().nullish(),
-      minRating: z.number().nullish(),
+      maxRating: z.number().optional(),
+      minRating: z.number().optional(),
     })
-    .nullish(),
-  searchSubCategories: z.boolean().nullish(),
-  searchTerm: z.string().nullish(),
+    .optional(),
+  searchSubCategories: z.boolean().optional(),
+  searchTerm: z.string().optional(),
 }) satisfies z.ZodType<SearchProductsFiltersInput>;
 
 const PrivateSearchParamsSchema = z.object({
-  after: z.string().nullish(),
-  before: z.string().nullish(),
-  limit: z.number().nullish(),
-  sort: PrivateSortParam.nullish(),
+  after: z.string().optional(),
+  before: z.string().optional(),
+  limit: z.number().optional(),
+  sort: PrivateSortParam.optional(),
   filters: SearchProductsFiltersInputSchema,
 });
 
 export const PublicSearchParamsSchema = z.object({
-  after: z.string().nullish(),
-  before: z.string().nullish(),
-  brand: SearchParamToArray.nullish().transform((value) => value?.map(Number)),
+  after: z.string().optional(),
+  before: z.string().optional(),
+  brand: SearchParamToArray.transform((value) => value?.map(Number)),
   category: z.coerce.number().optional(),
-  categoryIn: SearchParamToArray.nullish().transform((value) => value?.map(Number)),
-  isFeatured: z.coerce.boolean().nullish(),
-  limit: z.coerce.number().nullish(),
-  minPrice: z.coerce.number().nullish(),
-  maxPrice: z.coerce.number().nullish(),
-  minRating: z.coerce.number().nullish(),
-  maxRating: z.coerce.number().nullish(),
-  sort: PublicSortParam.nullish(),
+  categoryIn: SearchParamToArray.transform((value) => value?.map(Number)),
+  isFeatured: z.coerce.boolean().optional(),
+  limit: z.coerce.number().optional(),
+  minPrice: z.coerce.number().optional(),
+  maxPrice: z.coerce.number().optional(),
+  minRating: z.coerce.number().optional(),
+  maxRating: z.coerce.number().optional(),
+  sort: PublicSortParam.optional(),
   // In the future we should support more stock filters, e.g. out of stock, low stock, etc.
-  stock: SearchParamToArray.nullish().transform((value) =>
+  stock: SearchParamToArray.transform((value) =>
     value?.filter((stock) => z.enum(['in_stock']).safeParse(stock).success),
   ),
   // In the future we should support more shipping filters, e.g. 2 day shipping, same day, etc.
-  shipping: SearchParamToArray.nullish().transform((value) =>
+  shipping: SearchParamToArray.transform((value) =>
     value?.filter((stock) => z.enum(['free_shipping']).safeParse(stock).success),
   ),
-  term: z.string().nullish(),
+  term: z.string().optional(),
 });
 
 const AttributeKey = z.custom<`attr_${string}`>((val) => {
-  return typeof val === 'string' ? /^attr_\w+$/.test(val) : false;
+  return typeof val === 'string' ? /^attr_\w+(.*)$/.test(val) : false;
 });
 
-export const PublicToPrivateParams = PublicSearchParamsSchema.catchall(SearchParamToArray.nullish())
+const PublicToPrivateParams = PublicSearchParamsSchema.catchall(SearchParamToArray)
   .transform((publicParams) => {
     const { after, before, limit, sort, ...filters } = publicParams;
 
@@ -346,16 +352,15 @@ export const PublicToPrivateParams = PublicSearchParamsSchema.catchall(SearchPar
       slug,
       ...additionalParams
     } = filters;
-
+    
     // Assuming the rest of the params are product attributes for now. We need to see if we can get the GQL endpoint to ingore unknown params.
     const productAttributes = Object.entries(additionalParams)
       .filter(([attribute]) => AttributeKey.safeParse(attribute).success)
-      .filter(([, values]) => values != null)
       .map(([attribute, values]) => ({
         attribute: attribute.replace('attr_', ''),
         values,
       }));
-
+      
     return {
       after,
       before,
@@ -392,6 +397,7 @@ export const PublicToPrivateParams = PublicSearchParamsSchema.catchall(SearchPar
 export const fetchFacetedSearch = cache(
   // We need to make sure the reference passed into this function is the same if we want it to be memoized.
   async (params: z.input<typeof PublicSearchParamsSchema>) => {
+    console.log('----params-----', params);
     const { after, before, limit = 9, sort, filters } = PublicToPrivateParams.parse(params);
 
     return getProductSearchResults({

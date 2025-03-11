@@ -1,59 +1,34 @@
 'use server';
 
-import { BigCommerceGQLError } from '@bigcommerce/catalyst-client';
-import { SubmissionResult } from '@conform-to/react';
-import { parseWithZod } from '@conform-to/zod';
-import { AuthError } from 'next-auth';
-import { getLocale, getTranslations } from 'next-intl/server';
+import { unstable_rethrow as rethrow } from 'next/navigation';
+import { getLocale } from 'next-intl/server';
 
-import { schema } from '@/vibes/soul/sections/sign-in-section/schema';
-import { signIn } from '~/auth';
+import { Credentials, signIn } from '~/auth';
 import { redirect } from '~/i18n/routing';
 
-export const login = async (_lastResult: SubmissionResult | null, formData: FormData) => {
-  const locale = await getLocale();
-  const t = await getTranslations('Login');
-
-  const submission = parseWithZod(formData, { schema });
-
-  if (submission.status !== 'success') {
-    return submission.reply({ formErrors: [t('Form.error')] });
-  }
-
+export const login = async (_previousState: unknown, formData: FormData) => {
   try {
-    await signIn(
-      {
-        type: 'password',
-        email: submission.value.email,
-        password: submission.value.password,
-      },
-      {
-        // We want to use next/navigation for the redirect as it
-        // follows basePath and trailing slash configurations.
-        redirect: false,
-      },
-    );
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
+    const locale = await getLocale();
 
-    if (error instanceof BigCommerceGQLError) {
-      return submission.reply({
-        formErrors: error.errors.map(({ message }) => message),
-      });
-    }
+    const credentials = Credentials.parse({
+      email: formData.get('email'),
+      password: formData.get('password'),
+    });
 
-    if (
-      error instanceof AuthError &&
-      error.name === 'CallbackRouteError' &&
-      error.cause &&
-      error.cause.err?.message.includes('Invalid credentials')
-    ) {
-      return submission.reply({ formErrors: [t('Form.invalidCredentials')] });
-    }
+    await signIn('credentials', {
+      ...credentials,
+      // We want to use next/navigation for the redirect as it
+      // follows basePath and trailing slash configurations.
+      redirect: false,
+    });
 
-    return submission.reply({ formErrors: [t('Form.somethingWentWrong')] });
+    redirect({ href: '/account/', locale });
+    // redirect({ href: process.env.STENCIL_URL + '/account.php?action=order_status', locale });
+  } catch (error: unknown) {
+    rethrow(error);
+
+    return {
+      status: 'error',
+    };
   }
-
-  return redirect({ href: '/account/orders', locale });
 };

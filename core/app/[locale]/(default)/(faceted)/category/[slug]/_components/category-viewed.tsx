@@ -29,7 +29,7 @@ const productItemTransform = (p: productSearchItem, c: Category) => {
     purchase_price: p.prices?.salePrice?.value || p.prices?.price.value || 0,
     base_price: p.prices?.price.value,
     retail_price: p.prices?.retailPrice?.value,
-    currency: p.prices?.price.currencyCode || 'USD',
+    currency: p.prices?.price.currencyCode || 'CAD',
     category_names: breadcrumbs.map(({ name }) => name),
   };
 };

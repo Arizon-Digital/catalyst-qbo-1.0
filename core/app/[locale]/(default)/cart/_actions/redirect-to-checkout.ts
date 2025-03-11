@@ -1,16 +1,12 @@
 'use server';
 
-import { BigCommerceGQLError } from '@bigcommerce/catalyst-client';
-import { SubmissionResult } from '@conform-to/react';
-import { parseWithZod } from '@conform-to/zod';
-import { getLocale, getTranslations } from 'next-intl/server';
+import { getLocale } from 'next-intl/server';
 import { z } from 'zod';
 
 import { getSessionCustomerAccessToken } from '~/auth';
 import { client } from '~/client';
 import { graphql } from '~/client/graphql';
 import { redirect } from '~/i18n/routing';
-import { getCartId } from '~/lib/cart';
 
 const CheckoutRedirectMutation = graphql(`
   mutation CheckoutRedirectMutation($cartId: String!) {
@@ -24,54 +20,23 @@ const CheckoutRedirectMutation = graphql(`
   }
 `);
 
-export const redirectToCheckout = async (
-  _lastResult: SubmissionResult | null,
-  formData: FormData,
-): Promise<SubmissionResult | null> => {
+export const redirectToCheckout = async (formData: FormData) => {
   const locale = await getLocale();
-  const t = await getTranslations('Cart.Errors');
-
+  const cartId = z.string().parse(formData.get('cartId'));
   const customerAccessToken = await getSessionCustomerAccessToken();
 
-  const submission = parseWithZod(formData, { schema: z.object({}) });
+  const { data } = await client.fetch({
+    document: CheckoutRedirectMutation,
+    variables: { cartId },
+    fetchOptions: { cache: 'no-store' },
+    customerAccessToken,
+  });
 
-  const cartId = await getCartId();
-
-  if (!cartId) {
-    return submission.reply({ formErrors: [t('cartNotFound')] });
-  }
-
-  let url;
-
-  try {
-    const { data } = await client.fetch({
-      document: CheckoutRedirectMutation,
-      variables: { cartId },
-      fetchOptions: { cache: 'no-store' },
-      customerAccessToken,
-    });
-
-    url = data.cart.createCartRedirectUrls.redirectUrls?.redirectedCheckoutUrl;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
-
-    if (error instanceof BigCommerceGQLError) {
-      return submission.reply({
-        formErrors: error.errors.map(({ message }) => message),
-      });
-    }
-
-    if (error instanceof Error) {
-      return submission.reply({ formErrors: [error.message] });
-    }
-
-    return submission.reply({ formErrors: [t('failedToRedirectToCheckout')] });
-  }
+  const url = data.cart.createCartRedirectUrls.redirectUrls?.redirectedCheckoutUrl;
 
   if (!url) {
-    return submission.reply({ formErrors: [t('failedToRedirectToCheckout')] });
+    throw new Error('Invalid checkout url.');
   }
 
-  return redirect({ href: url, locale });
+  redirect({ href: url, locale });
 };

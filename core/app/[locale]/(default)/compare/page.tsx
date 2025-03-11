@@ -1,5 +1,8 @@
+
+
+
+
 import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
-import { Metadata } from 'next';
 import { getFormatter, getTranslations } from 'next-intl/server';
 import * as z from 'zod';
 
@@ -8,16 +11,17 @@ import { client } from '~/client';
 import { PricingFragment } from '~/client/fragments/pricing';
 import { graphql } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
-import { Image } from '~/components/image';
+import { BcImage } from '~/components/bc-image';
 import { Link } from '~/components/link';
 import { SearchForm } from '~/components/search-form';
 import { Button } from '~/components/ui/button';
-import { Rating } from '~/components/ui/rating';
-import { getPreferredCurrencyCode } from '~/lib/currency';
 import { cn } from '~/lib/utils';
-
+import DescriptionCell from './_components/add-to-cart/description-cell';
+ 
 import { AddToCart } from './_components/add-to-cart';
 import { AddToCartFragment } from './_components/add-to-cart/fragment';
+import { cookies } from 'next/headers';
+import { CurrencyCode } from '../product/[slug]/page-data';
 
 const MAX_COMPARE_LIMIT = 10;
 
@@ -28,15 +32,25 @@ const CompareParamsSchema = z.object({
       if (Array.isArray(value)) {
         return value;
       }
-
+ 
       if (typeof value === 'string') {
         return [...value.split(',')];
       }
-
+ 
       return undefined;
     })
     .transform((value) => value?.map((id) => parseInt(id, 10))),
 });
+
+// Helper function to format currency
+const formatPrice = (price: number, currencyCode: string, format: any) => {
+  const formattedPrice = format.number(price, {
+    style: 'currency',
+    currency: currencyCode,
+  });
+  
+  return formattedPrice.replace('CA$', 'C$');
+};
 
 const ComparePageQuery = graphql(
   `
@@ -51,13 +65,23 @@ const ComparePageQuery = graphql(
               brand {
                 name
               }
+              sku
+              weight {
+                value
+                unit
+              }
+              customFields {
+                edges {
+                  node {
+                    entityId
+                    name
+                    value
+                  }
+                }
+              }
               defaultImage {
                 altText
                 url: urlTemplate(lossy: true)
-              }
-              reviewSummary {
-                numberOfReviews
-                averageRating
               }
               productOptions(first: 3) {
                 edges {
@@ -72,6 +96,10 @@ const ComparePageQuery = graphql(
                   availableToSell
                 }
               }
+              availabilityV2 {
+                description
+                status
+              }
               ...AddToCartFragment
               ...PricingFragment
             }
@@ -82,15 +110,15 @@ const ComparePageQuery = graphql(
   `,
   [AddToCartFragment, PricingFragment],
 );
-
-export async function generateMetadata(): Promise<Metadata> {
+ 
+export async function generateMetadata() {
   const t = await getTranslations('Compare');
-
+ 
   return {
     title: t('title'),
   };
 }
-
+ 
 interface Props {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
@@ -100,27 +128,28 @@ export default async function Compare(props: Props) {
   const t = await getTranslations('Compare');
   const format = await getFormatter();
   const customerAccessToken = await getSessionCustomerAccessToken();
-  const currencyCode = await getPreferredCurrencyCode();
 
   const parsed = CompareParamsSchema.parse(searchParams);
   const productIds = parsed.ids?.filter((id) => !Number.isNaN(id));
-
+  const currencyCode = (await cookies()).get('currencyCode')?.value as CurrencyCode || 'CAD';
+ 
   const { data } = await client.fetch({
     document: ComparePageQuery,
     variables: {
       entityIds: productIds ?? [],
       first: productIds?.length ? MAX_COMPARE_LIMIT : 0,
-      currencyCode,
+      currencyCode: currencyCode
     },
     customerAccessToken,
     fetchOptions: customerAccessToken ? { cache: 'no-store' } : { next: { revalidate } },
   });
-
+ 
   const products = removeEdgesAndNodes(data.site.products).map((product) => ({
     ...product,
     productOptions: removeEdgesAndNodes(product.productOptions),
+    customFields: removeEdgesAndNodes(product.customFields),
   }));
-
+ 
   if (!products.length) {
     return (
       <div className="flex w-full justify-center py-16 align-middle">
@@ -132,21 +161,21 @@ export default async function Compare(props: Props) {
       </div>
     );
   }
-
+ 
   return (
-    <>
+    <>      
       <h1 className="pb-8 text-4xl font-black lg:text-5xl">
         {t('heading', { quantity: products.length })}
       </h1>
-
+ 
       <div className="-mx-6 overflow-auto overscroll-x-contain px-4 sm:-mx-10 sm:px-10 lg:-mx-12 lg:px-12">
         <table className="mx-auto w-full max-w-full table-fixed text-base md:w-fit">
           <caption className="sr-only">{t('Table.caption')}</caption>
-
+ 
           <colgroup>
-            <col className="w-80" span={products.length} />
+            <col className="w-[13.5rem]" span={products.length} />
           </colgroup>
-
+ 
           <thead>
             <tr>
               {products.map((product) => (
@@ -161,7 +190,7 @@ export default async function Compare(props: Props) {
                   return (
                     <td className="px-4" key={product.entityId}>
                       <Link aria-label={product.name} href={product.path}>
-                        <Image
+                        <BcImage
                           alt={product.defaultImage.altText}
                           height={300}
                           src={product.defaultImage.url}
@@ -171,7 +200,7 @@ export default async function Compare(props: Props) {
                     </td>
                   );
                 }
-
+ 
                 return (
                   <td className="px-4" key={product.entityId}>
                     <Link aria-label={product.name} href={product.path}>
@@ -201,22 +230,16 @@ export default async function Compare(props: Props) {
               {products.map((product) => {
                 const showPriceRange =
                   product.prices?.priceRange.min.value !== product.prices?.priceRange.max.value;
-
+ 
                 return (
                   <td className="px-4 py-4 align-bottom text-base" key={product.entityId}>
                     {product.prices && (
                       <p className="w-36 shrink-0">
                         {showPriceRange ? (
                           <>
-                            {format.number(product.prices.priceRange.min.value, {
-                              style: 'currency',
-                              currency: product.prices.price.currencyCode,
-                            })}{' '}
+                            {formatPrice(product.prices.priceRange.min.value, product.prices.price.currencyCode, format)}{' '}
                             -{' '}
-                            {format.number(product.prices.priceRange.max.value, {
-                              style: 'currency',
-                              currency: product.prices.price.currencyCode,
-                            })}
+                            {formatPrice(product.prices.priceRange.max.value, product.prices.price.currencyCode, format)}
                           </>
                         ) : (
                           <>
@@ -224,10 +247,7 @@ export default async function Compare(props: Props) {
                               <>
                                 {t('Table.Prices.msrp')}:{' '}
                                 <span className="line-through">
-                                  {format.number(product.prices.retailPrice.value, {
-                                    style: 'currency',
-                                    currency: product.prices.price.currencyCode,
-                                  })}
+                                  {formatPrice(product.prices.retailPrice.value, product.prices.price.currencyCode, format)}
                                 </span>
                                 <br />
                               </>
@@ -237,27 +257,18 @@ export default async function Compare(props: Props) {
                               <>
                                 {t('Table.Prices.was')}:{' '}
                                 <span className="line-through">
-                                  {format.number(product.prices.basePrice.value, {
-                                    style: 'currency',
-                                    currency: product.prices.price.currencyCode,
-                                  })}
+                                  {formatPrice(product.prices.basePrice.value, product.prices.price.currencyCode, format)}
                                 </span>
                                 <br />
                                 <>
                                   {t('Table.Prices.now')}:{' '}
-                                  {format.number(product.prices.price.value, {
-                                    style: 'currency',
-                                    currency: product.prices.price.currencyCode,
-                                  })}
+                                  {formatPrice(product.prices.price.value, product.prices.price.currencyCode, format)}
                                 </>
                               </>
                             ) : (
                               product.prices.price.value && (
                                 <>
-                                  {format.number(product.prices.price.value, {
-                                    style: 'currency',
-                                    currency: product.prices.price.currencyCode,
-                                  })}
+                                  {formatPrice(product.prices.price.value, product.prices.price.currencyCode, format)}
                                 </>
                               )
                             )}
@@ -280,7 +291,7 @@ export default async function Compare(props: Props) {
                     </td>
                   );
                 }
-
+ 
                 return (
                   <td className="border-b px-4 pb-12" key={product.entityId}>
                     <AddToCart data={product} />
@@ -290,6 +301,7 @@ export default async function Compare(props: Props) {
             </tr>
           </thead>
           <tbody>
+            {/* Description section with height control and read more */}
             <tr className="absolute mt-6">
               <th className="sticky start-0 top-0 m-0 ps-4 text-start" id="product-description">
                 {t('Table.description')}
@@ -299,42 +311,59 @@ export default async function Compare(props: Props) {
               {products.map((product) => (
                 <td
                   className="border-b px-4 pb-8 pt-20"
-                  dangerouslySetInnerHTML={{ __html: product.description }}
                   headers="product-description"
                   key={product.entityId}
-                />
+                >
+                  <DescriptionCell content={product.description} />
+                </td>
               ))}
             </tr>
+            
+            {/* Technical Data section */}
             <tr className="absolute mt-6">
-              <th className="sticky start-0 top-0 m-0 ps-4 text-start" id="product-rating">
-                {t('Table.rating')}
+              <th className="sticky start-0 top-0 m-0 ps-4 text-start" id="product-technical">
+            Other Details
               </th>
             </tr>
             <tr>
               {products.map((product) => (
                 <td
                   className="border-b px-4 pb-8 pt-20"
-                  headers="product-rating"
+                  headers="product-technical"
                   key={product.entityId}
                 >
-                  <p
-                    className={cn(
-                      'flex flex-nowrap text-primary',
-                      product.reviewSummary.numberOfReviews === 0 && 'text-gray-400',
+                  <div className="space-y-2">
+                    {product.sku && (
+                      <p className="flex flex-col">
+                        <span className="font-semibold">SKU:</span>
+                        <span className="text-gray-500">{product.sku}</span>
+                      </p>
                     )}
-                  >
-                    <Rating
-                      aria-label={
-                        product.reviewSummary.numberOfReviews === 0
-                          ? `${product.name} has no rating specified`
-                          : `${product.name} rating is ${product.reviewSummary.averageRating} out of 5 stars`
-                      }
-                      rating={product.reviewSummary.averageRating}
-                    />
-                  </p>
+                    {product.brand?.name && (
+                      <p className="flex flex-col">
+                        <span className="font-semibold">Brand:</span>
+                        <span className="text-gray-500">{product.brand.name}</span>
+                      </p>
+                    )}
+                    {product.weight && (
+                      <p className="flex flex-col">
+                        <span className="font-semibold">Weight:</span>
+                        <span className="text-gray-500">
+                          {product.weight.value} {product.weight.unit}
+                        </span>
+                      </p>)}
+                    {product.customFields?.map((field) => (
+                      <p key={field.entityId} className="flex flex-col">
+                        <span className="font-semibold">{field.name}:</span>
+                        <span className="text-gray-500">{field.value}</span>
+                      </p>
+                    ))}
+                  </div>
                 </td>
               ))}
             </tr>
+
+            {/* Availability section */}
             <tr className="absolute mt-6">
               <th className="sticky start-0 top-0 m-0 ps-4 text-start" id="product-availability">
                 {t('Table.availability')}
@@ -347,10 +376,19 @@ export default async function Compare(props: Props) {
                   headers="product-availability"
                   key={product.entityId}
                 >
-                  {product.inventory.aggregated?.availableToSell || 'N/A'}
+                  <div>
+                    <p>{product.availabilityV2?.description || 'N/A'}</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {product.inventory.aggregated?.availableToSell !== undefined 
+                        ? `${product.inventory.aggregated.availableToSell} units available`
+                        : ''}
+                    </p>
+                  </div>
                 </td>
               ))}
             </tr>
+            
+            {/* Final action buttons */}
             <tr>
               {products.map((product) => {
                 if (product.productOptions.length) {
@@ -362,7 +400,7 @@ export default async function Compare(props: Props) {
                     </td>
                   );
                 }
-
+ 
                 return (
                   <td className="border-b px-4 pb-24 pt-12" key={product.entityId}>
                     <AddToCart data={product} />
@@ -376,3 +414,5 @@ export default async function Compare(props: Props) {
     </>
   );
 }
+ 
+export const runtime = 'edge';

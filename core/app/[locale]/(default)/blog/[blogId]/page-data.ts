@@ -1,46 +1,48 @@
 import { cache } from 'react';
 
 import { client } from '~/client';
-import { graphql, VariablesOf } from '~/client/graphql';
+import { graphql } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
 
-const BlogPageQuery = graphql(`
-  query BlogPageQuery($entityId: Int!) {
-    site {
-      content {
-        blog {
-          name
-          path
-          post(entityId: $entityId) {
-            author
-            htmlBody
-            name
-            publishedDate {
-              utc
-            }
-            tags
-            thumbnailImage {
-              altText
-              url: urlTemplate(lossy: true)
-            }
-            seo {
-              pageTitle
-              metaDescription
-              metaKeywords
+import { SharingLinksFragment } from './_components/sharing-links';
+
+const BlogPageQuery = graphql(
+  `
+    query BlogPageQuery($entityId: Int!) {
+      site {
+        content {
+          blog {
+            post(entityId: $entityId) {
+              author
+              htmlBody
+              name
+              publishedDate {
+                utc
+              }
+              tags
+              thumbnailImage {
+                altText
+                url: urlTemplate(lossy: true)
+              }
+              seo {
+                pageTitle
+                metaDescription
+                metaKeywords
+              }
             }
           }
         }
+        ...SharingLinksFragment
       }
     }
-  }
-`);
+  `,
+  [SharingLinksFragment],
+);
 
-type Variables = VariablesOf<typeof BlogPageQuery>;
-
-export const getBlogPageData = cache(async (variables: Variables) => {
+export const getBlogPageData = cache(async ({ entityId }: { entityId: number }) => {
   const response = await client.fetch({
     document: BlogPageQuery,
-    variables,
+    variables: { entityId },
     fetchOptions: { next: { revalidate } },
   });
 
@@ -50,5 +52,5 @@ export const getBlogPageData = cache(async (variables: Variables) => {
     return null;
   }
 
-  return blog;
+  return response.data.site;
 });

@@ -1,16 +1,33 @@
 'use server';
 
-import { BigCommerceGQLError } from '@bigcommerce/catalyst-client';
-import { SubmissionResult } from '@conform-to/react';
-import { parseWithZod } from '@conform-to/zod';
 import { getTranslations } from 'next-intl/server';
+import { z } from 'zod';
 
-import { schema } from '@/vibes/soul/sections/forgot-password-section/schema';
 import { client } from '~/client';
 import { graphql } from '~/client/graphql';
 
+const ResetPasswordSchema = z.object({
+  email: z.string().email(),
+});
+
+const processZodErrors = (err: z.ZodError) => {
+  const { fieldErrors, formErrors } = err.flatten((issue: z.ZodIssue) => ({
+    message: issue.message,
+  }));
+
+  if (formErrors.length > 0) {
+    return formErrors.join('\n');
+  }
+
+  return Object.entries(fieldErrors)
+    .map(([, errorList]) => {
+      return `${errorList?.map(({ message }) => message).join('\n')}`;
+    })
+    .join('\n');
+};
+
 const ResetPasswordMutation = graphql(`
-  mutation ResetPasswordMutation($input: RequestResetPasswordInput!, $reCaptcha: ReCaptchaV2Input) {
+  mutation ResetPassword($input: RequestResetPasswordInput!, $reCaptcha: ReCaptchaV2Input) {
     customer {
       requestResetPassword(input: $input, reCaptchaV2: $reCaptcha) {
         __typename
@@ -25,29 +42,32 @@ const ResetPasswordMutation = graphql(`
   }
 `);
 
-export const resetPassword = async (
-  _lastResult: { lastResult: SubmissionResult | null; successMessage?: string },
-  formData: FormData,
-  // TODO: add recaptcha token
-  // reCaptchaToken,
-): Promise<{ lastResult: SubmissionResult | null; successMessage?: string }> => {
+interface SubmitResetPasswordForm {
+  formData: FormData;
+  path: string;
+  reCaptchaToken: string;
+}
+
+export const resetPassword = async ({
+  formData,
+  path,
+  reCaptchaToken,
+}: SubmitResetPasswordForm) => {
   const t = await getTranslations('Login.ForgotPassword');
 
-  const submission = parseWithZod(formData, { schema });
-
-  if (submission.status !== 'success') {
-    return { lastResult: submission.reply({ formErrors: [t('Errors.error')] }) };
-  }
-
   try {
+    const parsedData = ResetPasswordSchema.parse({
+      email: formData.get('email'),
+    });
+
     const response = await client.fetch({
       document: ResetPasswordMutation,
       variables: {
         input: {
-          email: submission.value.email,
-          path: '/change-password',
+          email: parsedData.email,
+          path,
         },
-        // ...(reCaptchaToken && { reCaptchaV2: { token: reCaptchaToken } }),
+        ...(reCaptchaToken && { reCaptchaV2: { token: reCaptchaToken } }),
       },
       fetchOptions: {
         cache: 'no-store',
@@ -56,32 +76,26 @@ export const resetPassword = async (
 
     const result = response.data.customer.requestResetPassword;
 
-    if (result.errors.length > 0) {
-      return {
-        lastResult: submission.reply({ formErrors: result.errors.map((error) => error.message) }),
-      };
+    if (result.errors.length === 0) {
+      return { status: 'success', data: parsedData };
     }
 
     return {
-      lastResult: submission.reply(),
-      successMessage: t('Form.confirmResetPassword', { email: submission.value.email }),
+      status: 'error',
+      error: result.errors.map((error) => error.message).join('\n'),
     };
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
-
-    if (error instanceof BigCommerceGQLError) {
+  } catch (error: unknown) {
+    if (error instanceof z.ZodError) {
       return {
-        lastResult: submission.reply({
-          formErrors: error.errors.map(({ message }) => message),
-        }),
+        status: 'error',
+        error: processZodErrors(error),
       };
     }
 
     if (error instanceof Error) {
-      return { lastResult: submission.reply({ formErrors: [error.message] }) };
+      return { status: 'error', error: error.message };
     }
 
-    return { lastResult: submission.reply({ formErrors: [t('Errors.error')] }) };
+    return { status: 'error', error: t('Errors.error') };
   }
 };

@@ -5,14 +5,16 @@ import { useEffect } from 'react';
 import { FragmentOf } from '~/client/graphql';
 import { bodl } from '~/lib/bodl';
 
-import { DigitalItemFragment, PhysicalItemFragment } from '../page-data';
+import { CartItemFragment } from './cart-item';
+import { CheckoutSummaryFragment } from './checkout-summary';
 
-type PhysicalItem = FragmentOf<typeof PhysicalItemFragment>;
-type DigitalItem = FragmentOf<typeof DigitalItemFragment>;
+type FragmentResult = FragmentOf<typeof CartItemFragment>;
+type PhysicalItem = FragmentResult['physicalItems'][number];
+type DigitalItem = FragmentResult['digitalItems'][number];
 type lineItem = PhysicalItem | DigitalItem;
 
 interface Props {
-  subtotal?: number;
+  checkout: FragmentOf<typeof CheckoutSummaryFragment> | null;
   currencyCode: string;
   lineItems: lineItem[];
 }
@@ -33,14 +35,26 @@ const lineItemTransform = (item: lineItem) => {
   };
 };
 
-export const CartViewed = ({ subtotal, currencyCode, lineItems }: Props) => {
+export const CartViewed = ({ checkout, currencyCode, lineItems }: Props) => {
   useEffect(() => {
     bodl.cart.cartViewed({
       currency: currencyCode,
-      cart_value: subtotal ?? 0,
+      cart_value: checkout?.grandTotal?.value ?? 0,
       line_items: lineItems.map(lineItemTransform),
     });
-  }, [currencyCode, lineItems, subtotal]);
+  }, [currencyCode, lineItems, checkout]);
+
+  useEffect(() => {
+    const loadFeefoReviewsInCart = () => {
+      const url = `//api.feefo.com/api/javascript/quality-bearings-online`;
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = url;
+      document.head.appendChild(script);
+    };
+    
+    loadFeefoReviewsInCart();
+  }, []);
 
   return null;
 };

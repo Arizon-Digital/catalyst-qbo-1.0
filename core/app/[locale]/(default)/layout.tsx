@@ -1,8 +1,13 @@
 import { setRequestLocale } from 'next-intl/server';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, Suspense } from 'react';
+import { Cart } from '~/Arizon/soul/sections/cart';
+import { Footer } from '~/Arizon/soul/sections/footer';
+import { Header, HeaderSkeleton } from '~/components/header';
 
-import { Footer } from '~/components/footer';
-import { Header } from '~/components/header';
+
+
+
+
 
 interface Props extends PropsWithChildren {
   params: Promise<{ locale: string }>;
@@ -12,16 +17,20 @@ export default async function DefaultLayout({ params, children }: Props) {
   const { locale } = await params;
 
   setRequestLocale(locale);
-
+  
   return (
     <>
-      <Header />
+      <Suspense fallback={<HeaderSkeleton />}>
+        <Header  cart={<Cart />} />
+      </Suspense>
 
-      <main>{children}</main>
+      <main className=" main-layout-css flex-1 px-4 2xl:container sm:px-10 lg:px-12 2xl:mx-auto 2xl:px-0 pdpwidth">
+        {children}
+      </main>
 
-      <Footer />
+      <Suspense>
+        <Footer />
+      </Suspense>
     </>
   );
 }
-
-export const experimental_ppr = true;

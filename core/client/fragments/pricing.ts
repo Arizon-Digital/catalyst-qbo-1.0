@@ -2,7 +2,7 @@ import { graphql } from '../graphql';
 
 export const PricingFragment = graphql(`
   fragment PricingFragment on Product {
-    prices(currencyCode: $currencyCode) {
+    prices(includeTax: true, currencyCode: $currencyCode) {
       price {
         value
         currencyCode
@@ -27,6 +27,60 @@ export const PricingFragment = graphql(`
         max {
           value
           currencyCode
+        }
+      }
+      bulkPricing {
+        minimumQuantity
+        maximumQuantity
+        ... on BulkPricingFixedPriceDiscount {
+          price
+        }
+        ... on BulkPricingPercentageDiscount {
+          percentOff
+        }
+        ... on BulkPricingRelativePriceDiscount {
+          priceAdjustment
+        }
+      }
+    }
+    excludeTax: prices(currencyCode: $currencyCode) {
+      price {
+        value
+        currencyCode
+      }
+      basePrice {
+        value
+        currencyCode
+      }
+      retailPrice {
+        value
+        currencyCode
+      }
+      salePrice {
+        value
+        currencyCode
+      }
+      priceRange {
+        min {
+          value
+          currencyCode
+        }
+        max {
+          value
+          currencyCode
+        }
+      }
+      bulkPricing {
+        minimumQuantity
+        maximumQuantity
+        ... on BulkPricingFixedPriceDiscount {
+          price
+        }
+        ... on BulkPricingPercentageDiscount {
+          percentOff
+        }
+        ... on BulkPricingRelativePriceDiscount {
+          priceAdjustment
         }
       }
     }

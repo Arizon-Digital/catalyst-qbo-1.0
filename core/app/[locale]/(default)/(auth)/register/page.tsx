@@ -1,22 +1,19 @@
-import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
+import { Breadcrumbs as ComponentsBreadcrumbs } from '~/components/ui/breadcrumbs';
 
-// TODO: Add recaptcha token
-// import { bypassReCaptcha } from '~/lib/bypass-recaptcha';
+import { bypassReCaptcha } from '~/lib/bypass-recaptcha';
 
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { formFieldTransformer } from '~/data-transformers/form-field-transformer';
-import {
-  CUSTOMER_FIELDS_TO_EXCLUDE,
-  FULL_NAME_FIELDS,
-} from '~/data-transformers/form-field-transformer/utils';
-import { exists } from '~/lib/utils';
-
-import { registerCustomer } from './_actions/register-customer';
+import { RegisterCustomerForm } from './_components/register-customer-form';
 import { getRegisterCustomerQuery } from './page-data';
 
-export async function generateMetadata(): Promise<Metadata> {
+const FALLBACK_COUNTRY = {
+  entityId: 226,
+  name: 'United States',
+  code: 'US',
+};
+
+export async function generateMetadata() {
   const t = await getTranslations('Register');
 
   return {
@@ -26,6 +23,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Register() {
   const t = await getTranslations('Register');
+  const breadcrumbs: any = [
+    {
+      label: 'CREATE ACCOUNT',
+      href: '#',
+    },
+  ];
 
   const registerCustomerData = await getRegisterCustomerQuery({
     address: { sortBy: 'SORT_ORDER' },
@@ -36,24 +39,40 @@ export default async function Register() {
     notFound();
   }
 
-  const { addressFields, customerFields } = registerCustomerData;
-  // const reCaptcha = await bypassReCaptcha(reCaptchaSettings);
+  const {
+    addressFields,
+    customerFields,
+    countries,
+    defaultCountry = FALLBACK_COUNTRY.name,
+    reCaptchaSettings,
+  } = registerCustomerData;
+
+  const reCaptcha = await bypassReCaptcha(reCaptchaSettings);
+
+  const {
+    code = FALLBACK_COUNTRY.code,
+    entityId = FALLBACK_COUNTRY.entityId,
+    statesOrProvinces,
+  } = countries.find(({ name }) => name === defaultCountry) || {};
 
   return (
-    <DynamicFormSection
-      action={registerCustomer}
-      fields={[
-        addressFields
-          .filter((field) => FULL_NAME_FIELDS.includes(field.entityId))
-          .map(formFieldTransformer)
-          .filter(exists),
-        ...customerFields
-          .filter((field) => !CUSTOMER_FIELDS_TO_EXCLUDE.includes(field.entityId))
-          .map(formFieldTransformer)
-          .filter(exists),
-      ]}
-      submitLabel={t('Form.submit')}
-      title={t('heading')}
-    />
+    <div className="mx-auto mb-10 register-page-parent text-base lg:w-2/3 pageheading" id='width'>
+     <div className='flex items-center justify-center'>
+      <ComponentsBreadcrumbs
+        className="login-div login-breadcrumb mx-auto  px-[1px]"
+        breadcrumbs={breadcrumbs}
+      />
+      </div>
+      <h1 className="mb-2.5 my-6 text-[25px] leading-[1] font-[400] lg:my-8 lg:text-5xl heading">{t('heading')}</h1>
+      <RegisterCustomerForm
+        addressFields={addressFields}
+        customerFields={customerFields}
+        reCaptchaSettings={reCaptcha}
+        countries={countries}
+        defaultCountry={{ entityId, code, states: statesOrProvinces ?? [] }}
+      />
+    </div>
   );
 }
+
+export const runtime = 'edge';

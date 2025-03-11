@@ -89,7 +89,7 @@ export function CartClient<LineItem extends CartLineItem>({
   summaryTitle,
 }: Props<LineItem>) {
   const [state, formAction] = useActionState(lineItemAction, {
-    lineItems: cart.lineItems,
+    lineItems: cart?.lineItems,
     lastResult: null,
   });
 

@@ -1,16 +1,25 @@
 'use server';
 
-import { BigCommerceGQLError } from '@bigcommerce/catalyst-client';
-import { SubmissionResult } from '@conform-to/react';
-import { parseWithZod } from '@conform-to/zod';
 import { getTranslations } from 'next-intl/server';
+import { z, ZodError } from 'zod';
 
-import { schema } from '@/vibes/soul/sections/reset-password-section/schema';
 import { client } from '~/client';
 import { graphql } from '~/client/graphql';
 
+const ChangePasswordFieldsSchema = z.object({
+  customerId: z.string(),
+  customerToken: z.string(),
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(1),
+  confirmPassword: z.string().min(1),
+});
+
+const ChangePasswordSchema = ChangePasswordFieldsSchema.omit({
+  currentPassword: true,
+}).required();
+
 const ChangePasswordMutation = graphql(`
-  mutation ChangePasswordMutation($input: ResetPasswordInput!) {
+  mutation ChangePassword($input: ResetPasswordInput!) {
     customer {
       resetPassword(input: $input) {
         __typename
@@ -25,26 +34,24 @@ const ChangePasswordMutation = graphql(`
   }
 `);
 
-export async function changePassword(
-  { token, customerEntityId }: { token: string; customerEntityId: string },
-  _prevState: { lastResult: SubmissionResult | null; successMessage?: string },
-  formData: FormData,
-) {
+export const changePassword = async (_previousState: unknown, formData: FormData) => {
   const t = await getTranslations('ChangePassword');
-  const submission = parseWithZod(formData, { schema });
-
-  if (submission.status !== 'success') {
-    return { lastResult: submission.reply({ formErrors: [t('Form.error')] }) };
-  }
 
   try {
+    const parsedData = ChangePasswordSchema.parse({
+      customerId: formData.get('customer-id'),
+      customerToken: formData.get('customer-token'),
+      newPassword: formData.get('new-password'),
+      confirmPassword: formData.get('confirm-password'),
+    });
+
     const response = await client.fetch({
       document: ChangePasswordMutation,
       variables: {
         input: {
-          token,
-          customerEntityId: Number(customerEntityId),
-          newPassword: submission.value.password,
+          token: parsedData.customerToken,
+          customerEntityId: Number(parsedData.customerId),
+          newPassword: parsedData.newPassword,
         },
       },
       fetchOptions: {
@@ -54,36 +61,31 @@ export async function changePassword(
 
     const result = response.data.customer.resetPassword;
 
-    if (result.errors.length > 0) {
-      return {
-        lastResult: submission.reply({ formErrors: result.errors.map((error) => error.message) }),
-      };
+    if (result.errors.length === 0) {
+      return { status: 'success', message: '' };
     }
 
     return {
-      lastResult: submission.reply(),
-      successMessage: t('Form.successMessage'),
+      status: 'error',
+      message: result.errors.map((error) => error.message).join('\n'),
     };
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
-
-    if (error instanceof BigCommerceGQLError) {
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
       return {
-        lastResult: submission.reply({
-          formErrors: error.errors.map(({ message }) => message),
-        }),
+        status: 'error',
+        message: error.issues
+          .map(({ path, message }) => `${path.toString()}: ${message}.`)
+          .join('\n'),
       };
     }
 
     if (error instanceof Error) {
       return {
-        lastResult: submission.reply({ formErrors: [error.message] }),
+        status: 'error',
+        message: error.message,
       };
     }
 
-    return {
-      lastResult: submission.reply({ formErrors: [t('Errors.error')] }),
-    };
+    return { status: 'error', message: t('Errors.error') };
   }
-}
+};

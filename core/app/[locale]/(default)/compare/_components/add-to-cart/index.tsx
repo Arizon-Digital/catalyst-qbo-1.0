@@ -1,22 +1,31 @@
 'use client';
-
+ 
 import { FragmentOf } from 'gql.tada';
 import { AlertCircle, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useId, useTransition } from 'react';
 import { toast } from 'react-hot-toast';
-
+ 
 import { AddToCartButton } from '~/components/add-to-cart-button';
 import { useCart } from '~/components/header/cart-provider';
 import { Link } from '~/components/link';
-
+ 
 import { addToCart } from '../../_actions/add-to-cart';
-
+ 
 import { AddToCartFragment } from './fragment';
-
+import { useCommonContext } from '~/components/common-context/common-provider';
+ 
+const Submit = ({ data: product }: { data: FragmentOf<typeof AddToCartFragment> }) => {
+  const { pending } = useFormStatus();
+ 
+  return <AddToCartButton data={product} loading={pending} />;
+};
+ 
+ 
 export const AddToCart = ({ data: product }: { data: FragmentOf<typeof AddToCartFragment> }) => {
   const t = useTranslations('Compare.AddToCart');
   const cart = useCart();
+  const cartContext = useCommonContext();
   const toastId = useId();
   const [isPending, startTransition] = useTransition();
 
@@ -28,6 +37,7 @@ export const AddToCart = ({ data: product }: { data: FragmentOf<typeof AddToCart
 
     // Optimistic update
     cart.increment(quantity);
+    cartContext.setCartIdFn(result?.data?.entityId);
     toast.success(
       () => (
         <div className="flex items-center gap-3">

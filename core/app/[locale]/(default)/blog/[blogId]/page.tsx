@@ -1,26 +1,25 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getFormatter } from 'next-intl/server';
-import { cache } from 'react';
 
-import { Breadcrumb } from '@/vibes/soul/primitives/breadcrumbs';
-import { BlogPostContent, BlogPostContentBlogPost } from '@/vibes/soul/sections/blog-post-content';
+import { BcImage } from '~/components/bc-image';
+import { Link } from '~/components/link';
+import { Tag } from '~/components/ui/tag';
 
+import { SharingLinks } from './_components/sharing-links';
 import { getBlogPageData } from './page-data';
 
-const cachedBlogPageDataVariables = cache((blogId: string) => ({ entityId: Number(blogId) }));
-
 interface Props {
-  params: Promise<{ blogId: string }>;
+  params: Promise<{
+    blogId: string;
+  }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { blogId } = await params;
 
-  const variables = cachedBlogPageDataVariables(blogId);
-
-  const blog = await getBlogPageData(variables);
-  const blogPost = blog?.post;
+  const data = await getBlogPageData({ entityId: Number(blogId) });
+  const blogPost = data?.content.blog?.post;
 
   if (!blogPost) {
     return {};
@@ -35,67 +34,69 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-async function getBlogPost(props: Props): Promise<BlogPostContentBlogPost> {
+export default async function Blog({ params }: Props) {
+  const { blogId } = await params;
+
   const format = await getFormatter();
 
-  const { blogId } = await props.params;
+  const data = await getBlogPageData({ entityId: Number(blogId) });
+  const blogPost = data?.content.blog?.post;
 
-  const variables = cachedBlogPageDataVariables(blogId);
-
-  const blog = await getBlogPageData(variables);
-  const blogPost = blog?.post;
-
-  if (!blog || !blogPost) {
+  if (!blogPost) {
     return notFound();
   }
 
-  return {
-    author: blogPost.author ?? undefined,
-    title: blogPost.name,
-    content: blogPost.htmlBody,
-    date: format.dateTime(new Date(blogPost.publishedDate.utc)),
-    image: blogPost.thumbnailImage
-      ? { alt: blogPost.thumbnailImage.altText, src: blogPost.thumbnailImage.url }
-      : undefined,
-    tags: blogPost.tags.map((tag) => ({
-      label: tag,
-      link: {
-        href: `${blog.path}?tag=${tag}`,
-      },
-    })),
-  };
-}
-
-async function getBlogPostBreadcrumbs(props: Props): Promise<Breadcrumb[]> {
-  const { blogId } = await props.params;
-
-  const variables = cachedBlogPageDataVariables(blogId);
-
-  const blog = await getBlogPageData(variables);
-  const blogPost = blog?.post;
-
-  if (!blog || !blogPost) {
-    return notFound();
-  }
-
-  return [
-    {
-      label: 'Home',
-      href: '/',
-    },
-    {
-      label: blog.name,
-      href: blog.path,
-    },
-    {
-      label: blogPost.name,
-      href: '#',
-    },
-  ];
-}
-
-export default function Blog(props: Props) {
   return (
-    <BlogPostContent blogPost={getBlogPost(props)} breadcrumbs={getBlogPostBreadcrumbs(props)} />
+    <div className="mx-auto max-w-4xl">
+      {blogPost.thumbnailImage ? (
+        <div className="mb-6 flex h-40 sm:h-80 lg:h-96">
+          <BcImage
+            alt={blogPost.thumbnailImage.altText}
+            className="h-full w-full object-cover object-center"
+            height={900}
+            src={blogPost.thumbnailImage.url}
+            width={900}
+          />
+        </div>
+      ) : (
+        <div className="mb-6 flex h-40 justify-between bg-primary/10 p-4 sm:h-80 lg:h-96">
+          <h3 className="mb-0 flex-none basis-1/2 self-start text-3xl font-bold text-primary">
+            {blogPost.name}
+          </h3>
+          <small className="mb-0 flex-none self-end text-xl font-bold text-primary">
+            {format.dateTime(new Date(blogPost.publishedDate.utc))}
+          </small>
+        </div>
+      )}
+
+      <h1 className="mb-2 text-3xl font-black lg:text-5xl">{blogPost.name}</h1>
+
+      <div className="mb-10 text-base blog" dangerouslySetInnerHTML={{ __html: blogPost.htmlBody }} />
+
+      <div className="flex justify-between items-start mb-10">
+        <div className="flex">
+          {blogPost.tags.map((tag) => (
+            <Link className="me-3 block cursor-pointer" href={`/blog/tag/${tag}`} key={tag}>
+              <Tag content={tag} />
+            </Link>
+          ))}
+        </div>
+        <div className="flex-shrink-0">
+          <SharingLinks data={data} />
+        </div>
+      </div>
+
+      <div className="mb-8 flex items-center text-base text-gray-500">
+        <span>{format.dateTime(new Date(blogPost.publishedDate.utc))}</span>
+        {Boolean(blogPost.author) && (
+          <>
+            <span className="mx-2">,</span>
+            <span>by {blogPost.author}</span>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
+
+export const runtime = 'edge';

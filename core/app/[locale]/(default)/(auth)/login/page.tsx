@@ -1,13 +1,16 @@
-import { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Breadcrumbs as ComponentsBreadcrumbs } from '~/components/ui/breadcrumbs';
+import { Link } from '~/components/link';
+import { Button } from '~/components/ui/button';
+import { locales } from '~/i18n/routing';
 
-import { ButtonLink } from '@/vibes/soul/primitives/button-link';
-import { SignInSection } from '@/vibes/soul/sections/sign-in-section';
-import { ForceRefresh } from '~/components/force-refresh';
+import { LoginForm } from './_components/login-form';
 
-import { login } from './_actions/login';
+export async function generateMetadata({ params }: Props) {
+  const { locale } = await params;
 
-export async function generateMetadata(): Promise<Metadata> {
+  setRequestLocale(locale);
+
   const t = await getTranslations('Login');
 
   return {
@@ -15,34 +18,56 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function Login() {
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function Login({ params }: Props) {
+  const { locale } = await params;
+
+  setRequestLocale(locale);
+
   const t = await getTranslations('Login');
 
+  const breadcrumbs: any = [
+    {
+      label: 'LOGIN',
+      href: '#',
+    },
+  ];
+
   return (
-    <>
-      <ForceRefresh />
-      <SignInSection
-        action={login}
-        forgotPasswordHref="/login/forgot-password"
-        forgotPasswordLabel={t('Form.forgotPassword')}
-        submitLabel={t('Form.logIn')}
-        title={t('heading')}
-      >
-        <div className="">
-          <h3 className="mb-3 text-xl font-bold lg:text-2xl">{t('CreateAccount.heading')}</h3>
-          <p className="text-base font-semibold">{t('CreateAccount.accountBenefits')}</p>
-          <ul className="mb-4 list-disc ps-4">
+    <div className="mx-auto my-6 max-w-4xl pageheading">
+      <div className='flex justify-center items-center'>
+       <ComponentsBreadcrumbs
+          className="login-div login-breadcrumb mx-auto px-[1px]"
+          breadcrumbs={breadcrumbs}
+        />
+        </div>
+      <h2 className="text-h2 mb-8 text-4xl font-black lg:text-5xl" id='signinheading'>Sign in</h2>
+      <div className="mb-12 grid grid-cols-1 lg:grid-cols-2 lg:gap-x-8 mt-[2rem]">
+        <LoginForm />
+        <div className="flex flex-col gap-4 bg-gray-100 p-8" id='background'>
+          <h3 className="text-h5 mb-3" id='newcustomer'>{t('CreateAccount.heading')}</h3>
+          <p className="text-base font-semiboldd" id='createanaccount'>{t('CreateAccount.accountBenefits')}</p>
+          <ul className="list-disc ps-4">
             <li>{t('CreateAccount.fastCheckout')}</li>
             <li>{t('CreateAccount.multipleAddresses')}</li>
             <li>{t('CreateAccount.ordersHistory')}</li>
             <li>{t('CreateAccount.ordersTracking')}</li>
             <li>{t('CreateAccount.wishlists')}</li>
           </ul>
-          <ButtonLink href="/register" variant="secondary">
-            {t('CreateAccount.createLink')}
-          </ButtonLink>
+          <Button asChild className="w-fit items-center px-8 py-2 hover:text-white"id='register'>
+            <Link href="/register">{t('CreateAccount.createLink')}</Link>
+          </Button>
         </div>
-      </SignInSection>
-    </>
+      </div>
+    </div>
   );
 }
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
+export const dynamic = 'force-static';

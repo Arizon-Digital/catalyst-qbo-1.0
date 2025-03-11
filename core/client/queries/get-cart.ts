@@ -25,6 +25,8 @@ const GetCartQuery = graphql(
             totalQuantity
             physicalItems {
               name
+              sku
+              url
               brand
               imageUrl
               entityId
