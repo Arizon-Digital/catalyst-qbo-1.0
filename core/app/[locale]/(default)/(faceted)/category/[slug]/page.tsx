@@ -30,8 +30,8 @@ async function getCategory(props: Props) {
   const { slug } = await props.params;
   const categoryId = Number(slug);
   const data = await getCategoryPageData({ categoryId });
-
   const category = data.category;
+  
 
   if (category == null) notFound();
 
@@ -112,6 +112,11 @@ async function getSubCategoriesFilters(props: Props): Promise<Filter[]> {
   ];
 }
 
+async function getUrl(props: Props): Promise<string | null> {
+  const category = await getCategory(props);
+
+  return category.defaultImage;
+}
 async function getTitle(props: Props): Promise<string | null> {
   const category = await getCategory(props);
 
@@ -135,6 +140,7 @@ async function getProducts(props: Props) {
 
   return search.products.items;
 }
+
 
 async function getListProducts(props: Props): Promise<ListProduct[]> {
   const products = await getProducts(props);
@@ -276,7 +282,7 @@ export default async function Category(props: Props) {
   const { locale } = await props.params;
 
   setRequestLocale(locale);
-
+  const categoryBannerImage = await getUrl(props);
   return (
     <>
       <ProductsListSection
@@ -297,6 +303,8 @@ export default async function Category(props: Props) {
         sortParamName="sort"
         title={getTitle(props)}
         totalCount={getTotalCount(props)}
+        categoryBannerImage={ categoryBannerImage}
+
       />
       <Stream value={Promise.all([getCategory(props), getProducts(props)])}>
         {([category, products]) => (
