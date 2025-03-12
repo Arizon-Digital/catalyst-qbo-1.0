@@ -34,18 +34,18 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
     const [isFloating, setIsFloating] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
-    
+
     useEffect(() => {
       if (!bannerElement) return;
-      
+
       const resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
         for (const entry of entries) {
           setBannerHeight(entry.contentRect.height);
         }
       });
-      
+
       resizeObserver.observe(bannerElement);
-      
+
       return () => {
         resizeObserver.disconnect();
       };
@@ -62,7 +62,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       window.addEventListener('resize', handleResize);
       return () => window.removeEventListener('resize', handleResize);
     }, []);
-    
+
     const toggleMobileMenu = () => {
       setMobileMenuOpen(!mobileMenuOpen);
       // Reset active dropdown when closing menu
@@ -72,11 +72,11 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
     const toggleDropdown = (index: number) => {
       setActiveDropdown(activeDropdown === index ? null : index);
     };
-    
+
     return (
       <div ref={ref}>
         {banner && <Banner ref={setBannerElement} {...banner} />}
-        
+
         <Headroom
           onUnfix={() => setIsFloating(false)}
           onUnpin={() => setIsFloating(true)}
@@ -91,23 +91,23 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 {navigation.currencies && navigation.currencies.length > 1 && navigation.currencyAction && (
                   <div className="flex items-center gap-1">
                     <span className="font-medium hidden sm:inline">Select Currency:</span>
-                    <CurrencySelector 
-                      currencies={navigation.currencies} 
-                      activeCurrencyId={navigation.activeCurrencyId} 
-                      currencyAction={navigation.currencyAction} 
+                    <CurrencySelector
+                      currencies={navigation.currencies}
+                      activeCurrencyId={navigation.activeCurrencyId}
+                      currencyAction={navigation.currencyAction}
                     />
                   </div>
                 )}
-                
+
                 <Link href="/about-us" className="flex items-center gap-1 text-white hover:text-gray-300 font-medium text-xs sm:text-sm">
                   <span>About Us</span>
                 </Link>
-                
+
                 <Link href="/contact-us" className="flex items-center gap-1 text-white hover:text-gray-300 font-medium text-xs sm:text-sm">
                   <Mail size={14} className="hidden sm:inline" />
                   <span>Contact Us</span>
                 </Link>
-                
+
                 <Link href="tel:+14388002658" className="flex items-center gap-1 text-white hover:text-gray-300 font-medium text-xs sm:text-sm">
                   <Phone size={14} className="hidden sm:inline" />
                   <span className="hidden sm:inline">CAN:</span>
@@ -116,7 +116,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               </div>
             </div>
           </div>
-          
+
           <div className={clsx(
             "bg-white transition-shadow relative",
             isFloating && "shadow-lg"
@@ -124,7 +124,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
             {/* Main header with logo, search, account and cart */}
             <div className="container mx-auto py-3 md:py-5 flex items-center justify-between px-4">
               {/* Hamburger menu for mobile */}
-              <button 
+              <button
                 className="lg:hidden flex items-center mr-2"
                 onClick={toggleMobileMenu}
                 aria-label="Toggle mobile menu"
@@ -135,13 +135,13 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   <Menu size={24} className="text-blue-900" />
                 )}
               </button>
-              
+
               {/* Logo section - Updated with larger sizes */}
               <div className="flex-shrink-0">
                 <Logo
                   className={clsx(navigation.mobileLogo != null ? 'hidden md:flex' : 'flex')}
-                  height={navigation.logoHeight || 130} 
-                  href={navigation.logoHref || '/'}
+                  height={navigation.logoHeight || 130}
+                  href="/"  
                   label={navigation.logoLabel || 'Quality Bearings Online'}
                   logo={navigation.logo}
                   width={navigation.logoWidth || 280}
@@ -150,17 +150,17 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   <Logo
                     className="flex md:hidden"
                     height={navigation.mobileLogoHeight || 70} // Increased to 70px for mobile
-                    href={navigation.logoHref || '/'}
-                    label={navigation.logoLabel || 'Quality Bearings Online'} 
+                    href="/"
+                    label={navigation.logoLabel || 'Quality Bearings Online'}
                     logo={navigation.mobileLogo}
                     width={navigation.mobileLogoWidth || 180}
                   />
                 )}
               </div>
-              
+
               {/* Search bar - hidden on smallest screens */}
               <div className="hidden sm:flex flex-grow max-w-xl mx-4">
-                <form 
+                <form
                   action={navigation.searchHref || '/search'}
                   method="get"
                   className="relative w-full"
@@ -171,8 +171,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     placeholder={navigation.searchInputPlaceholder || 'Search by reference'}
                     className="w-full border border-gray-300 rounded-l px-4 py-2 md:py-3 focus:outline-none focus:ring-1 focus:ring-blue-800"
                   />
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="absolute right-0 top-0 h-full bg-blue-900 text-white px-3 md:px-4 rounded-r"
                     aria-label={navigation.searchLabel || 'Search'}
                   >
@@ -180,11 +180,11 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   </button>
                 </form>
               </div>
-              
-              {/* User authentication and cart - simplified for mobile */}
+
+
               <div className="flex items-center gap-2 md:gap-6 lg:gap-8">
-                {/* Sign In/Register - simplified on mobile */}
-                <Link href="/account" className="flex items-center gap-2">
+
+                <Link href="/login" className="flex items-center gap-2">
                   <div className="flex-shrink-0">
                     <User size={24} className="text-blue-900" />
                   </div>
@@ -193,7 +193,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     <div>Register</div>
                   </div>
                 </Link>
-                
+
                 {/* Recently viewed - hide text on mobile */}
                 <Link href="/recently-viewed" className="flex items-center gap-2">
                   <div className="flex-shrink-0">
@@ -209,7 +209,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     <div>Viewed</div>
                   </div>
                 </Link>
-                
+
                 {/* Cart with count */}
                 <Link href="/cart" className="flex items-center gap-2">
                   <div className="flex-shrink-0 relative">
@@ -230,10 +230,10 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 </Link>
               </div>
             </div>
-            
+
             {/* Search bar for mobile - full width under header */}
             <div className="sm:hidden px-4 pb-3">
-              <form 
+              <form
                 action={navigation.searchHref || '/search'}
                 method="get"
                 className="relative w-full"
@@ -244,8 +244,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   placeholder={navigation.searchInputPlaceholder || 'Search by reference'}
                   className="w-full border border-gray-300 rounded-l px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-800"
                 />
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="absolute right-0 top-0 h-full bg-blue-900 text-white px-3 rounded-r"
                   aria-label={navigation.searchLabel || 'Search'}
                 >
@@ -253,7 +253,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 </button>
               </form>
             </div>
-            
+
             {/* Blue Category Navigation with full-width dropdown */}
             <nav className="bg-blue-950 relative hidden lg:block">
               <div className="container mx-auto">
@@ -262,14 +262,14 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     <ul className="m-0 p-0 list-none flex justify-center">
                       {links.map((item, index) => (
                         <li key={index} className="static group">
-                          <Link 
-                            href={item.href} 
+                          <Link
+                            href={item.href}
                             className="block text-white py-4 px-3 xl:px-5 hover:bg-blue-900 transition-colors font-medium text-sm whitespace-nowrap"
                           >
                             {item.label}
                             {item.groups && item.groups.length > 0 && <ChevronDown className="inline-block ml-1" size={14} />}
                           </Link>
-                          
+
                           {item.groups && item.groups.length > 0 && (
                             <div className="absolute left-0 w-full hidden group-hover:block bg-white shadow-lg z-50 border-t border-gray-200">
                               <div className="container mx-auto py-6">
@@ -277,8 +277,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                                   {item.groups.map((group, groupIndex) => (
                                     <div key={groupIndex} className="mb-4">
                                       {group.label && (
-                                        <Link 
-                                          href={group.href || '#'} 
+                                        <Link
+                                          href={group.href || '#'}
                                           className="block font-bold text-gray-800 mb-3 text-base hover:text-blue-800"
                                         >
                                           {group.label}
@@ -286,8 +286,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                                       )}
                                       <div>
                                         {group.links.map((link, linkIndex) => (
-                                          <Link 
-                                            key={linkIndex} 
+                                          <Link
+                                            key={linkIndex}
                                             href={link.href}
                                             className="block text-gray-600 py-1 text-sm hover:text-blue-800"
                                           >
@@ -308,59 +308,59 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 </Stream>
               </div>
             </nav>
-            
+
             {/* Mobile Navigation Menu - Slide in from left */}
             {mobileMenuOpen && (
               <div className="lg:hidden fixed inset-0 z-50 flex">
                 {/* Backdrop - darken the background */}
-                <div 
-                  className="fixed inset-0 bg-black bg-opacity-50" 
+                <div
+                  className="fixed inset-0 bg-black bg-opacity-50"
                   onClick={toggleMobileMenu}
                 ></div>
-                
+
                 {/* Slide-in menu */}
                 <div className="relative flex-1 flex flex-col w-full max-w-xs bg-white overflow-y-auto">
                   <div className="px-4 py-3 border-b border-gray-200">
                     <h2 className="text-lg font-medium text-blue-900">Menu</h2>
                   </div>
-                  
+
                   <Stream value={navigation.links || []}>
                     {(links) => (
                       <div className="divide-y divide-gray-100">
                         {links.map((item, index) => (
                           <div key={index} className="py-2">
                             <div className="flex items-center justify-between px-4">
-                              <Link 
-                                href={item.href || '#'} 
+                              <Link
+                                href={item.href || '#'}
                                 className="py-2 text-gray-900 font-medium"
                                 onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
                               >
                                 {item.label}
                               </Link>
-                              
+
                               {item.groups && item.groups.length > 0 && (
                                 <button
-                                  className="p-2 text-gray-500" 
+                                  className="p-2 text-gray-500"
                                   onClick={() => toggleDropdown(index)}
                                   aria-expanded={activeDropdown === index}
                                 >
-                                  <ChevronDown 
+                                  <ChevronDown
                                     className={clsx(
                                       "h-5 w-5 transition-transform",
                                       activeDropdown === index ? "rotate-180" : ""
-                                    )} 
+                                    )}
                                   />
                                 </button>
                               )}
                             </div>
-                            
+
                             {activeDropdown === index && item.groups && (
                               <div className="mt-2 pl-4 pr-2 pb-2">
                                 {item.groups.map((group, groupIndex) => (
                                   <div key={groupIndex} className="mb-3">
                                     {group.label && (
-                                      <Link 
-                                        href={group.href || '#'} 
+                                      <Link
+                                        href={group.href || '#'}
                                         className="block font-semibold text-gray-800 mb-2 hover:text-blue-800"
                                         onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
                                       >
@@ -369,8 +369,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                                     )}
                                     <div className="space-y-1 pl-2">
                                       {group.links.map((link, linkIndex) => (
-                                        <Link 
-                                          key={linkIndex} 
+                                        <Link
+                                          key={linkIndex}
                                           href={link.href}
                                           className="block text-gray-600 py-1 text-sm hover:text-blue-800"
                                           onClick={() => setMobileMenuOpen(false)}
@@ -388,7 +388,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                       </div>
                     )}
                   </Stream>
-                  
+
                   {/* Additional mobile menu links */}
                   <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
                     <Link href="/about-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
@@ -404,14 +404,14 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 </div>
               </div>
             )}
-            
+
             {/* Gold border below navigation */}
             <div className="h-[6px] w-full" style={{
               background: '#ca9618'
             }}></div>
           </div>
         </Headroom>
-        
+
         {/* Banner Section - Hidden on mobile */}
         <div className="border-t border-b border-gray-200 bg-white py-4 shadow-md hidden md:block">
           <div className="container mx-auto">
@@ -432,7 +432,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   </div>
                 </div>
               </div>
-              
+
               {/* 1-3 Day Delivery */}
               <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
                 <div className="flex items-center">
@@ -449,7 +449,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   </div>
                 </div>
               </div>
-              
+
               {/* Queen's Award */}
               <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
                 <div className="flex items-center">
@@ -466,7 +466,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   </div>
                 </div>
               </div>
-              
+
               {/* ISO Certificate */}
               <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
                 <div className="flex items-center">
@@ -483,7 +483,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   </div>
                 </div>
               </div>
-              
+
               {/* Feefo Rating */}
               <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start">
                 <div className="flex items-center">
