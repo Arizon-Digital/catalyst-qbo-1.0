@@ -11,6 +11,7 @@ import { Banner } from '@/vibes/soul/primitives/banner';
 import { Navigation } from '@/vibes/soul/primitives/navigation';
 import { Link } from '~/components/link';
 import { Logo } from '@/vibes/soul/primitives/logo';
+import { Stream } from '@/vibes/soul/lib/streamable';
 
 type CurrencyAction = (state: any, payload: FormData) => any | Promise<any>;
 
@@ -176,11 +177,15 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 <Link href="/cart" className="flex items-center gap-2">
                   <div className="flex-shrink-0 relative">
                     <ShoppingCart size={24} className="text-blue-900" />
-                    {cartCount > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                        {cartCount}
-                      </span>
-                    )}
+                    <Stream value={navigation.cartCount || 0}>
+                      {(count) => (
+                        count && count > 0 ? (
+                          <span className="absolute -top-2 -right-2 bg-blue-900 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                            {count}
+                          </span>
+                        ) : null
+                      )}
+                    </Stream>
                   </div>
                   <div className="text-xs md:text-sm hidden sm:block">
                     <div className="font-medium">Cart</div>
