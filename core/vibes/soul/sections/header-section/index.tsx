@@ -1,7 +1,7 @@
 'use client';
 
-import { forwardRef, useEffect, useState } from 'react';
-import { Phone, Mail, ChevronDown, Search, User, ShoppingCart, Menu, X } from 'lucide-react';
+import { forwardRef, useEffect, useState, useRef } from 'react';
+import { Phone, Mail, ChevronDown, Search, User, Menu, X, Trash2, ShoppingBag } from 'lucide-react';
 import { clsx } from 'clsx';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useTransition } from 'react';
@@ -12,6 +12,8 @@ import { Navigation } from '@/vibes/soul/primitives/navigation';
 import { Link } from '~/components/link';
 import { Logo } from '@/vibes/soul/primitives/logo';
 import { Stream } from '@/vibes/soul/lib/streamable';
+import { getCartData, getCartId } from '~/components/common-functions';
+import ViewedItemsPopover from './Recently Viewed Products Popover';
 
 type CurrencyAction = (state: any, payload: FormData) => any | Promise<any>;
 
@@ -27,8 +29,18 @@ interface Props {
 
 export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
   ({ navigation, banner }, ref) => {
+    const [isOpen, setIsOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
+
+    // MiniCart states
+    const [isCartOpen, setIsCartOpen] = useState(false);
+    const [removeError, setRemoveError] = useState<string | null>(null);
+    const [cartItems, setCartItems] = useState<any>({ lineItems: { physicalItems: [] } });
+    const [hasItems, setHasItems] = useState(false);
+    const cartRef = useRef<HTMLDivElement>(null);
+    const [cartId, setCartId] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
       const handleResize = () => {
@@ -41,6 +53,29 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // Initialize cart and set up outside click handler
+    useEffect(() => {
+      const initCart = async () => {
+        try {
+          const cartIdData = await getCartId();
+          setCartId(cartIdData);
+        } catch (error) {
+          console.error('Error getting cart ID:', error);
+        }
+      };
+
+      initCart();
+
+      const handleClickOutside = (event: MouseEvent) => {
+        if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+          setIsCartOpen(false);
+        }
+      };
+
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     const toggleMobileMenu = () => {
       setMobileMenuOpen(!mobileMenuOpen);
       if (mobileMenuOpen) setActiveDropdown(null);
@@ -48,6 +83,69 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
     const toggleDropdown = (index: number) => {
       setActiveDropdown(activeDropdown === index ? null : index);
+    };
+
+    // Load mini cart data
+    const loadMiniBag = async () => {
+      setIsCartOpen(true);
+      setLoading(true);
+
+      try {
+        // Get real cart data from your API
+        const cartData = await getCartData();
+        console.log("Cart data loaded (full cart):", cartData); // Debug full cart data
+
+        if (cartData?.lineItems?.physicalItems && cartData.lineItems.physicalItems.length > 0) {
+          // Debug the first item to see its structure
+          console.log("First cart item structure:", cartData.lineItems.physicalItems[0]);
+          setCartItems(cartData);
+          setHasItems(cartData?.lineItems?.physicalItems.length > 0);
+        } else {
+          setCartItems({ lineItems: { physicalItems: [] } });
+          setHasItems(false);
+        }
+      } catch (error) {
+        console.error('Error loading cart data:', error);
+        setCartItems({ lineItems: { physicalItems: [] } });
+        setHasItems(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Handle removing item from cart
+    const handleRemoveItem = async (e: React.FormEvent<HTMLFormElement>, lineItemEntityId: string) => {
+      e.preventDefault();
+      setLoading(true);
+
+      try {
+        // Import the removeItem function dynamically to avoid import errors
+        const removeItemModule = await import('~/app/[locale]/(default)/cart/_actions/remove-item');
+        const removeItem = removeItemModule.removeItem;
+
+        // Call the removeItem function with the correct parameters
+        const result = await removeItem({
+          lineItemEntityId,
+        });
+
+        // After removal, reload the cart data
+        await loadMiniBag();
+
+        if (result.status === 'error') {
+          setRemoveError(result.error || 'Failed to remove item');
+          console.error('Error removing item:', result.error);
+        } else {
+          setRemoveError(null);
+        }
+      } catch (error) {
+        console.error('Error removing item:', error);
+        setRemoveError('Failed to remove item');
+
+        // Fallback: If the import fails, manually reload the cart
+        await loadMiniBag();
+      } finally {
+        setLoading(false);
+      }
     };
 
     const navigationLinks = navigation?.links || [];
@@ -64,7 +162,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 <Link href="/about-us" className="flex items-center gap-1 text-white hover:text-gray-300 font-medium text-xs sm:text-sm">
                   <span>About Us</span>
                 </Link>
-                
+
                 {navigation.currencies && navigation.currencies.length > 0 && navigation.currencyAction && (
                   <div className="flex items-center gap-1">
                     <span className="font-medium hidden sm:inline">Select Currency:</span>
@@ -75,7 +173,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     />
                   </div>
                 )}
-                
+
                 <Link href="/contact-us" className="flex items-center gap-1 text-white hover:text-gray-300 font-medium text-xs sm:text-sm">
                   <Mail size={14} className="hidden sm:inline" />
                   <span>Contact Us</span>
@@ -108,7 +206,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 <Logo
                   className={clsx(navigation.mobileLogo != null ? 'hidden md:flex' : 'flex')}
                   height={navigation.logoHeight || 330}
-                  href="/"  
+                  href="/"
                   label={navigation.logoLabel || 'Quality Bearings Online'}
                   logo={navigation.logo}
                   width={navigation.logoWidth || 600}
@@ -160,37 +258,135 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 </Link>
 
                 <Link href="/recently-viewed" className="flex items-center gap-2">
-                  <div className="flex-shrink-0">
-                    <svg viewBox="0 0 24 24" width="24" height="24" className="text-blue-900" fill="none" stroke="currentColor" strokeWidth="2">
-                      <rect x="2" y="3" width="20" height="18" rx="2" />
-                      <line x1="8" y1="10" x2="16" y2="10" />
-                      <line x1="8" y1="14" x2="16" y2="14" />
-                      <line x1="8" y1="18" x2="16" y2="18" />
-                    </svg>
-                  </div>
+                  
                   <div className="text-xs md:text-sm hidden sm:block">
-                    <div className="font-medium">Recently</div>
-                    <div>Viewed</div>
+                    <ViewedItemsPopover />
                   </div>
                 </Link>
 
-                <Link href="/cart" className="flex items-center gap-2">
-                  <div className="flex-shrink-0 relative">
-                    <ShoppingCart size={24} className="text-blue-900" />
-                    <Stream value={navigation.cartCount || 0}>
-                      {(count) => (
-                        count && count > 0 ? (
-                          <span className="absolute -top-2 -right-2 bg-blue-900 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
-                            {count}
-                          </span>
-                        ) : null
-                      )}
-                    </Stream>
-                  </div>
-                  <div className="text-xs md:text-sm hidden sm:block">
-                    <div className="font-medium">Cart</div>
-                  </div>
-                </Link>
+                {/* MiniCart Component */}
+                <div className="relative" ref={cartRef}>
+                  <button
+                    onClick={() => loadMiniBag()}
+                    className="relative flex items-end gap-2 p-2 rounded-full mini-cart-btn"
+                    aria-label="Shopping cart"
+                  >
+                    <div className="flex-shrink-0 relative">
+                      <ShoppingBag size={24} className="text-blue-900" />
+                      <Stream value={navigation.cartCount || 2}>
+                        {(count) => (
+                          count && count > 0 ? (
+                            <span className="absolute -top-2 -right-2 bg-blue-900 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                              {count}
+                            </span>
+                          ) : null
+                        )}
+                      </Stream>
+                    </div>
+                    <div className="text-xs md:text-sm hidden sm:block">
+                      <div className="font-medium">Cart</div>
+                    </div>
+                  </button>
+
+                  {isCartOpen && (
+                    <div className="absolute right-0 top-12 w-96 z-50 bg-white rounded-lg border border-gray-200 shadow-sm card-cart">
+                      <div className="p-4">
+                        <div className="mb-4">
+                          <h2 className="text-lg font-bold">Shopping Cart</h2>
+                          {removeError && (
+                            <p className="text-red-500 text-sm">{removeError}</p>
+                          )}
+                        </div>
+
+                        <div className="max-h-96 overflow-y-auto">
+                          {hasItems && cartItems?.lineItems?.physicalItems?.length > 0 ? (
+                            <>
+                              {cartItems.lineItems.physicalItems.map((item: any, index: number) => (
+                                <div key={`cart-item-${item.id || index}`} className="py-4 border-b">
+                                  <div className="flex">
+                                    <div className="w-20 h-20 bg-gray-100 rounded mr-3">
+                                      {item.imageUrl ? (
+                                        <Link href={item.productUrl || item.url || `/product/${item.productId || item.id}` || '#'}>
+                                          <img
+                                            src={item.imageUrl}
+                                            alt={item.name || 'Product'}
+                                            className="w-full h-full object-contain"
+                                          />
+                                        </Link>
+                                      ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                                          No Image
+                                        </div>
+                                      )}
+                                    </div>
+                                    <div className="flex-1">
+                                      <div className="text-sm text-gray-600">{item.brand || ''}</div>
+                                      <Link
+                                        href={item.productUrl || item.url || `/product/${item.productId || item.id}` || '#'}
+                                        className="text-blue-600 font-medium block"
+                                      >
+                                        {item.name || 'Product Name'}
+                                      </Link>
+                                      <div className="text-sm text-gray-600 mt-1">
+                                        SKU: {item.entityId || ''}
+                                      </div>
+                                      <div className="mt-2">
+                                        <span className="text-sm">{item.quantity || 0} x </span>
+                                        <span className="font-bold">
+                                          {item.extendedSalePrice?.currencyCode || 'C$'}
+                                          {parseFloat(item.extendedSalePrice?.value || 0).toFixed(2)}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="ml-4">
+                                      <form onSubmit={(e) => handleRemoveItem(e, item.entityId || item.id || '')}>
+                                        <input type="hidden" name="lineItemEntityId" value={item.entityId || item.id || ''} />
+                                        <button
+                                          type="submit"
+                                          className="text-gray-500 hover:text-red-500"
+                                          aria-label="Remove item"
+                                        >
+                                          <Trash2 size={20} />
+                                        </button>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </>
+                          ) : (
+                            <>
+                              {loading ? (
+                                <div className="text-center py-4">Loading cart data...</div>
+                              ) : (
+                                <div className="text-center py-8 text-gray-500">
+                                  Your cart is empty
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </div>
+
+                        {hasItems && cartItems?.lineItems?.physicalItems?.length > 0 && (
+                          <div className="mt-4 space-y-2 flex flex-row gap-[10px]">
+                            <Link
+                              href="/checkout"
+                              className="w-full bg-[#ca9618] text-white font-bold text-sm text-center py-3 rounded hover:bg-[#b6871b]"
+                            >
+                              CHECKOUT NOW
+                            </Link>
+                            <Link
+                              href="/cart"
+                              className="w-full border border-gray-300 text-gray-700 font-medium text-sm text-center py-3 rounded hover:bg-gray-100"
+                            >
+                              VIEW CART
+                            </Link>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -276,6 +472,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
         <div className="h-[200px] w-full"></div>
 
+        {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden fixed inset-0 z-[60] flex">
             <div
@@ -367,6 +564,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
         <div className="border-t border-b border-gray-200 bg-white py-4 shadow-md hidden md:block mt-10">
           <div className="container mx-auto">
             <div className="flex flex-wrap justify-center md:justify-between items-center px-4">
+              {/* Features section - unchanged */}
               <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
                 <div className="flex items-center">
                   <img
@@ -486,7 +684,7 @@ function CurrencySelector({
           {currencies.map((currency) => (
             <DropdownMenu.Item
               className={clsx(
-                'cursor-default rounded-md bg-transparent px-2.5 py-2 text-sm font-medium text-gray-600 outline-none transition-colors hover:bg-gray-100 hover:text-gray-900',
+                'cursor-default rounded-md bg-transparent px-2.5 py-2 text-sm font-medium text-gray-600 outline-none transition-colors hover:bg-gray-100hover:text-gray-900',
                 {
                   'text-gray-900 font-semibold': currency.id === activeCurrencyId,
                 },

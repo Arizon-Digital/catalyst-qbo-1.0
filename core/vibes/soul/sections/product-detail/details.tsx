@@ -2,16 +2,14 @@ import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
 import { useFormatter, useTranslations } from 'next-intl';
  
 import { PricingFragment } from '~/client/fragments/pricing';
-import { ProductItemFragment } from '~/client/fragments/product-item';
-import { FragmentOf, graphql } from '~/client/graphql';
- 
-import { ProductForm } from './product-form';
-import { ProductFormFragment } from './product-form/fragment';
-import { ProductSchema, ProductSchemaFragment } from './product-schema';
-import { ReviewSummary, ReviewSummaryFragment } from './review-summary';
-import ProductPriceDisplay from './exclvat';
+
 import { Suspense } from 'react';
 import BulkPricing from './BulkPricing';
+import { FragmentOf, graphql } from '~/client/graphql';
+import { ProductItemFragment } from '~/client/fragments/fragments/product-item';
+import { ProductFormFragment } from '~/app/[locale]/(default)/product/[slug]/page-data';
+import { ProductSchemaFragment } from '~/app/[locale]/(default)/product/[slug]/_components/product-schema/fragment';
+import { ProductSchema } from '~/app/[locale]/(default)/product/[slug]/_components/product-schema';
  
 export const DetailsFragment = graphql(
   `
@@ -50,7 +48,7 @@ export const DetailsFragment = graphql(
     }
   `,
   [
-    ReviewSummaryFragment,
+    
     ProductSchemaFragment,
     ProductFormFragment,
     ProductItemFragment,
@@ -116,11 +114,7 @@ export const Details = ({ product }: Props) => {
         {/* <CurrencyTextWrapper /> */}
         <span className='cntpriced'>
           <Suspense>
-          <ProductPriceDisplay
-            product={product}
-            page="product"
-            currencyData=""
-          />
+         
           </Suspense>
         </span>
         <ProductForm data={product} />
