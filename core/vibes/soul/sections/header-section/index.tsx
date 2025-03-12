@@ -257,12 +257,12 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   </div>
                 </Link>
 
-                <Link href="/recently-viewed" className="flex items-center gap-2">
-                  
+              
+
                   <div className="text-xs md:text-sm hidden sm:block">
                     <ViewedItemsPopover />
                   </div>
-                </Link>
+                
 
                 {/* MiniCart Component */}
                 <div className="relative" ref={cartRef}>
@@ -368,16 +368,16 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                         </div>
 
                         {hasItems && cartItems?.lineItems?.physicalItems?.length > 0 && (
-                          <div className="mt-4 space-y-2 flex flex-row gap-[10px]">
-                            <Link
-                              href="/checkout"
-                              className="w-full bg-[#ca9618] text-white font-bold text-sm text-center py-3 rounded hover:bg-[#b6871b]"
+                          <div className="mt-4 flex flex-row gap-[10px]">
+                            <a
+                              href="https://secure.qualitybearingsonline.ca/checkout"
+                              className="w-full bg-[#ca9618] text-white font-bold text-sm text-center py-3 rounded-sm uppercase"
                             >
                               CHECKOUT NOW
-                            </Link>
+                            </a>
                             <Link
                               href="/cart"
-                              className="w-full border border-gray-300 text-gray-700 font-medium text-sm text-center py-3 rounded hover:bg-gray-100"
+                              className="w-full bg-white border border-gray-300 text-gray-700 font-medium text-sm text-center py-3 rounded-sm uppercase"
                             >
                               VIEW CART
                             </Link>
@@ -428,7 +428,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                       </Link>
 
                       {item.groups && item.groups.length > 0 && (
-                        <div className="absolute left-0 w-full hidden group-hover:block bg-white shadow-lg z-50 border-t border-gray-200">
+                        <div className="absolute left-0 w-full hidden group-hover:block bg-white shadow-lg z-50 border-t border-gray-200 max-w-[90%] ml-[120px]">
                           <div className="container mx-auto py-6">
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                               {item.groups.map((group, groupIndex) => (
@@ -561,18 +561,18 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
           </div>
         )}
 
+        {/* Features section - updated with consistent styling */}
         <div className="border-t border-b border-gray-200 bg-white py-4 shadow-md hidden md:block mt-10">
           <div className="container mx-auto">
             <div className="flex flex-wrap justify-center md:justify-between items-center px-4">
-              {/* Features section - unchanged */}
               <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
                 <div className="flex items-center">
                   <img
                     src="https://www.qualitybearingsonline.com/content/NewSite/Customer-Service.png"
-                    alt="Customer Service"
+                    alt="Free Delivery"
                     className="w-12 h-12 mr-3"
                   />
-                  <div className="text-sm font-medium">
+                  <div className="text-[14px] font-bold">
                     <Link href="/customer-service/" className="hover:text-blue-800">
                       Free Delivery<br />
                       Over $300.00
@@ -585,10 +585,10 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 <div className="flex items-center">
                   <img
                     src="https://www.qualitybearingsonline.com/content/NewSite/UK-Delivery.png"
-                    alt="USA Delivery"
+                    alt="DHL & UPS Delivery"
                     className="w-12 h-12 mr-3"
                   />
-                  <div className="text-sm font-medium">
+                  <div className="text-[14px] font-bold">
                     <Link href="/delivery-information/" className="hover:text-blue-800">
                       1-3 Day DHL & UPS<br />
                       Delivery
@@ -602,9 +602,9 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   <img
                     className="w-12 h-12 mr-3"
                     src="https://store-03842.mybigcommerce.com/content/Queens_Award_Logo_black.png"
-                    alt="Queen's Award For Enterprise For International Trade"
+                    alt="Queen's Award For Enterprise"
                   />
-                  <div className="text-sm font-medium">
+                  <div className="text-[14px] font-bold">
                     <Link href="/blog/9/" className="hover:text-blue-800">
                       Queen's Award For<br />
                       Enterprise Winners
@@ -620,7 +620,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     alt="ISO Certificate"
                     className="w-12 h-12 mr-3"
                   />
-                  <div className="text-sm font-medium">
+                  <div className="text-[14px] font-bold">
                     <Link href="https://store-03842.mybigcommerce.com/content/ISO_9001_2015_Certificate.pdf" target="_blank" className="hover:text-blue-800">
                       ISO 9001 : 2015<br />
                       Cert. No.291342018
