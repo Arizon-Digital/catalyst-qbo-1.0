@@ -105,7 +105,7 @@ export default async function Cart() {
             style: 'currency',
             currency: cart.currencyCode,
           }),
-          totalLabel: t('CheckoutSummary.total'),
+          totalLabel: t('CheckoutSummary.grandTotal'),
           summaryItems: [
             {
               label: t('CheckoutSummary.subTotal'),

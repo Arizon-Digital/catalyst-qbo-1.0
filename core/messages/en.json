@@ -46,6 +46,10 @@
       "cta": "See all"
     }
   },
+ "Currencies" :{
+  
+"title": "Select Currency"
+ },
   "ChangePassword": {
     "title": "Change password",
     "heading": "Change password",
@@ -89,7 +93,7 @@
     },
     "ForgotPassword": {
       "title": "Forgot password",
-      "heading": "Forgot password",
+      "heading": "Reset password",
       "Form": {
         "description": "Enter the email associated with your account below. We'll send you instructions to reset your password.",
         "emailLabel": "Email",
@@ -97,7 +101,7 @@
         "recaptchaText": "Pass ReCAPTCHA check",
         "confirmResetPassword": "If the email address {email} is linked to an account in our store, we have sent you a password reset email. Please check your inbox and spam folder if you don't see it.",
         "submitting": "Submitting...",
-        "submit": "Reset password"
+        "submit": "RESET PASSWORD"
       },
       "Errors": {
         "error": "Unknown error."
@@ -314,9 +318,9 @@
       "spinnerText": "Removing...",
       "couponCodeRemoveFailed": "There was an error removing the coupon code. Please try again.",
       "tax": "Tax",
-      "total": "Total",
-      "shipping": "Shipping",
-      "shippingCost": "Shipping cost",
+      "grandTotal": "Grand total",
+      "shipping": "Shipping:",
+      "shippingCost": "Shipping cost:",
       "handlingCost": "Handling cost",
       "add": "Add",
       "change": "Change",
@@ -337,13 +341,13 @@
       "statePlaceholder": "Select state",
       "city": "Suburb/city",
       "cityPlaceholder": "City",
-      "postcode": "Zip/Postcode",
+      "postcode": "Postal Code",
       "postcodePlaceholder": "Postal code",
       "errorMessage": "Something went wrong, please try again."
     },
     "SubmitShippingInfo": {
       "spinnerText": "Submitting...",
-      "submitText": "Estimate shipping"
+      "submitText": "CALCULATE SHIPPING"
     },
     "ShippingCost": {
       "shippingOptions": "Available options",
@@ -406,6 +410,22 @@
     }
   },
   "Product": {
+  	"TechData": {
+      "title": "Techcnical Data"
+    },
+    "Bulk": {
+      "title": "Bulkpricing"
+    },
+    "loading": "Loading...",
+    "Carousel": {
+      "relatedProducts": "Related products"
+    },
+    "Gallery": {
+      "previous": "Previous product image",
+      "next": "Next product image",
+      "thumbnailNavigation": "Thumbnail navigation",
+      "enlarge": "Enlarge product image"
+    },
     "ProductDetails": {
       "quantity": "Quantity",
       "increaseQuantity": "Increase quantity",

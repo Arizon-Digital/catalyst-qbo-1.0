@@ -34,6 +34,8 @@ const BlogPostsPageQuery = graphql(
       site {
         content {
           blog {
+            name
+            description
             posts(first: $first, after: $after, last: $last, before: $before, filters: $filters) {
               edges {
                 node {

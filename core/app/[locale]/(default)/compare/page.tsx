@@ -38,6 +38,16 @@ const CompareParamsSchema = z.object({
     .transform((value) => value?.map((id) => parseInt(id, 10))),
 });
 
+// Helper function to format currency
+const formatPrice = (price: number, currencyCode: string, format: any) => {
+  const formattedPrice = format.number(price, {
+    style: 'currency',
+    currency: currencyCode,
+  });
+  
+  return formattedPrice.replace('CA$', 'C$');
+};
+
 const ComparePageQuery = graphql(
   `
     query ComparePageQuery($entityIds: [Int!], $first: Int, $currencyCode: currencyCode) {
@@ -50,6 +60,20 @@ const ComparePageQuery = graphql(
               path
               brand {
                 name
+              }
+              sku
+              weight {
+                value
+                unit
+              }
+              customFields {
+                edges {
+                  node {
+                    entityId
+                    name
+                    value
+                  }
+                }
               }
               defaultImage {
                 altText
@@ -71,6 +95,10 @@ const ComparePageQuery = graphql(
                 aggregated {
                   availableToSell
                 }
+              }
+              availabilityV2 {
+                description
+                status
               }
               ...AddToCartFragment
               ...PricingFragment
@@ -119,6 +147,7 @@ export default async function Compare(props: Props) {
   const products = removeEdgesAndNodes(data.site.products).map((product) => ({
     ...product,
     productOptions: removeEdgesAndNodes(product.productOptions),
+    customFields: removeEdgesAndNodes(product.customFields),
   }));
 
   if (!products.length) {
