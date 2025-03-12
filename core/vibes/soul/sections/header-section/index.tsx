@@ -64,7 +64,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   <span>About Us</span>
                 </Link>
                 
-                {navigation.currencies && navigation.currencies.length > 1 && navigation.currencyAction && (
+                {navigation.currencies && navigation.currencies.length > 0 && navigation.currencyAction && (
                   <div className="flex items-center gap-1">
                     <span className="font-medium hidden sm:inline">Select Currency:</span>
                     <CurrencySelector
@@ -176,6 +176,11 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 <Link href="/cart" className="flex items-center gap-2">
                   <div className="flex-shrink-0 relative">
                     <ShoppingCart size={24} className="text-blue-900" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {cartCount}
+                      </span>
+                    )}
                   </div>
                   <div className="text-xs md:text-sm hidden sm:block">
                     <div className="font-medium">Cart</div>
@@ -470,7 +475,7 @@ function CurrencySelector({
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           align="end"
-          className="z-50 max-h-80 overflow-y-scroll rounded-md bg-white p-2 shadow-xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 w-32"
+          className="z-[10000] max-h-80 overflow-y-scroll rounded-md bg-white p-2 shadow-xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 w-32"
           sideOffset={16}
         >
           {currencies.map((currency) => (
