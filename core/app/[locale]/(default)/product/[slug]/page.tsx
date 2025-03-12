@@ -16,8 +16,7 @@ import { addToCart } from './_actions/add-to-cart';
 import { ProductSchema } from './_components/product-schema';
 import { ProductViewed } from './_components/product-viewed';
 import { PaginationSearchParamNames, Reviews } from './_components/reviews';
-import { getProductData } from './page-data';
-import TabComponent from '@/vibes/soul/sections/product-detail/tab';
+import { getProductData } from '@/arizon/soul/pages/product/[slug]/page-data';
 
 const cachedProductDataVariables = cache(
   async (productId: string, searchParams: Props['searchParams']) => {
@@ -80,37 +79,63 @@ const getProduct = async (props: Props) => {
   const accordions = [
     ...(specifications.length
       ? [
-          {
-            title: t('specifications'),
-            content: (
-              <div className="prose @container">
-                <dl className="flex flex-col gap-4">
-                  {specifications.map((field, index) => (
-                    <div className="grid grid-cols-1 gap-2 @lg:grid-cols-2" key={index}>
-                      <dt>
-                        <strong>{field.name}</strong>
-                      </dt>
-                      <dd>{field.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-            ),
-          },
-        ]
+        {
+          title: t('specifications'),
+          content: (
+            <div className="prose @container">
+              <dl className="flex flex-col gap-4">
+                {specifications.map((field, index) => (
+                  <div className="grid grid-cols-1 gap-2 @lg:grid-cols-2" key={index}>
+                    <dt>
+                      <strong>{field.name}</strong>
+                    </dt>
+                    <dd>{field.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ),
+        },
+      ]
       : []),
     ...(product.warranty
       ? [
-          {
-            title: t('warranty'),
-            content: (
-              <div className="prose" dangerouslySetInnerHTML={{ __html: product.warranty }} />
-            ),
-          },
-        ]
+        {
+          title: t('warranty'),
+          content: (
+            <div className="prose" dangerouslySetInnerHTML={{ __html: product.warranty }} />
+          ),
+        },
+      ]
       : []),
   ];
 
+  const categories = (product?.categories) ? removeEdgesAndNodes(product?.categories) : [];
+
+  // Find the category with the longest breadcrumb trail
+  const categoryWithMostBreadcrumbs = categories.reduce((longest, current) => {
+    const longestLength = longest?.breadcrumbs?.edges?.length || 0;
+    const currentLength = current?.breadcrumbs?.edges?.length || 0;
+    return currentLength > longestLength ? current : longest;
+  }, categories[0]);
+
+  // Create breadcrumbs structure only for the most complete path
+  const categoryWithBreadcrumbs = categoryWithMostBreadcrumbs
+    ? {
+      ...categoryWithMostBreadcrumbs,
+      breadcrumbs: {
+        edges: [
+          ...(categoryWithMostBreadcrumbs?.breadcrumbs?.edges || []),
+          {
+            node: {
+              name: product.name || '',
+              path: '#',
+            },
+          },
+        ].filter(Boolean),
+      },
+    }
+    : null;
   return {
     id: product.entityId.toString(),
     title: product.name,
@@ -125,6 +150,7 @@ const getProduct = async (props: Props) => {
     rating: product.reviewSummary.averageRating,
     accordions,
     sku: product.sku,
+    breadcrumbs: categoryWithBreadcrumbs,
   };
 };
 
@@ -157,7 +183,7 @@ const getCtaLabel = async (props: Props) => {
 
   return t('addToCart');
 };
-console.log("getCtaLabel", getCtaLabel)
+
 const getCtaDisabled = async (props: Props) => {
   const { slug } = await props.params;
   const variables = await cachedProductDataVariables(slug, props.searchParams);
@@ -177,7 +203,7 @@ const getCtaDisabled = async (props: Props) => {
 
   return false;
 };
-console.log("getCtaDisabled", getCtaDisabled)
+
 
 const getRelatedProducts = async (props: Props) => {
   const format = await getFormatter();
@@ -212,13 +238,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     keywords: metaKeywords ? metaKeywords.split(',') : null,
     openGraph: url
       ? {
-          images: [
-            {
-              url,
-              alt,
-            },
-          ],
-        }
+        images: [
+          {
+            url,
+            alt,
+          },
+        ],
+      }
       : null,
   };
 }
@@ -238,7 +264,7 @@ export default async function Product(props: Props) {
   const productId = Number(slug);
   const variables = await cachedProductDataVariables(slug, props.searchParams);
   const parsedSearchParams = searchParamsCache.parse(props.searchParams);
-
+  
   return (
     <>
       <ProductDetail
@@ -254,7 +280,6 @@ export default async function Product(props: Props) {
         productId={productId}
         quantityLabel={t('ProductDetails.quantity')}
         thumbnailLabel={t('ProductDetails.thumbnail')}
-        sku={props?.sku}
       />
 
       <FeaturedProductsCarousel
@@ -269,7 +294,7 @@ export default async function Product(props: Props) {
       />
 
       {/* <Reviews productId={productId} searchParams={parsedSearchParams} /> */}
-    {/* <TabComponent /> */}
+      {/* <TabComponent /> */}
       <Stream fallback={null} value={getProductData(variables)}>
         {(product) => (
           <>

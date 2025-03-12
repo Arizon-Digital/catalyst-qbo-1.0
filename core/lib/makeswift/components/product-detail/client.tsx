@@ -12,7 +12,7 @@ import React, {
 } from 'react';
 
 import { Stream, type Streamable } from '@/vibes/soul/lib/streamable';
-import { ProductDetail, ProductDetailSkeleton } from '@/vibes/soul/sections/product-detail';
+import { ProductDetail, ProductDetailSkeleton } from '@/arizon/soul/sections/product-detail';
 import { mergeSections } from '~/lib/makeswift/utils/merge-sections';
 
 type VibesProductDetailProps = ComponentPropsWithoutRef<typeof ProductDetail>;
