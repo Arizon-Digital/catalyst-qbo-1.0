@@ -1,5 +1,4 @@
 import { clsx } from 'clsx';
-
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
@@ -40,14 +39,14 @@ export function Logo({ className, logo: streamableLogo, href, width, height, lab
             className,
           )}
           href={href}
-          style={typeof logo === 'string' ? {} : { width, height }}
+          style={typeof logo === 'string' ? {} : { width: 600, height: 100 }}
         >
           {typeof logo === 'object' && logo !== null && logo.src !== '' ? (
             <Image
               alt={logo.alt}
               className="object-contain object-left"
               fill
-              sizes={`${width}px`}
+              sizes="600px"
               src={logo.src}
             />
           ) : (
