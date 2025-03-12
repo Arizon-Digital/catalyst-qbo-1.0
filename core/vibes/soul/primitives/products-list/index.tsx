@@ -106,7 +106,7 @@ export function ProductsListSkeleton({
     <div className={clsx('w-full @container', className)} data-pending={pending ? '' : undefined}>
       <div className="mx-auto grid grid-cols-1 gap-x-4 gap-y-6 @sm:grid-cols-2 @2xl:grid-cols-3 @2xl:gap-x-5 @2xl:gap-y-8 @5xl:grid-cols-4 @7xl:grid-cols-5">
         {Array.from({ length: placeholderCount }).map((_, index) => (
-          <ProductCardSkeleton key={index} />
+          <ProductCardSkeleton key={index} />   
         ))}
       </div>
     </div>

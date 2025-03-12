@@ -21,7 +21,7 @@ interface Props {
   additionalProductIds: string[];
 }
 
-export function useProducts({ collection, collectionLimit = 20, additionalProductIds }: Props) {
+export function useProducts({ collection, collectionLimit = 40, additionalProductIds }: Props) {
   const bcProductToVibesProduct = useBcProductToVibesProduct();
 
   const { data: collectionData, isLoading: isCollectionLoading } = useSWR(

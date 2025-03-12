@@ -132,11 +132,11 @@ export function FiltersPanelInner({
   const linkGroupFilters = filters.filter((filter) => filter.type === 'link-group');
 
   return (
-    <div className={clsx('space-y-5', className)} data-pending={isPending ? true : null}>
+    <div className={clsx('space-y-5 border border-[#dcdcdc] !important rounded-[4px] shadow-[0_3px_0_#dcdcdc]', className)} data-pending={isPending ? true : null}>
       {linkGroupFilters.map((linkGroup, index) => (
         <div key={index.toString()}>
-          <h3 className="py-4 font-mono text-sm uppercase text-contrast-400">{linkGroup.label}</h3>
-          <ul>
+          <h3 className="py-4 font-mono text-sm uppercase text-contrast-400 ml-8">{linkGroup.label}</h3>
+          <ul className='ml-8'>
             {linkGroup.links.map((link, linkIndex) => (
               <li className="py-2" key={linkIndex.toString()}>
                 <Link
@@ -299,7 +299,7 @@ export function FiltersPanelInner({
 
 export function FiltersSkeleton() {
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 ">
       <AccordionSkeleton>
         <ToggleGroupSkeleton options={4} seed={2} />
       </AccordionSkeleton>

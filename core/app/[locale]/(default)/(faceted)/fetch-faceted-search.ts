@@ -167,7 +167,7 @@ interface ProductSearch {
 }
 
 const getProductSearchResults = cache(
-  async ({ limit = 9, after, before, sort, filters }: ProductSearch) => {
+  async ({ limit = 24, after, before, sort, filters }: ProductSearch) => {
     const customerAccessToken = await getSessionCustomerAccessToken();
     const currencyCode = await getPreferredCurrencyCode();
     const filterArgs = { filters, sort };
