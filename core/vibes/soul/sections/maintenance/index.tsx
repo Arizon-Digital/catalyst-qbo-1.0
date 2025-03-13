@@ -1,6 +1,6 @@
 import { MailIcon, PhoneIcon } from 'lucide-react';
 
-import { Logo } from '@/vibes/soul/primitives/logo';
+import { Logo } from '@/arizon/soul/primitives/logo';
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 import { Link } from '~/components/link';
 

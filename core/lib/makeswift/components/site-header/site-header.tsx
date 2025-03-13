@@ -1,7 +1,7 @@
 import { MakeswiftComponent } from '@makeswift/runtime/next';
 import { type ComponentPropsWithoutRef } from 'react';
 
-import { HeaderSection } from '@/vibes/soul/sections/header-section';
+import { HeaderSection } from '@/arizon/soul/sections/header-section';
 import { getComponentSnapshot } from '~/lib/makeswift/client';
 
 import { PropsContextProvider } from './site-header.client';

@@ -6,8 +6,9 @@ import {
   ProductCard,
   ProductCardSkeleton,
 } from '@/vibes/soul/primitives/product-card';
+import { CompareDrawer } from '@/arizon/soul/primitives/products-list/compare-drawer';
 
-import { CompareDrawer } from './compare-drawer';
+
 
 export type ListProduct = CardProduct;
 

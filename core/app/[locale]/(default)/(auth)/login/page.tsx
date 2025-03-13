@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
-import { SignInSection } from '@/vibes/soul/sections/sign-in-section';
+import { SignInSection } from '@/arizon/soul/sections/sign-in-section';
 import { ForceRefresh } from '~/components/force-refresh';
 
 import { login } from './_actions/login';

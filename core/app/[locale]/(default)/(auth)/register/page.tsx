@@ -5,7 +5,7 @@ import { getTranslations } from 'next-intl/server';
 // TODO: Add recaptcha token
 // import { bypassReCaptcha } from '~/lib/bypass-recaptcha';
 
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
+import { DynamicFormSection } from '@/arizon/soul/sections/dynamic-form-section';
 import { formFieldTransformer } from '~/data-transformers/form-field-transformer';
 import {
   CUSTOMER_FIELDS_TO_EXCLUDE,

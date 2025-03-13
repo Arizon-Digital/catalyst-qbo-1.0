@@ -1,11 +1,12 @@
+import { CartClient, Cart as CartData, CartLineItem, Props as CartProps } from '@/arizon/soul/sections/cart/client';
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 import { StickySidebarLayout } from '@/vibes/soul/sections/sticky-sidebar-layout';
 
-import { CartClient, Cart as CartData, CartLineItem, Props as CartProps } from './client';
+// import { CartClient, Cart as CartData, CartLineItem, Props as CartProps } from './client';
 
-export { type CartLineItem } from './client';
+export { type CartLineItem } from '@/arizon/soul/sections/cart/client';
 
 export function Cart<LineItem extends CartLineItem>({
   cart: streamableCart,

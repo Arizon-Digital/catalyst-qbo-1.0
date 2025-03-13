@@ -1,7 +1,7 @@
 import { MakeswiftComponent } from '@makeswift/runtime/next';
 import { type ComponentPropsWithoutRef } from 'react';
 
-import { Footer as VibesFooter } from '@/vibes/soul/sections/footer';
+import { Footer as VibesFooter } from '@/arizon/soul/sections/footer';
 import { getComponentSnapshot } from '~/lib/makeswift/client';
 
 import { PropsContextProvider } from './site-footer.client';

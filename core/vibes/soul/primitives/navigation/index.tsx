@@ -23,7 +23,7 @@ import { useFormStatus } from 'react-dom';
 import { FormStatus } from '@/vibes/soul/form/form-status';
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { Button } from '@/vibes/soul/primitives/button';
-import { Logo } from '@/vibes/soul/primitives/logo';
+import { Logo } from '@/arizon/soul/primitives/logo';
 import { Price } from '@/vibes/soul/primitives/price-label';
 import { ProductCard } from '@/vibes/soul/primitives/product-card';
 import { Link } from '~/components/link';

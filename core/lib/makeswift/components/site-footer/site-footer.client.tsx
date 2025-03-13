@@ -9,7 +9,7 @@ import {
   useContext,
 } from 'react';
 
-import { Footer } from '@/vibes/soul/sections/footer';
+import { Footer } from '@/arizon/soul/sections/footer';
 
 import { mergeSections } from '../../utils/merge-sections';
 

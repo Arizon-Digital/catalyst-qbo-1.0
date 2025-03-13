@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 
-import { ResetPasswordSection } from '@/vibes/soul/sections/reset-password-section';
+
 import { redirect } from '~/i18n/routing';
 
 import { changePassword } from './_actions/change-password';

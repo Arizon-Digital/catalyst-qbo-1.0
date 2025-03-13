@@ -10,7 +10,7 @@ import {
   useContext,
 } from 'react';
 
-import { HeaderSection } from '@/vibes/soul/sections/header-section';
+import { HeaderSection } from '@/arizon/soul/sections/header-section';
 
 type HeaderSectionProps = ComponentPropsWithoutRef<typeof HeaderSection>;
 
