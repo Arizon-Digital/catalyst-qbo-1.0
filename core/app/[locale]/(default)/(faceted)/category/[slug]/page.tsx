@@ -112,10 +112,14 @@ async function getSubCategoriesFilters(props: Props): Promise<Filter[]> {
   ];
 }
 
-async function getUrl(props: Props) {
-  const category = await getCategory(props);
+async function getCategoryImageUrl(props: Props) {
+  try{
+    const category = await getCategory(props);
+    return category.defaultImage;
+  } catch(error) {
+    console.error('Error fetching data:', error);
 
-  return category.defaultImage;
+  }
 }
 async function getTitle(props: Props): Promise<string | null> {
   const category = await getCategory(props);
@@ -151,7 +155,7 @@ async function getListProducts(props: Props): Promise<ListProduct[]> {
     title: product.name,
     href: product.path,
     image: product.defaultImage
-      ? { src: product.defaultImage.url, alt: product.defaultImage.altText }
+      ? { src: product.defaultImage.urlResize, alt: product.defaultImage.altText }
       : undefined,
     price: pricesTransformer(product.prices, format),
     subtitle: product.brand?.name ?? undefined,
@@ -303,7 +307,7 @@ export default async function Category(props: Props) {
         sortParamName="sort"
         title={getTitle(props)}
         totalCount={getTotalCount(props)}
-        categoryBannerImage={ getUrl(props)}
+        categoryBannerImage={getCategoryImageUrl(props)}
 
       />
       <Stream value={Promise.all([getCategory(props), getProducts(props)])}>

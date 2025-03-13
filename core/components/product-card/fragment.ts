@@ -9,6 +9,7 @@ export const ProductCardFragment = graphql(
       defaultImage {
         altText
         url: urlTemplate(lossy: true)
+        urlResize: url(width: 340, height: 340, lossy: true)
       }
       path
       brand {
