@@ -1,11 +1,14 @@
+
+
 'use client';
 
 import { forwardRef, useEffect, useState, useRef } from 'react';
-import { Phone, Mail, ChevronDown, Search, User, Menu, X, Trash2, ShoppingBag } from 'lucide-react';
+import { Phone, Mail, ChevronDown, Search, Menu, X, Trash2, ShoppingBag } from 'lucide-react';
 import { clsx } from 'clsx';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useTransition } from 'react';
 import { useActionState } from 'react';
+
 
 import { Banner } from '@/vibes/soul/primitives/banner';
 import { Navigation } from '@/vibes/soul/primitives/navigation';
@@ -14,6 +17,8 @@ import { Logo } from '@/vibes/soul/primitives/logo';
 import { Stream } from '@/vibes/soul/lib/streamable';
 import { getCartData, getCartId } from '~/components/common-functions';
 import ViewedItemsPopover from './Recently Viewed Products Popover';
+import { BcImage } from '~/components/bc-image';
+import { Button } from '~/components/ui/button/button';
 
 type CurrencyAction = (state: any, payload: FormData) => any | Promise<any>;
 
@@ -32,6 +37,12 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
     const [isOpen, setIsOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
+    
+    // Add this line to define customerAccessToken with a default value
+    const [customerAccessToken, setCustomerAccessToken] = useState<string | null>(null);
+    
+    // Add miniCartIcon variable with the specific image URL
+    const miniCartIcon = "https://www.qualitybearingsonline.ca/_next/static/media/mini-cart-icon.a78bafe5.png";
 
     // MiniCart states
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -59,6 +70,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
         try {
           const cartIdData = await getCartId();
           setCartId(cartIdData);
+          
+          
         } catch (error) {
           console.error('Error getting cart ID:', error);
         }
@@ -247,22 +260,61 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
               <div className="flex items-center gap-2 md:gap-6 lg:gap-8">
 
-                <Link href="/login" className="flex items-center gap-2">
-                  <div className="flex-shrink-0">
-                    <User size={24} className="text-blue-900" strokeWidth={2} />
+                {customerAccessToken ? (
+                  <div className="flex items-center">
+                    <div className='user-icon'>
+                      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
+                        <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
+                        <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
+                      </svg>
+                    </div>
+                    <div className='flex sign/registration'>
+                      <Link
+                        href="/account"
+                        className="flex items-center p-0"
+                        aria-label="My Account"
+                      >
+                        Account
+                      </Link>
+                      <form action={() => {
+                        // Replace with your actual logout action
+                        setCustomerAccessToken(null);
+                        // Example: localStorage.removeItem('customerToken');
+                      }}>
+                        <Button
+                          type="submit"
+                          variant="subtle"
+                          className="p-0 hover:bg-transparent"
+                        >
+                          Sign Out
+                        </Button>
+                      </form>
+                    </div>
                   </div>
-                  <div className="text-xs md:text-sm hidden sm:block">
-                    <div className="font-medium">Sign In</div>
-                    <div className="font-medium">Register</div>
+                ) : (
+                  <div className="flex items-center">
+                    <div className='user-icon'>
+                      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
+                        <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
+                        <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
+                      </svg>
+                    </div>
+                    <div className='flex flex-col sign/registration text-[#1c2541] font-light'>
+                      <Link aria-label="Login" className="flex items-center ml-1" href="/login">
+                        Sign In
+                      </Link>
+                      <Link aria-label="Registration" className="ml-1" href="/register/">
+                        Register
+                      </Link>
+                    </div>
                   </div>
-                </Link>
+                )}
 
-              
-
-                  <div className="text-xs md:text-sm hidden sm:block">
-                    <ViewedItemsPopover />
-                  </div>
-                
+                <div className="text-xs md:text-sm hidden sm:block">
+                  <ViewedItemsPopover />
+                </div>
 
                 {/* MiniCart Component */}
                 <div className="relative" ref={cartRef}>
@@ -271,21 +323,22 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     className="relative flex items-end gap-2 p-2 rounded-full mini-cart-btn"
                     aria-label="Shopping cart"
                   >
-                    <div className="flex-shrink-0 relative">
-                      <ShoppingBag size={24} className="text-blue-900" />
-                      <Stream value={navigation.cartCount || 2}>
-                        {(count) => (
-                          count && count > 0 ? (
-                            <span className="absolute -top-2 -right-2 bg-blue-900 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
-                              {count}
-                            </span>
-                          ) : null
-                        )}
-                      </Stream>
-                    </div>
-                    <div className="text-xs md:text-sm hidden sm:block">
-                      <div className="font-medium">Cart</div>
-                    </div>
+                    {miniCartIcon ? (
+                      <BcImage
+                        src={miniCartIcon}
+                        alt="mini-cart"
+                        width={50}
+                        height={50}
+                      />
+                    ) : (
+                      <ShoppingBag size={30} className="text-blue-900" />
+                    )}
+                    
+                    <span className="absolute right-1.5 mini-cart-count top-3 h-[20px] w-[30px] flex items-center justify-center rounded-full bg-[#1c2541] text-white text-xs font-bold mini-cart-badge">
+                      {navigation.cartCount || 0}
+                    </span>
+                    
+                    <span className="text-[#1a2348] mini-cart-text block font-light text-sm">Cart</span>
                   </button>
 
                   {isCartOpen && (
@@ -649,6 +702,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
   },
 );
 
+HeaderSection.displayName = 'HeaderSection';
+
 function CurrencySelector({
   currencies,
   activeCurrencyId,
@@ -706,5 +761,3 @@ function CurrencySelector({
     </DropdownMenu.Root>
   );
 }
-
-HeaderSection.displayName = 'HeaderSection';

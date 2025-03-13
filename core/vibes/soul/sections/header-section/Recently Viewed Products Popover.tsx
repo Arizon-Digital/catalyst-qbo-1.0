@@ -99,26 +99,49 @@ const ViewedItemsPopover = () => {
     <Popover.Root>
       <Popover.Trigger asChild>
         <button className="flex items-center gap-2" aria-label="Recently viewed products">
-          <div className="flex-shrink-0">
-            <svg 
-              width="24" 
-              height="24" 
-              viewBox="0 0 24 24" 
-              className="text-blue-900" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2"
-            >
-              <rect x="2" y="3" width="20" height="18" rx="2" />
-              <line x1="8" y1="10" x2="16" y2="10" />
-              <line x1="8" y1="14" x2="16" y2="14" />
-              <line x1="8" y1="18" x2="16" y2="18" />
-            </svg>
-          </div>
-          <div className="text-xs md:text-sm hidden sm:block">
-            <div className="font-medium">Recently</div>
-            <div>Viewed</div>
-          </div>
+        <div className='flex mr-[20px] items-center'>
+              <div className="mr-3">
+                <svg
+                  width="45"
+                  height="50"
+                  viewBox="0 0 100 100"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="20"
+                    y="15"
+                    width="60"
+                    height="70"
+                    rx="1"
+                    stroke="#1A2A47"
+                    strokeWidth="5"
+                    fill="none"
+                  ></rect>
+                  <rect x="27" y="25" width="8" height="8" rx="1" fill="#1A2A47"></rect>
+                  <rect x="40" y="27" width="30" height="4" fill="#1A2A47"></rect>
+                  <rect x="27" y="45" width="8" height="8" rx="1" fill="#1A2A47"></rect>
+                  <rect x="40" y="47" width="30" height="4" fill="#1A2A47"></rect>
+                  <rect x="27" y="65" width="8" height="8" rx="1" fill="#1A2A47"></rect>
+                  <rect x="40" y="67" width="15" height="4" fill="#1A2A47"></rect>
+                  <circle
+                    cx="80"
+                    cy="65"
+                    r="12"
+                    stroke="#1A2A47"
+                    strokeWidth="4"
+                    fill="#ffffff"
+                  ></circle>
+                  <line x1="80" y1="65" x2="80" y2="58" stroke="#1A2A47" strokeWidth="2"></line>
+                  <line x1="80" y1="65" x2="87" y2="65" stroke="#1A2A47" strokeWidth="2"></line>
+                </svg>
+              </div>
+              <div className='flex flex-col items-center recently-viewed'>
+              <p className="recently text-[#1c2541]"> Recently </p>
+              <p className="recently text-[#1c2541]"> Viewed </p>
+              
+              </div>
+            </div>
         </button>
       </Popover.Trigger>
       
