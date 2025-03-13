@@ -24,6 +24,8 @@ import { getToastNotification } from '../../lib/server-toast';
 import { CookieNotifications, Notifications } from '../notifications';
 import { Providers } from '../providers';
 
+import { Oswald, Roboto_Slab } from 'next/font/google';
+
 import '~/lib/makeswift/components';
 
 const RootLayoutMetadataQuery = graphql(`
@@ -40,6 +42,18 @@ const RootLayoutMetadataQuery = graphql(`
     }
   }
 `);
+
+const oswald = Oswald({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-oswald',
+});
+
+const robotoSlab = Roboto_Slab({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto-slab',
+});
 
 export async function generateMetadata(): Promise<Metadata> {
   const { data } = await client.fetch({
@@ -101,7 +115,7 @@ export default async function RootLayout({ params, children }: Props) {
 
   return (
     <MakeswiftProvider previewMode={(await draftMode()).isEnabled}>
-      <html className={clsx(fonts.map((f) => f.variable))} lang={locale}>
+      <html  className={clsx(fonts.map((f) => f.variable), oswald.variable, robotoSlab.variable)} lang={locale}>
         <head>
           <SiteTheme />
           <DraftModeScript appOrigin={process.env.MAKESWIFT_APP_ORIGIN} />

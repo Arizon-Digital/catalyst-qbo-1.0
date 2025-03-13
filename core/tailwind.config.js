@@ -140,6 +140,20 @@ const config = {
             fontVariationSettings: 'var(--font-variation-settings-mono)',
           },
         ],
+        oswald: [
+          'var(--font-oswald)',
+          {
+            fontFeatureSettings: 'var(--font-feature-settings-oswald)',
+            fontVariationSettings: 'var(--font-variation-settings-oswald)',
+          },
+        ],
+        robotoslab: [
+          'var(--font-roboto-slab)',
+          {
+            fontFeatureSettings: 'var(--font-feature-settings-robotoslab)',
+            fontVariationSettings: 'var(--font-variation-settings-robotoslab)',
+          },
+        ],
       },
       fontSize: {
         xs: 'var(--font-size-xs, 0.75rem)',

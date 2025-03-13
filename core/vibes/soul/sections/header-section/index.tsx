@@ -171,7 +171,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
           <div className="bg-black text-white py-2 px-4">
             <div className="container mx-auto flex justify-end items-center">
-              <div className="flex items-center gap-2 md:gap-6 flex-wrap justify-end">
+              <div className="flex items-center gap-2 md:gap-6 flex-wrap justify-end font-oswald">
                 <Link href="/about-us" className="flex items-center gap-1 text-white hover:text-gray-300 font-medium text-xs sm:text-sm">
                   <span>About Us</span>
                 </Link>
@@ -248,11 +248,12 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     placeholder={navigation.searchInputPlaceholder || 'Search by reference'}
                     className="w-full border border-gray-300 rounded-l px-4 py-2 md:py-3 focus:outline-none focus:ring-1 focus:ring-blue-800"
                   />
-                  <button
-                    type="submit"
-                    className="absolute right-0 top-0 h-full bg-blue-900 text-white px-3 md:px-4 rounded-r"
-                    aria-label={navigation.searchLabel || 'Search'}
-                  >
+                 <button
+  type="submit"
+  className="absolute right-0 top-0 h-full px-3 md:px-4 rounded-r text-white bg-gradient-to-r from-blue-900 to-blue-900/70"
+  aria-label={navigation.searchLabel || 'Search'}
+>
+ 
                     <Search size={20} />
                   </button>
                 </form>
@@ -301,7 +302,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                         <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
                       </svg>
                     </div>
-                    <div className='flex flex-col sign/registration text-[#1c2541] font-light'>
+                    <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
                       <Link aria-label="Login" className="flex items-center ml-1" href="/login">
                         Sign In
                       </Link>
@@ -320,7 +321,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 <div className="relative" ref={cartRef}>
                   <button
                     onClick={() => loadMiniBag()}
-                    className="relative flex items-end gap-2 p-2 rounded-full mini-cart-btn"
+                    className="relative flex items-end gap-1 p-1 rounded-full mini-cart-btn"
                     aria-label="Shopping cart"
                   >
                     {miniCartIcon ? (
@@ -338,7 +339,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                       {navigation.cartCount || 0}
                     </span>
                     
-                    <span className="text-[#1a2348] mini-cart-text block font-light text-sm">Cart</span>
+                    <span className="text-[#1a2348] mini-cart-text block font-light text-sm font-robotoslab">Cart</span>
                   </button>
 
                   {isCartOpen && (
@@ -469,7 +470,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               <div className="container mx-auto">
                 <ul className="m-0 p-0 list-none flex justify-center">
                   {navigationLinks.map((item, index) => (
-                    <li key={index} className="static group">
+                    <li key={index} className="static group font-oswald">
                       <Link
                         href={item.href || '#'}
                         className="block text-white py-4 px-3 xl:px-5 hover:bg-blue-900 transition-colors font-bold text-[15px] whitespace-nowrap"
@@ -483,7 +484,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                       {item.groups && item.groups.length > 0 && (
                         <div className="absolute left-0 w-full hidden group-hover:block bg-white shadow-lg z-50 border-t border-gray-200 max-w-[90%] ml-[120px]">
                           <div className="container mx-auto py-6">
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 font-robotoslab">
                               {item.groups.map((group, groupIndex) => (
                                 <div key={groupIndex} className="mb-4">
                                   {group.label && (
