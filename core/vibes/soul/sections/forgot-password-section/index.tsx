@@ -1,3 +1,5 @@
+
+
 import { ForgotPasswordAction, ForgotPasswordForm } from './forgot-password-form';
 
 interface Props {
@@ -9,21 +11,35 @@ interface Props {
 }
 
 export function ForgotPasswordSection({
-  title = 'Forgot your password?',
-  subtitle = 'Enter the email associated with your account below. We’ll send you instructions to reset your password.',
-  emailLabel,
-  submitLabel,
+  title = 'Reset password',
+  subtitle = 'Fill in your email below to request a new password. An email will be sent to the address below containing a link to verify your email address.',
+  emailLabel = 'Email Address',
+  submitLabel = 'RESET PASSWORD',
   action,
 }: Props) {
   return (
-    <div className="@container">
-      <div className="flex flex-col justify-center gap-y-24 px-3 py-10 @xl:flex-row @xl:px-6 @4xl:py-20 @5xl:px-20">
-        <div className="flex w-full flex-col @xl:max-w-md @xl:pr-10 @4xl:pr-20">
-          <h1 className="mb-5 text-4xl font-medium leading-none @xl:text-5xl">{title}</h1>
-          <p className="mb-10 text-base font-light leading-none @xl:text-lg">{subtitle}</p>
-          <ForgotPasswordForm action={action} emailLabel={emailLabel} submitLabel={submitLabel} />
-        </div>
+    <div className="max-w-md mx-auto p-4">
+      {/* Breadcrumb navigation */}
+      <div className="text-sm mb-6 text-center">
+        <a href="/" className="text-gray-500 hover:text-gray-700">HOME</a>
+        <span className="text-gray-400"> / FORGOT PASSWORD</span>
       </div>
+      
+      {/* Main content */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-4 text-center">{title}</h1>
+        <p className="text-gray-700 text-left">{subtitle}</p>
+      </div>
+      
+      {/* Pass Tailwind classes to your existing component */}
+      <ForgotPasswordForm 
+        action={action} 
+        emailLabel={emailLabel} 
+        submitLabel={submitLabel}
+        // You might need to add a className prop to your ForgotPasswordForm component
+        // to accept these styles, or modify your component to apply these styles internally
+        className="[&_button]:bg-amber-600 [&_button]:text-white [&_button]:font-medium [&_button]:uppercase [&_button:hover]:bg-amber-700 [&_label]:text-left [&_label]:block [&_label]:mb-2"
+      />
     </div>
   );
 }
