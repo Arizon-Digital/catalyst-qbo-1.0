@@ -166,41 +166,7 @@ export function ProductsListSection({
                   </div>
 
                   {/* Right-aligned controls with gap */}
-                  <div className="flex items-center gap-4">
-                    {/* Column selector */}
-                    <div className="hidden md:block">
-                      <ProductGridSwitcher />
-                    </div>
-
-                    {/* Products Per Page */}
-                    <div className="hidden md:block">
-                      <ProductCountFilter />
-                    </div>
-
-                    {/* Mobile filters button */}
-                    <div className="md:hidden">
-                      <SidePanel.Root>
-                        <SidePanel.Trigger asChild>
-                          <Button size="medium" variant="secondary">
-                            {filterLabel}
-                            <Sliders size={20} />
-                          </Button>
-                        </SidePanel.Trigger>
-                        <Stream value={streamableFiltersPanelTitle}>
-                          {(filtersPanelTitle) => (
-                            <SidePanel.Content title={<h2>{filtersPanelTitle}</h2>}>
-                              <FiltersPanel
-                                filters={filters}
-                                paginationInfo={paginationInfo}
-                                rangeFilterApplyLabel={rangeFilterApplyLabel}
-                                resetFiltersLabel={resetFiltersLabel}
-                              />
-                            </SidePanel.Content>
-                          )}
-                        </Stream>
-                      </SidePanel.Root>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
             </div>
