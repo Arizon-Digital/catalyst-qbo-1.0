@@ -41,7 +41,7 @@ const cachedProductDataVariables = cache(
   },
 );
 
-const getProduct = async (props: Props) => {
+export const getProduct = async (props: Props) => {
   const t = await getTranslations('Product.ProductDetails.Accordions');
 
   const format = await getFormatter();
@@ -264,7 +264,7 @@ export default async function Product(props: Props) {
   const productId = Number(slug);
   const variables = await cachedProductDataVariables(slug, props.searchParams);
   const parsedSearchParams = searchParamsCache.parse(props.searchParams);
-  
+
   return (
     <>
       <ProductDetail

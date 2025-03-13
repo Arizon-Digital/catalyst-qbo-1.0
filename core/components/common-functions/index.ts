@@ -3,11 +3,6 @@
 import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { getCart } from '~/client/queries/get-cart';
-import { getProduct } from '~/app/[locale]/(default)/product/[slug]/page-data';
- 
-export const getProductData = cache(async (variables: any) => {
-  return await getProduct(variables);
-});
 
 export const getCartId = async() => {
   const cookieStore = await cookies();
