@@ -145,6 +145,7 @@ export const getProduct = async (props: Props) => {
     images: product.defaultImage
       ? [{ src: product.defaultImage.url, alt: product.defaultImage.altText }, ...images]
       : images,
+    productData: product,
     price: pricesTransformer(product.prices, format),
     subtitle: product.brand?.name,
     rating: product.reviewSummary.averageRating,

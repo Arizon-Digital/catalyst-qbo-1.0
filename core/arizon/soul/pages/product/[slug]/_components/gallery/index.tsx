@@ -13,7 +13,6 @@ interface Props {
 }
 
 export const Gallery = ({ product }: Props) => {
-  console.log('========product iamges=======', product.images);
   const images = (product.images) ? removeEdgesAndNodes(product.images) : [];
 
   // Pick the top-level default image
