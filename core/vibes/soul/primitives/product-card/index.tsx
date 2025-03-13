@@ -1,5 +1,3 @@
-
-
 "use client";
 import { clsx } from 'clsx';
 
@@ -66,16 +64,16 @@ export function ProductCard({
   const [storeId,setStoreId]=useState([])
 
   return (
-    <div className={clsx('@container border border-[#dcdcdc] rounded-[4px] shadow-[0_3px_0_#dcdcdc] flex flex-col items-center', className)}>
+    <div className={clsx('@container', className)}>
       <Link
         aria-label={title}
-        className="group flex cursor-pointer flex-col gap-2 rounded-[4px] ring-[var(--product-card-focus,hsl(var(--primary)))] ring-offset-4 focus-visible:outline-0 focus-visible:ring-2 items-center w-full"
+        className="group flex cursor-pointer flex-col gap-2 rounded-[var(--product-card-border-radius,1rem)] ring-[var(--product-card-focus,hsl(var(--primary)))] ring-offset-4 focus-visible:outline-0 focus-visible:ring-2"
         href={href}
         id={id}
       >
         <div
           className={clsx(
-            'relative overflow-hidden rounded-[4px] w-full group',
+            'relative overflow-hidden rounded-[inherit]',
             {
               '5:6': 'aspect-[5/6]',
               '3:4': 'aspect-[3/4]',
@@ -88,61 +86,20 @@ export function ProductCard({
           )}
         >
           {image != null ? (
-            <>
-              <Image
-                alt={image.alt}
-                className={clsx(
-                  'w-full h-full scale-100 select-none transition-transform duration-500 ease-out group-hover:scale-110 object-cover',
-                  {
-                    light: 'bg-[var(--product-card-light-background,hsl(var(--contrast-100))]',
-                    dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500))]',
-                  }[colorScheme],
-                )}
-                fill
-                priority={imagePriority}
-                sizes={imageSizes}
-                src={image.src}
-              />
-              
-              {showCompare && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <div className="flex flex-col gap-2 w-full max-w-[80%]">
-                    <button className="bg-yellow-500 text-white font-semibold py-2 px-4 rounded flex items-center justify-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                      </svg>
-                      QUICK VIEW
-                    </button>
-                    
-                    <button className="bg-yellow-500 text-white font-semibold py-2 px-4 rounded flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z" />
-                      </svg>
-                      ADD TO CART
-                    </button>
-                    
-                    <div className="flex items-center">
-                      <button className="bg-yellow-500 flex-grow text-white font-semibold py-2 px-4 rounded-l flex items-center justify-center">
-                        <Compare
-                          colorScheme={colorScheme}
-                          label={compareLabel || "COMPARE"}
-                          paramName={compareParamName}
-                          productId={id}
-                          productName={title}  
-                          image={image ? { 
-                            altText: image.alt, 
-                            src: image.src 
-                          } : undefined}
-                        />
-                      </button>
-                      <button className="bg-yellow-500 py-2 px-2 rounded-r text-white font-semibold border-l border-yellow-600">
-                        ↻
-                      </button>
-                    </div>
-                  </div>
-                </div>
+            <Image
+              alt={image.alt}
+              className={clsx(
+                'w-full scale-100 select-none transition-transform duration-500 ease-out group-hover:scale-110',
+                {
+                  light: 'bg-[var(--product-card-light-background,hsl(var(--contrast-100))]',
+                  dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500))]',
+                }[colorScheme],
               )}
-            </>
+              fill
+              priority={imagePriority}
+              sizes={imageSizes}
+              src={image.src}
+            />
           ) : (
             <div
               className={clsx(
@@ -164,9 +121,9 @@ export function ProductCard({
         </div>
       </Link>
 
-      <div className="mt-2 flex flex-col items-center gap-x-4 gap-y-3 px-1 @xs:mt-3 @2xl:flex-row @2xl:items-center">
-        <div className="flex-1 text-center">
-          <Link className="group text-base flex flex-col items-center" href={href} tabIndex={-1}>
+      <div className="mt-2 flex flex-col items-start gap-x-4 gap-y-3 px-1 @xs:mt-3 @2xl:flex-row">
+        <div className="flex-1">
+          <Link className="group text-base" href={href} tabIndex={-1}>
             <span
               className={clsx(
                 'block font-semibold',
@@ -195,6 +152,22 @@ export function ProductCard({
             {price != null && <PriceLabel colorScheme={colorScheme} price={price} />}
           </Link>
         </div>
+
+        {showCompare && (
+  <div className="mt-0.5 shrink-0">
+    <Compare
+      colorScheme={colorScheme}
+      label={compareLabel}
+      paramName={compareParamName}
+      productId={id}
+      productName={title}  
+      image={image ? { 
+        altText: image.alt, 
+        src: image.src 
+      } : undefined}
+    />
+  </div>
+)}
        
       </div>
     </div>
@@ -203,9 +176,9 @@ export function ProductCard({
 
 export function ProductCardSkeleton({ className }: { className?: string }) {
   return (
-    <div className={clsx(className, "border border-[#dcdcdc] rounded-[4px] shadow-[0_3px_0_#dcdcdc] flex flex-col items-center")}>
-      <div className="flex aspect-[5/6] flex-col gap-2 rounded-[4px] bg-contrast-100 items-center w-full" />
-      <div className="mt-2 flex flex-col items-center gap-x-4 gap-y-3 px-1 @xs:mt-3 @2xl:flex-row @2xl:items-center">
+    <div className={className}>
+      <div className="flex aspect-[5/6] flex-col gap-2 rounded-xl bg-contrast-100 @md:rounded-2xl" />
+      <div className="mt-2 flex flex-col items-start gap-x-4 gap-y-3 px-1 @xs:mt-3 @2xl:flex-row">
         <div className="flex-1">
           <div className="flex flex-col text-base">
             <div className="flex h-[1lh] items-center">
