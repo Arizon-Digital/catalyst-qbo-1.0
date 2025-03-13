@@ -627,7 +627,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     className="w-12 h-12 mr-3"
                   />
                   <div className="text-[14px] font-bold">
-                    <Link href="/customer-service/" className="hover:text-blue-800">
+                    <Link href="/customer-service/" className="hover:text-blue-800 font-robotoslab">
                       Free Delivery<br />
                       Over $300.00
                     </Link>
@@ -643,7 +643,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     className="w-12 h-12 mr-3"
                   />
                   <div className="text-[14px] font-bold">
-                    <Link href="/delivery-information/" className="hover:text-blue-800">
+                    <Link href="/delivery-information/" className="hover:text-blue-800 font-robotoslab">
                       1-3 Day DHL & UPS<br />
                       Delivery
                     </Link>
@@ -659,7 +659,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     alt="Queen's Award For Enterprise"
                   />
                   <div className="text-[14px] font-bold">
-                    <Link href="/blog/9/" className="hover:text-blue-800">
+                    <Link href="/blog/9/" className="hover:text-blue-800 font-robotoslab">
                       Queen's Award For<br />
                       Enterprise Winners
                     </Link>
@@ -675,7 +675,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     className="w-12 h-12 mr-3"
                   />
                   <div className="text-[14px] font-bold">
-                    <Link href="https://store-03842.mybigcommerce.com/content/ISO_9001_2015_Certificate.pdf" target="_blank" className="hover:text-blue-800">
+                    <Link href="https://store-03842.mybigcommerce.com/content/ISO_9001_2015_Certificate.pdf" target="_blank" className="hover:text-blue-800 font-robotoslab">
                       ISO 9001 : 2015<br />
                       Cert. No.291342018
                     </Link>

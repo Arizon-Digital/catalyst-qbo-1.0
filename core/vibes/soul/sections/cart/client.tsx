@@ -1,14 +1,13 @@
 
-
-
 'use client';
 
 import { getFormProps, getInputProps, SubmissionResult, useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 import { clsx } from 'clsx';
 import { Minus, Plus, Trash2 } from 'lucide-react';
-import { startTransition, useActionState, useEffect, useOptimistic } from 'react';
+import { startTransition, useActionState, useEffect, useOptimistic, useState } from 'react';
 import { useFormStatus } from 'react-dom';
+import Link from 'next/link'; // Import Next.js Link component
 
 import { Button } from '@/vibes/soul/primitives/button';
 import { toast } from '@/vibes/soul/primitives/toaster';
@@ -28,6 +27,7 @@ export interface CartLineItem {
   subtitle: string;
   quantity: number;
   price: string;
+  href: string; // Direct URL to the product
 }
 
 export interface CartSummaryItem {
@@ -152,7 +152,7 @@ export function CartClient<LineItem extends CartLineItem>({
 
   // New design matching the images provided
   return (
-    <div className="w-full px-4 sm:px-6 md:px-0 max-w-screen-xl mx-auto mt-8 mb-8">
+    <div className="w-full px-4 sm:px-6 md:px-0 max-w-[1580px] mx-auto mt-8 mb-8">
       <div className="flex items-center text-sm text-gray-500 mb-3">
         <a href="/" className="hover:underline">HOME</a>
         <span className="mx-1">/</span>
@@ -181,7 +181,10 @@ export function CartClient<LineItem extends CartLineItem>({
                   <tr key={lineItem.id} className="border-b border-gray-200">
                     <td className="p-2 sm:p-4">
                       <div className="flex items-start gap-2 sm:gap-4">
-                        <div className="relative w-10 h-10 sm:w-14 sm:h-14 overflow-hidden flex-shrink-0">
+                        <Link 
+                          href={lineItem.href} 
+                          className="relative w-10 h-10 sm:w-14 sm:h-14 overflow-hidden flex-shrink-0"
+                        >
                           <Image
                             alt={lineItem.image.alt}
                             className="object-contain"
@@ -189,13 +192,18 @@ export function CartClient<LineItem extends CartLineItem>({
                             sizes="(max-width: 640px) 40px, 56px"
                             src={lineItem.image.src}
                           />
-                        </div>
+                        </Link>
                         <div>
                           <div className="text-xs sm:text-sm text-gray-500">
                             {lineItem.subtitle}
                           </div>
                           <div className="text-sm sm:text-base font-medium">
-                            {lineItem.title}
+                            <Link 
+                              href={lineItem.href} 
+                              className="hover:text-yellow-600 transition-colors"
+                            >
+                              {lineItem.title}
+                            </Link>
                           </div>
                         </div>
                       </div>
@@ -295,7 +303,7 @@ export function CartClient<LineItem extends CartLineItem>({
                   height="32"
                   viewBox="0 0 70 32"
                 >
-                  <path d="M69.102 17.22l.4 9.093c-.69.313-3.286 1.688-4.26 1.688h-4.79v-.655c-.545.438-1.548.656-2.466.656H42.933v-2.465c0-.344-.057-.344-.345-.344h-.257V28h-4.96v-2.923c-.832.402-1.75.402-2.58.402h-.545V28h-6.05l-1.434-1.656-1.576 1.656h-9.72v-10.78h9.892l1.405 1.662 1.55-1.663h6.65c.776 0 2.038.116 2.582.66v-.66h5.936c.602 0 1.75.116 2.523.66v-.66h8.947v.66c.516-.43 1.433-.66 2.265-.66H62.2v.66c.546-.37 1.32-.66 2.323-.66H69.1zm-34.197 6.65c1.577 0 3.183-.43 3.183-2.58 0-2.093-1.635-2.523-3.07-2.523h-5.877l-2.38 2.523-2.235-2.523h-7.427v7.67h7.312l2.35-2.51 2.267 2.51h3.556V23.87h2.322zM46 23.557c-.17-.23-.486-.516-.945-.66.516-.172 1.318-.832 1.318-2.036 0-.89-.315-1.377-.917-1.72-.602-.316-1.32-.373-2.266-.373h-4.215v7.67h1.864V23.64h1.977c.66 0 1.032.06 1.32.345.315.373.315 1.032.315 1.548v.903h1.836V24.96c0-.69-.058-1.033-.288-1.406zm7.57-3.183v-1.605h-6.135v7.67h6.136v-1.563h-4.33v-1.55h4.245V21.78H49.24v-1.405h4.33zm4.675 6.065c1.864 0 2.926-.76 2.926-2.393 0-.774-.23-1.262-.544-1.664-.46-.37-1.12-.6-2.15-.6H57.47c-.257 0-.486-.058-.716-.116-.2-.086-.373-.258-.373-.545 0-.26.06-.43.288-.603.143-.115.373-.115.717-.115h3.383v-1.634h-3.67c-1.98 0-2.64 1.204-2.64 2.294 0 2.438 2.152 2.322 3.843 2.38.345 0 .545.058.66.173.116.086.23.315.23.544 0 .2-.114.372-.23.487-.172.115-.372.172-.716.172H54.69v1.62h3.554zm7.197 0c1.864 0 2.924-.76 2.924-2.393 0-.774-.23-1.262-.544-1.664-.46-.37-1.12-.6-2.15-.6h-1.004c-.258 0-.488-.058-.718-.116-.2-.086-.373-.258-.373-.545 0-.26.115-.43.287-.603.144-.115.373-.115.717-.115h3.384v-1.634h-3.67c-1.922 0-2.64 1.204-2.64 2.294 0 2.438 2.152 2.322 3.843 2.38.344 0 .544.058.66.174.115.086.23.315.23.544 0 .2-.115.373-.23.488s-.373.172-.717.172h-3.556v1.62h3.556zm-21.476-5.92c.23.115.373.344.373.66 0 .343-.144.6-.374.773-.287.116-.545.116-.89.116l-2.236.058v-1.75h2.237c.344 0 .66 0 .89.144zM36.108 8.646c-.287.172-.544.172-.918.172h-2.265V7.126h2.265c.316 0 .688 0 .918.114.23.144.344.374.344.718 0 .315-.114.602-.344.69zm14.68-1.807l1.263 3.038H49.53zM30.776 25.79l-2.838-3.183 2.838-3.012v6.193zm4.244-5.42c.66 0 1.09.26 1.09.92s-.43 1.03-1.09 1.03H32.58v-1.95h2.437zM5.772 9.88l1.29-3.04 1.263 3.04H5.774zm13.132 10.494h4.616l2.037 2.237-2.093 2.264h-4.56v-1.55h4.072v-1.547h-4.07v-1.405zm.172-6.996l-.545 1.377h-3.24l-.546-1.32v1.32H8.524l-.66-1.75H6.287l-.717 1.75H-.002l2.39-5.65L4.623 4h4.79l.658 1.262V4h5.59l1.263 2.724L18.158 4h17.835c.832 0 1.548.143 2.093.602V4h4.903v.602C43.79 4.142 44.852 4 46.056 4h7.082l.66 1.262V4h5.217l.775 1.262V4h5.103v10.753h-5.16l-1.004-1.635v1.635H52.31l-.717-1.75h-1.576l-.717 1.75h-3.355c-1.318 0-2.294-.316-2.954-.66v.66h-7.97v-2.466c0-.344-.058-.402-.287-.402h-.257v2.867H19.075v-1.377zM43.363 6.41c-.832.83-.975 1.863-1.004 3.01 0 1.377.343 2.266.946 2.925.66.66 1.806.86 2.695.86h2.152l.716-1.692h3.843l.718 1.692h3.727V7.442l3.47 5.763h2.638V5.52H61.37v5.334L58.13 5.52h-2.838v7.255L52.196 5.52h-2.724l-2.638 6.05h-.832c-.487 0-1.003-.114-1.262-.372-.344-.402-.488-1.004-.488-1.836 0-.803.144-1.405.488-1.748.373-.316.774-.43 1.434-.43h1.75V5.52h-1.75c-1.262 0-2.265.286-2.81.89zm-3.784-.89v7.684h1.862V5.52H39.58zm-8.46 0v7.685h1.806v-2.78h1.98c.66 0 1.09.056 1.375.314.317.4.26 1.06.26 1.49v.975h1.89v-1.52c0-.66-.056-1.003-.343-1.376-.172-.23-.487-.49-.89-.66.517-.23 1.32-.832 1.32-2.036 0-.89-.373-1.377-.976-1.75-.6-.344-1.26-.344-2.207-.344h-4.215zm-7.484 0v7.686H29.8V11.63h-4.3v-1.55h4.244V8.503H25.5V7.126h4.3V5.52h-6.164zm-7.512 7.685H17.7l2.696-6.02v6.02h1.864V5.52h-3.01l-2.266 5.22-2.41-5.22h-2.952v7.255L8.468 5.52H5.744l-3.297 7.685h1.978l.688-1.692h3.87l.69 1.692h3.755v-6.02z"></path>
+                  <path d="M69.102 17.22l.4 9.093c-.69.313-3.286 1.688-4.26 1.688h-4.79v-.655c-.545.438-1.548.656-2.466.656H42.933v-2.465c0-.344-.057-.344-.345-.344h-.257V28h-4.96v-2.923c-.832.402-1.75.402-2.58.402h-.545V28h-6.05l-1.434-1.656-1.576 1.656h-9.72v-10.78h9.892l1.405 1.662 1.55-1.663h6.65c.776 0 2.038.116 2.582.66v-.66h5.936c.602 0 1.75.116 2.523.66v-.66h8.947v.66c.516-.43 1.433-.66 2.265-.66H62.2v.66c.546-.37 1.32-.66 2.323-.66H69.1zm-34.197 6.65c1.577 0 3.183-.43 3.183-2.58 0-2.093-1.635-2.523-3.07-2.523h-5.877l-2.38 2.523-2.235-2.523h-7.427v7.67h7.312l2.35-2.51 2.267 2.51h3.556V23.87h2.322zM46 23.557c-.17-.23-.486-.516-.945-.66.516-.172 1.318-.832 1.318-2.036 0-.89-.315-1.377-.917-1.72-.602-.316-1.32-.373-2.266-.373h-4.215v7.67h1.864V23.64h1.977c.66 0 1.032.06 1.32.345.315.373.315 1.032.315 1.548v.903h1.836V24.96c0-.69-.058-1.033-.288-1.406zm7.57-3.183v-1.605h-6.135v7.67h6.136v-1.563h-4.33v-1.55h4.245V21.78H49.24v-1.405h4.33zm4.675 6.065c1.864 0 2.926-.76 2.926-2.393 0-.774-.23-1.262-.544-1.664-.46-.37-1.12-.6-2.15-.6H57.47c-.257 0-.486-.058-.716-.116-.2-.086-.373-.258-.373-.545 0-.26.06-.43.288-.603.143-.115.373-.115.717-.115h3.383v-1.634h-3.67c-1.98 0-2.64 1.204-2.64 2.294 0 2.438 2.152 2.322 3.843 2.38.345 0 .545.058.66.173.116.086.23.315.23.544 0 .2-.114.372-.23.487-.172.115-.372.172-.716.172H54.69v1.62h3.554zm7.197 0c1.864 0 2.924-.76 2.924-2.393 0-.774-.23-1.262-.544-1.664-.46-.37-1.12-.6-2.15-.6h-1.004c-.258 0-.488-.058-.718-.116-.2-.086-.373-.258-.373-.545 0-.26.115-.43.287-.603.144-.115.373-.115.717-.115h3.384v-1.634h-3.67c-1.922 0-2.64 1.204-2.64 2.294 0 2.438 2.152 2.322 3.843 2.38.344 0 .544.058.66.174.115.086.23.315.23.544 0 .2-.115.373-.23.488s-.373.172-.717.172h-3.556v1.62h3.556zm-21.476-5.92c.23.115.373.344.373.66 0 .343-.144.6-.374.773-.287.116-.545.116-.89.116l-2.236.058v-1.75h2.237c.344 0 .66 0 .89.144zM36.108 8.646c-.287.172-.544.172-.918.172h-2.265V7.126h2.265c.316 0 .688 0 .918.114.23.144.344.374.344.718 0 .315-.114.602-.344.69zm14.68-1.807l1.263 3.038H49.53zM30.776 25.79l-2.838-3.183 2.838-3.012v6.193zm4.244-5.42c.66 0 1.09.26 1.09.92s-.43 1.03-1.09 1.03H32.58v-1.95h2.437zM5.772 9.88l1.29-3.04 1.263 3.04H5.774zm13.132 10.494h4.616l2.037 2.237-2.093 2.264h-4.56v-1.55h4.072v-1.547h-4.07v-1.405zm.172-6.996l-.545 1.377h-3.24l-.546-1.32v1.32H8.524l-.66-1.75H6.287l-.717 1.75H-.002l2.39-5.65L4.623 4h4.79l.658 1.262V4h5.59l1.263 2.724L18.158 4h17.835c.832 0 1.548.143 2.093.602V4h4.903v.602C43.79 4.142 44.852 4 46.056 4h7.082l.66 1.262V4h5.217l.775 1.262V4h5.103v10.753h-5.16l-1.004-1.635v1.635H52.31l-.717-1.75h-1.576l-.717 1.75h-3.355c-1.318 0-2.294-.143-2.954-.602v.602h-7.97v-2.465c0-.344-.058-.402-.287-.402h-.258v2.867H19.075v-1.377zM43.363 6.41c-.832.83-.975 1.863-1.004 3.01 0 1.377.343 2.266.946 2.925.66.66 1.806.86 2.695.86h2.152l.716-1.692h3.843l.718 1.692h3.727V7.442l3.47 5.763h2.638V5.52h-3.01l-2.266 5.22-2.41-5.22h-2.952v7.255L8.468 5.52H5.744l-3.297 7.685h1.978l.688-1.692h3.87l.69 1.692h3.755v-6.02z"></path>
                 </svg>
               </article>
               <article className="opacity-50 transition-opacity duration-500">
@@ -343,54 +351,109 @@ function QuantityControl({
       onSubmit(formData);
     },
   });
+  
+  // State to control the delete confirmation popup
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  
+  // Handle delete button click
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowDeleteConfirm(true);
+  };
+  
+  // Handle confirm delete
+  const handleConfirmDelete = () => {
+    const formData = new FormData();
+    formData.append('id', lineItem.id);
+    formData.append('intent', 'delete');
+    onSubmit(formData);
+    setShowDeleteConfirm(false);
+  };
+  
+  // Handle cancel delete
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false);
+  };
 
   return (
-    <form {...getFormProps(form)} action={action} className="inline-flex items-center">
-      <input {...getInputProps(fields.id, { type: 'hidden' })} key={fields.id.id} />
+    <>
+      <form {...getFormProps(form)} action={action} className="inline-flex items-center">
+        <input {...getInputProps(fields.id, { type: 'hidden' })} key={fields.id.id} />
+        
+        <div className="flex items-center">
+          <button
+            aria-label={decrementLabel}
+            className={clsx(
+              'flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-yellow-600 text-white rounded',
+              lineItem.quantity === 1 ? 'opacity-50' : 'hover:bg-yellow-700',
+            )}
+            disabled={lineItem.quantity === 1}
+            name="intent"
+            type="submit"
+            value="decrement"
+          >
+            <Minus size={12} className="sm:hidden" />
+            <Minus size={14} className="hidden sm:block" />
+          </button>
+          
+          <span className="flex w-6 sm:w-8 h-6 sm:h-8 select-none justify-center items-center px-1 sm:px-2 text-sm sm:text-base">
+            {lineItem.quantity}
+          </span>
+          
+          <button
+            aria-label={incrementLabel}
+            className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-yellow-600 text-white rounded hover:bg-yellow-700"
+            name="intent"
+            type="submit"
+            value="increment"
+          >
+            <Plus size={12} className="sm:hidden" />
+            <Plus size={14} className="hidden sm:block" />
+          </button>
+          
+          <button
+            aria-label={deleteLabel}
+            className="ml-1 sm:ml-2 text-gray-500 hover:text-black"
+            type="button" // Changed to button type
+            onClick={handleDeleteClick}
+          >
+            <Trash2 size={14} className="sm:hidden" />
+            <Trash2 size={16} className="hidden sm:block" />
+          </button>
+        </div>
+      </form>
       
-      <div className="flex items-center">
-        <button
-          aria-label={decrementLabel}
-          className={clsx(
-            'flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-yellow-600 text-white rounded',
-            lineItem.quantity === 1 ? 'opacity-50' : 'hover:bg-yellow-700',
-          )}
-          disabled={lineItem.quantity === 1}
-          name="intent"
-          type="submit"
-          value="decrement"
-        >
-          <Minus size={12} className="sm:hidden" />
-          <Minus size={14} className="hidden sm:block" />
-        </button>
-        
-        <span className="flex w-6 sm:w-8 h-6 sm:h-8 select-none justify-center items-center px-1 sm:px-2 text-sm sm:text-base">
-          {lineItem.quantity}
-        </span>
-        
-        <button
-          aria-label={incrementLabel}
-          className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-yellow-600 text-white rounded hover:bg-yellow-700"
-          name="intent"
-          type="submit"
-          value="increment"
-        >
-          <Plus size={12} className="sm:hidden" />
-          <Plus size={14} className="hidden sm:block" />
-        </button>
-        
-        <button
-          aria-label={deleteLabel}
-          className="ml-1 sm:ml-2 text-gray-500 hover:text-black"
-          name="intent"
-          type="submit"
-          value="delete"
-        >
-          <Trash2 size={14} className="sm:hidden" />
-          <Trash2 size={16} className="hidden sm:block" />
-        </button>
-      </div>
-    </form>
+      {/* Delete Confirmation Popup */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+            </div>
+            <h3 className="text-center text-lg font-medium mb-4">Are you sure you want to delete this item?</h3>
+            <div className="flex justify-end space-x-2">
+              <button 
+                className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+                onClick={handleCancelDelete}
+              >
+                Cancel
+              </button>
+              <button 
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors flex items-center justify-center"
+                onClick={handleConfirmDelete}
+              >
+                <Trash2 size={16} className="mr-1" />
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
