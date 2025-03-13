@@ -65,13 +65,19 @@ const ViewedItemsPopover = () => {
       try {
         setIsLoading(true);
         // Get recently viewed product IDs from localStorage
-        let productIds = [];
+        let productIdsArray: any = [];
+        let productIds: any = [];
         
         // Use try-catch to safely parse localStorage data
         try {
           const storedData = localStorage.getItem('qbo_recently_viewed_items');
           if (storedData) {
-            productIds = JSON.parse(storedData);
+            productIdsArray = JSON.parse(storedData);
+            if(productIdsArray?.length > 0) {
+              productIds = productIdsArray?.filter(function (el) {
+                return el != null;
+              });
+            }
           }
         } catch (error) {
           console.error('Error parsing recently viewed items from localStorage:', error);
@@ -82,7 +88,7 @@ const ViewedItemsPopover = () => {
           // Default currency code (can be made dynamic if needed)
           const currencyCode = 'USD';
           // Fetch product data for the recently viewed items
-          const recentlyViewedData = await getRecentlyViewedProducts(productIds, currencyCode);
+          const recentlyViewedData: any = await getRecentlyViewedProducts(productIds, currencyCode);
           setRecentlyViewed(recentlyViewedData);
         }
       } catch (error) {

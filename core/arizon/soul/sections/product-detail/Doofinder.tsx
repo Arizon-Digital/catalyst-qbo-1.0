@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getCurrencyCodeFn } from "~/components/header/_actions/getCurrencyList";
+import { getPreferredCurrencyCode } from '~/lib/currency';
 
 const DoofinderScriptLoader = ({value}: {value: any}) => {
   const [currency, setCurrency] = useState('CAD');
   useEffect(() => {
     const getCurrencyCode = async() => {
-      let currencyCode: any = await getCurrencyCodeFn();
+      let currencyCode: any = await getPreferredCurrencyCode();
       if(currencyCode != currency) {
         setCurrency(currencyCode);
       }

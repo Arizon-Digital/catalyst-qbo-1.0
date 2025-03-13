@@ -112,7 +112,7 @@ async function getSubCategoriesFilters(props: Props): Promise<Filter[]> {
   ];
 }
 
-async function getUrl(props: Props): Promise<string | null> {
+async function getUrl(props: Props) {
   const category = await getCategory(props);
 
   return category.defaultImage;
@@ -282,7 +282,7 @@ export default async function Category(props: Props) {
   const { locale } = await props.params;
 
   setRequestLocale(locale);
-  const categoryBannerImage = await getUrl(props);
+  
   return (
     <>
       <ProductsListSection
@@ -303,7 +303,7 @@ export default async function Category(props: Props) {
         sortParamName="sort"
         title={getTitle(props)}
         totalCount={getTotalCount(props)}
-        categoryBannerImage={ categoryBannerImage}
+        categoryBannerImage={ getUrl(props)}
 
       />
       <Stream value={Promise.all([getCategory(props), getProducts(props)])}>

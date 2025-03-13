@@ -2,8 +2,8 @@ import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { Accordion, Accordions } from '@/vibes/soul/primitives/accordions';
 import { Breadcrumbs } from '@/arizon/soul/primitives/breadcrumbs';
 import { Price, PriceLabel } from '@/vibes/soul/primitives/price-label';
-import { Rating } from '@/vibes/soul/primitives/rating';
 import { ProductGallery } from '@/arizon/soul/sections/product-detail/product-gallery';
+import { Gallery } from '@/arizon/soul/pages/product/[slug]/_components/gallery';
 
 import { ProductDetailForm, ProductDetailFormAction } from './product-detail-form';
 import { Field } from './schema';
@@ -64,7 +64,6 @@ export function ProductDetail<F extends Field>({
           {(product) =>
             product && (
               <Breadcrumbs category={product?.breadcrumbs} className="mb-6" />
-
             )}
         </Stream>
 
@@ -74,7 +73,7 @@ export function ProductDetail<F extends Field>({
               <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @2xl:grid-cols-2 @5xl:gap-x-12 bg-white border border-[#dcdcdc] rounded-md shadow-[0_3px_0_#dcdcdc]">
                 <div className="hidden @2xl:block">
                   <Stream fallback={<ProductGallerySkeleton />} value={product.images}>
-                    {(images) => <ProductGallery images={images} />}
+                    {(images) => <Gallery product={product} />}
                   </Stream>
                 </div>
 
@@ -102,7 +101,7 @@ export function ProductDetail<F extends Field>({
                   <div className="mb-8 @2xl:hidden">
                     <Stream fallback={<ProductGallerySkeleton />} value={product.images}>
                       {(images) => (
-                        <ProductGallery images={images} thumbnailLabel={thumbnailLabel} />
+                        <Gallery product={product} />
                       )}
                     </Stream>
                   </div>
