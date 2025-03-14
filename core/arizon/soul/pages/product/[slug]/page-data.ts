@@ -111,6 +111,7 @@ const AddToCartButtonFragment = graphql(`
     }
     availabilityV2 {
       status
+      description
     }
   }
 `);

@@ -1,12 +1,13 @@
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { Accordion, Accordions } from '@/vibes/soul/primitives/accordions';
 import { Breadcrumbs } from '@/arizon/soul/primitives/breadcrumbs';
-import { Price, PriceLabel } from '@/vibes/soul/primitives/price-label';
+import { Price, PriceLabel } from '@/arizon/soul/primitives/price-label';
 import { ProductGallery } from '@/arizon/soul/sections/product-detail/product-gallery';
 import { Gallery } from '@/arizon/soul/pages/product/[slug]/_components/gallery';
 
 import { ProductDetailForm, ProductDetailFormAction } from './product-detail-form';
 import { Field } from './schema';
+import BulkPricing from './BulkPricing';
 
 interface ProductDetailProduct {
   id: string;
@@ -42,6 +43,7 @@ interface Props<F extends Field> {
   prefetch?: boolean;
   thumbnailLabel?: string;
   additionalInformationLabel?: string;
+  getAvailabilityLabel?: string;
 }
 
 export function ProductDetail<F extends Field>({
@@ -56,6 +58,7 @@ export function ProductDetail<F extends Field>({
   prefetch,
   thumbnailLabel,
   additionalInformationLabel = 'Additional information',
+  getAvailabilityLabel
 }: Props<F>) {
 
   return (
@@ -88,17 +91,21 @@ export function ProductDetail<F extends Field>({
                     {product.title}
                   </h1>
                   <h1 className="mb-3 mt-2 font-heading text-2xl font-medium leading-none @xl:mb-4 @xl:text-3xl @4xl:text-4xl">
-                    sku : {product.sku}
+                    SKU : {product.sku}
                   </h1>
-
-
-
+                  {Boolean(product?.productData?.availabilityV2?.description) && (
+                    <div>
+                      <h3 className="font-semiboldd flex productView-info-name">Availability <p className="pr productView-info-value ">: {product?.productData?.availabilityV2?.description}</p></h3>
+                    </div>
+                  )}
+                  {(product?.productData?.weight?.value) && (
+                    <BulkPricing product={product?.productData} />
+                  )}
                   <Stream fallback={<PriceLabelSkeleton />} value={product.price}>
                     {(price) => (
-                      <PriceLabel className="my-3 text-xl @xl:text-2xl" price={price ?? ''} />
+                      <PriceLabel className="my-3 text-xl @xl:text-2xl" price={price?.replace('CA', 'C') ?? ''} />
                     )}
                   </Stream>
-
                   <div className="mb-8 @2xl:hidden">
                     <Stream fallback={<ProductGallerySkeleton />} value={product.images}>
                       {(images) => (
@@ -136,7 +143,20 @@ export function ProductDetail<F extends Field>({
                       />
                     )}
                   </Stream>
+                  <div className="feefo-reviews">
+                    <a
+                      href={`https://www.feefo.com/reviews/quality-bearings-online`}
+                      target="_blank"
 
+                    >
+                      <img
+                        alt="Feefo logo"
+                        border="0"
+                        src={`https://api.feefo.com/api/logo?merchantidentifier=quality-bearings-online&vendorref=${product.sku}&servicedefault=true`}
+                        title="Our Feefo product rating"
+                      />
+                    </a>
+                  </div>
                   <Stream fallback={<ProductDescriptionSkeleton />} value={product.description}>
                     {(description) =>
                       description != null && (
