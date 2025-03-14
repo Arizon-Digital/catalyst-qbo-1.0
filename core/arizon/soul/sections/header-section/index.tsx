@@ -296,7 +296,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     href="/"
                     label={navigation.logoLabel || 'Quality Bearings Online'}
                     logo={navigation.mobileLogo}
-                    width={navigation.mobileLogoWidth || 180}
+                    width={navigation.mobileLogoWidth || 100}
                   />
                 )}
               </div>
@@ -311,7 +311,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     type="text"
                     name={navigation.searchParamName || 'query'}
                     placeholder={navigation.searchInputPlaceholder || 'Search by reference'}
-                    className="w-full border border-gray-300 rounded-l px-4 py-2 md:py-3 focus:outline-none focus:ring-1 focus:ring-blue-800"
+                    className="w-full border border-black -300 rounded-l px-4 py-2 md:py-3 focus:outline-none focus:ring-1 focus:ring-blue-800 font-light"
                   />
                  <button
   type="submit"
@@ -516,7 +516,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 />
                 <button
                   type="submit"
-                  className="absolute right-0 top-0 h-full bg-blue-900 text-white px-3 rounded-r"
+                  className="absolute right-0 top-0 h-full bg-linear-gradient(90deg, #1a2348, rgba(26, 35, 72, .7)) !important; text-white px-3 rounded-r"
                   aria-label={navigation.searchLabel || 'Search'}
                 >
                   <Search size={18} />
@@ -898,3 +898,7 @@ function CurrencySelector({
     </DropdownMenu.Root>
   );
 }
+
+
+
+

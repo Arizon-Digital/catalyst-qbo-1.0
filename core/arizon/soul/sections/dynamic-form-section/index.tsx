@@ -25,8 +25,11 @@ export function DynamicFormSection<F extends Field>({
     <SectionLayout className={clsx('mx-auto w-full max-w-4xl', className)} containerSize="lg">
       {title != null && title !== '' && (
         <header className="pb-8 @2xl:pb-12 @4xl:pb-16">
-          <h1 className="mb-5 font-heading text-4xl font-medium leading-none @xl:text-5xl">
-            {title}
+          <h2 className="mb-4  font-extralight font-grey font-robotoslab leading-none text-center @xl:text-xs ">
+          HOME / CREATE ACCOUNT
+          </h2>
+          <h1 className="mb-2   font-normal font-robotoslab leading-none @xl:text-2xl text-center">
+          New Account
           </h1>
           {subtitle != null && subtitle !== '' && (
             <p className="mb-10 text-base font-light leading-none @xl:text-lg">{subtitle}</p>

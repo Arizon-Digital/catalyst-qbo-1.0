@@ -44,7 +44,7 @@ export function Logo({ className, logo: streamableLogo, href, width, height, lab
           {typeof logo === 'object' && logo !== null && logo.src !== '' ? (
             <Image
               alt={logo.alt}
-              className="object-contain object-left"
+              className="object-contain object-right"
               fill
               sizes="600px"
               src={logo.src}
