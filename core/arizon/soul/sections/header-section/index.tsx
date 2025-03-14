@@ -19,6 +19,8 @@ import { getCartData, getCartId } from '~/components/common-functions';
 import ViewedItemsPopover from './Recently Viewed Products Popover';
 import { BcImage } from '~/components/bc-image';
 import { Button } from '~/components/ui/button/button';
+import DoofinderScriptLoader from '../product-detail/Doofinder';
+
 
 type CurrencyAction = (state: any, payload: FormData) => any | Promise<any>;
 
@@ -30,7 +32,9 @@ interface Currency {
 interface Props {
   navigation: React.ComponentPropsWithoutRef<typeof Navigation>;
   banner?: React.ComponentPropsWithoutRef<typeof Banner>;
+
 }
+const dooFinderKey= process.env.DOOFINDER_KEY
 
 export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
   ({ navigation, banner }, ref) => {
@@ -253,7 +257,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
   className="absolute right-0 top-0 h-full px-3 md:px-4 rounded-r text-white bg-gradient-to-r from-blue-900 to-blue-900/70"
   aria-label={navigation.searchLabel || 'Search'}
 >
- 
+ <DoofinderScriptLoader value={dooFinderKey} />
                     <Search size={20} />
                   </button>
                 </form>
@@ -316,7 +320,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 <div className="text-xs md:text-sm hidden sm:block">
                   <ViewedItemsPopover />
                 </div>
-
+    
                 {/* MiniCart Component */}
                 <div className="relative" ref={cartRef}>
                   <button
@@ -566,7 +570,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                         </button>
                       )}
                     </div>
-
+   
                     {activeDropdown === index && item.groups && (
                       <div className="mt-2 pl-4 pr-2 pb-2">
                         {item.groups.map((group, groupIndex) => (
