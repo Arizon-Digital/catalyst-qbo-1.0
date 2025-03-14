@@ -31,7 +31,7 @@ async function getCategory(props: Props) {
   const categoryId = Number(slug);
   const data = await getCategoryPageData({ categoryId });
   const category = data.category;
-  
+
 
   if (category == null) notFound();
 
@@ -118,14 +118,9 @@ async function getSubCategoriesFilters(props: Props): Promise<Filter[]> {
   ];
 }
 
-async function getCategoryImageUrl(props: Props): Promise<CategoryImageProps | null>  {
-  try{
-    const category = await getCategory(props);
-    return category.defaultImage;
-  } catch(error) {
-    console.error('Error fetching data:', error);
-
-  }
+async function getCategoryImageUrl(props: Props): Promise<CategoryImageProps | null> {
+  const category = await getCategory(props);
+  return category.defaultImage;
 }
 async function getTitle(props: Props): Promise<string | null> {
   const category = await getCategory(props);
@@ -292,7 +287,7 @@ export default async function Category(props: Props) {
   const { locale } = await props.params;
 
   setRequestLocale(locale);
-  
+
   return (
     <>
       <ProductsListSection
