@@ -19,6 +19,12 @@ import {
 } from '@/vibes/soul/sections/products-list-section/sorting';
 import { Link } from '~/components/link';
 
+interface CategoryImageProps {
+  altText: string;
+  isDefault: boolean;
+  url: string;
+}
+
 interface Props {
   breadcrumbs?: Streamable<Breadcrumb[]>;
   title?: Streamable<string | null>;
@@ -70,7 +76,6 @@ export function ProductsListSection({
   placeholderCount = 8,
   categoryBannerImage,
 }: Props) {
-
   return (
     <div className="group/products-list-section @container">
       <div className="mx-auto max-w-screen-2xl px-4 py-10 @xl:px-6 @xl:py-14 @4xl:px-8 @4xl:py-12">
@@ -84,17 +89,19 @@ export function ProductsListSection({
 
           <div className="flex flex-col items-start justify-between gap-4 pb-8 pt-6 text-foreground">
             <div className="w-full relative mb-8 rounded-lg overflow-hidden">
+              <Stream value={categoryBannerImage}>
+                {(image) => <img
+                    src={image?.url?.replace('.original', '')}
+                    alt={title}
+                    className="w-full h-48 md:h-64 object-cover"
+                  />}
+              </Stream>
               <Suspense
                 fallback={
                   <div className="h-48 w-full animate-pulse rounded-lg bg-contrast-100" />
                 }
               >
                 <div className="relative">
-                  <img
-                    src={categoryBannerImage?.url?.replace('.original', '')}
-                    alt={categoryBannerImage?.altText}
-                    className="w-full h-48 md:h-64 object-cover"
-                  />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-between px-6 py-4">
                     <h1 className="font-heading text-3xl font-medium leading-none text-white @lg:text-4xl @2xl:text-5xl">
                       <span>{title}</span>
