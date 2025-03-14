@@ -49,49 +49,22 @@ export function SignInSection({
         </div>
       </div>
 
-      <div className="container mx-auto pb-9  ">
-        <h1 className="text-2xl font-normal text-center mb-9 ">Sign in</h1>
+      <div className="container mx-auto pb-9">
+        <h1 className="text-2xl font-normal text-center mb-9">{title}</h1>
 
         <div className="flex flex-col md:flex-row justify-center gap-8 max-w-5xl mx-auto">
           {/* Left Column - Sign In Form */}
           <div className="w-full md:w-1/2 p-6 border border-gray-200 bg-white rounded">
-            <div className="mb-4">
-              <label htmlFor="email" className="block mb-2">{emailLabel}</label>
-              <div className="relative">
-                <input 
-                  type="email" 
-                  id="email" 
-                  className="w-full p-3 border border-gray-300 bg-gray-100" 
-                  defaultValue="priyanka@arizon.digital"
-                />
-                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 bg-gray-300 p-1 rounded">
-                  <span className="text-sm">⋯</span>
-                </button>
-              </div>
-            </div>
+            {/* Using the SignInForm component for functionality with custom class */}
+            <SignInForm
+              action={action}
+              emailLabel={emailLabel}
+              passwordLabel={passwordLabel}
+              submitLabel={submitLabel}
+              className="login-form"
+            />
             
-            <div className="mb-6">
-              <label htmlFor="password" className="block mb-2">{passwordLabel}</label>
-              <div className="relative">
-                <input 
-                  type="password" 
-                  id="password" 
-                  className="w-full p-3 border border-gray-300 bg-gray-100" 
-                  defaultValue="•••••••"
-                />
-                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 bg-gray-300 p-1 rounded">
-                  <span className="text-sm">⋯</span>
-                </button>
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <button 
-                type="submit" 
-                className="px-8 py-3 bg-yellow-600 text-white font-bold uppercase rounded-md"
-              >
-                SIGN IN
-              </button>
+            <div className="mt-4 text-right">
               <Link 
                 href={forgotPasswordHref} 
                 className="text-black hover:underline"
@@ -119,7 +92,7 @@ export function SignInSection({
               href={createAccountHref} 
               className="block w-[50%] py-2 bg-yellow-600 text-white font-normal text-center uppercase rounded-md mb-10"
             >
-              CREATE ACCOUNT
+              {createAccountLabel}
             </Link>
           </div>
         </div>
