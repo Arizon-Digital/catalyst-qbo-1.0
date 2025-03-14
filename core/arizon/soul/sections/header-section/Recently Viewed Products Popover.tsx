@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { Link } from '~/components/link';
 import { getRecentlyViewedProducts } from "~/components/graphql-apis";
+import { getPreferredCurrencyCode } from '~/lib/currency';
 
 const ViewedItems = ({ recentlyViewed }) => {
   if (!recentlyViewed || !recentlyViewed.edges || recentlyViewed.edges.length === 0) {
@@ -40,7 +41,7 @@ const ViewedItems = ({ recentlyViewed }) => {
               </Link>
               {product.pricesWithTax?.price && (
                 <div className="text-sm font-bold mt-1">
-                  {product.pricesWithTax.price.currencyCode} {product.pricesWithTax.price.value}
+                  {(product.pricesWithTax.price.currencyCode == 'USD') ? '$' : 'C$'} {product.pricesWithTax.price.value}
                 </div>
               )}
               {product.sku && (
@@ -86,7 +87,7 @@ const ViewedItemsPopover = () => {
         
         if (productIds.length > 0) {
           // Default currency code (can be made dynamic if needed)
-          const currencyCode = 'USD';
+          const currencyCode = await getPreferredCurrencyCode();
           // Fetch product data for the recently viewed items
           const recentlyViewedData: any = await getRecentlyViewedProducts(productIds, currencyCode);
           setRecentlyViewed(recentlyViewedData);
@@ -167,7 +168,7 @@ const ViewedItemsPopover = () => {
             )}
           </div>
           
-          {recentlyViewed && recentlyViewed.edges && recentlyViewed.edges.length > 0 && (
+          {/*recentlyViewed && recentlyViewed.edges && recentlyViewed.edges.length > 0 && (
             <div className="mt-4">
               <Link
                 href="/recently-viewed"
@@ -176,7 +177,7 @@ const ViewedItemsPopover = () => {
                 VIEW ALL
               </Link>
             </div>
-          )}
+          )*/}
           
           <Popover.Arrow className="fill-white" />
         </Popover.Content>
