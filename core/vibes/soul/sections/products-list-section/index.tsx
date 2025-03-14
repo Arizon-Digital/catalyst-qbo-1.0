@@ -225,7 +225,6 @@ export function ProductsListSection({
               placeholderCount={placeholderCount}
               products={products}
               showCompare
-              className="product-grid"
             />
 
             {paginationInfo && <CursorPagination info={paginationInfo} />}
