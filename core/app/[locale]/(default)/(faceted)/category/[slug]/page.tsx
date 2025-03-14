@@ -38,6 +38,12 @@ async function getCategory(props: Props) {
   return category;
 }
 
+interface CategoryImageProps {
+  altText: string;
+  isDefault: boolean;
+  url: string;
+}
+
 const createCategorySearchParamsCache = cache(async (props: Props) => {
   const { slug } = await props.params;
   const category = cacheCategoryFacetedSearch(slug);
@@ -112,7 +118,7 @@ async function getSubCategoriesFilters(props: Props): Promise<Filter[]> {
   ];
 }
 
-async function getCategoryImageUrl(props: Props) {
+async function getCategoryImageUrl(props: Props): Promise<CategoryImageProps | null>  {
   try{
     const category = await getCategory(props);
     return category.defaultImage;
