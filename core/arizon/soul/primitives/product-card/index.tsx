@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 
 import { Badge } from '@/vibes/soul/primitives/badge';
-import { Price, PriceLabel } from '@/vibes/soul/primitives/price-label';
+import { Price, PriceLabel } from '@/arizon/soul/primitives/price-label';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';

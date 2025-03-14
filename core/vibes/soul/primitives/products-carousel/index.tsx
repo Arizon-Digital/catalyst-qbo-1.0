@@ -12,7 +12,7 @@ import {
   CardProduct,
   ProductCard,
   ProductCardSkeleton,
-} from '@/vibes/soul/primitives/product-card';
+} from '@/arizon/soul/primitives/product-card';
 
 export type CarouselProduct = CardProduct;
 
