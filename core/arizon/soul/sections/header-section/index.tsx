@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { forwardRef, useEffect, useState, useRef } from 'react';
@@ -8,7 +7,7 @@ import { clsx } from 'clsx';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useTransition } from 'react';
 import { useActionState } from 'react';
-
+import { usePathname } from 'next/navigation'; 
 
 import { Banner } from '@/vibes/soul/primitives/banner';
 import { Navigation } from '@/vibes/soul/primitives/navigation';
@@ -41,9 +40,62 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
     const [isOpen, setIsOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
+    const [activeDesktopMenu, setActiveDesktopMenu] = useState<number | null>(null);
+    const pathname = usePathname(); 
     
-    // Add this line to define customerAccessToken with a default value
     const [customerAccessToken, setCustomerAccessToken] = useState<string | null>(null);
+    
+   
+    useEffect(() => {
+      
+      const checkIfLoggedIn = () => {
+        try {
+       
+          if (pathname && pathname.includes('/account')) {
+            setCustomerAccessToken('logged-in');
+            return;
+          }
+          
+          const localStorageKeys = ['customerToken', 'customer_token', 'token', 'auth', 'authToken'];
+          for (const key of localStorageKeys) {
+            const token = localStorage.getItem(key);
+            if (token) {
+              setCustomerAccessToken(token);
+              return;
+            }
+          }
+          
+
+          for (const key of localStorageKeys) {
+            const token = sessionStorage.getItem(key);
+            if (token) {
+              setCustomerAccessToken(token);
+              return;
+            }
+          }
+          
+          if (document.cookie.includes('token') || 
+              document.cookie.includes('customer') || 
+              document.cookie.includes('auth')) {
+            setCustomerAccessToken('cookie-auth');
+            return;
+          }
+          
+          
+          if (window.location.href.includes('/account/')) {
+            setCustomerAccessToken('account-page');
+            return;
+          }
+          
+   
+          setCustomerAccessToken(null);
+        } catch (error) {
+          console.error('Error checking auth status:', error);
+        }
+      };
+      
+      checkIfLoggedIn();
+    }, [pathname]);
     
     // Add miniCartIcon variable with the specific image URL
     const miniCartIcon = "https://www.qualitybearingsonline.ca/_next/static/media/mini-cart-icon.a78bafe5.png";
@@ -67,6 +119,15 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       window.addEventListener('resize', handleResize);
       return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    // Add this effect to close menus when the route changes
+    useEffect(() => {
+      // Close all menus when pathname changes
+      setMobileMenuOpen(false);
+      setActiveDropdown(null);
+      setActiveDesktopMenu(null);
+      setIsCartOpen(false);
+    }, [pathname]);
 
     // Initialize cart and set up outside click handler
     useEffect(() => {
@@ -274,27 +335,20 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                         <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
                       </svg>
                     </div>
-                    <div className='flex sign/registration'>
+                    <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
                       <Link
-                        href="/account"
-                        className="flex items-center p-0"
+                        href="/account/orders"
+                        className="flex items-center ml-1"
                         aria-label="My Account"
                       >
                         Account
                       </Link>
-                      <form action={() => {
-                        // Replace with your actual logout action
-                        setCustomerAccessToken(null);
-                        // Example: localStorage.removeItem('customerToken');
-                      }}>
-                        <Button
-                          type="submit"
-                          variant="subtle"
-                          className="p-0 hover:bg-transparent"
-                        >
-                          Sign Out
-                        </Button>
-                      </form>
+                      <Link
+                        href="/logout"
+                        className="ml-1 text-[#1c2541] font-light font-robotoslab text-left"
+                      >
+                        Sign Out
+                      </Link>
                     </div>
                   </div>
                 ) : (
@@ -474,10 +528,21 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               <div className="container mx-auto">
                 <ul className="m-0 p-0 list-none flex justify-center">
                   {navigationLinks.map((item, index) => (
-                    <li key={index} className="static group font-oswald">
+                    <li 
+                      key={index} 
+                      className="static font-oswald"
+                      onMouseEnter={() => setActiveDesktopMenu(index)}
+                      onMouseLeave={() => setActiveDesktopMenu(null)}
+                    >
                       <Link
                         href={item.href || '#'}
                         className="block text-white py-4 px-3 xl:px-5 hover:bg-blue-900 transition-colors font-bold text-[15px] whitespace-nowrap"
+                        onClick={() => {
+                          if (item.href) {
+                            // Close the menu immediately when clicking a link
+                            setActiveDesktopMenu(null);
+                          }
+                        }}
                       >
                         {item.label}
                         {item.groups && item.groups.length > 0 && (
@@ -485,9 +550,9 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                         )}
                       </Link>
 
-                      {item.groups && item.groups.length > 0 && (
-                        <div className="absolute left-0 w-full hidden group-hover:block bg-white shadow-lg z-50 border-t border-gray-200 max-w-[90%] ml-[120px]">
-                          <div className="container mx-auto py-6">
+                      {item.groups && item.groups.length > 0 && activeDesktopMenu === index && (
+                        <div className="absolute left-0 w-full bg-white shadow-lg z-50 border-t border-gray-200 max-w-[90%] ml-[120px]">
+                          <div className="container mx-auto py-6" style={{maxHeight: '80vh', overflowY: 'auto'}}>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 font-robotoslab">
                               {item.groups.map((group, groupIndex) => (
                                 <div key={groupIndex} className="mb-4">
@@ -495,6 +560,10 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                                     <Link
                                       href={group.href || '#'}
                                       className="block font-bold text-gray-800 mb-3 text-base hover:text-blue-800"
+                                      onClick={() => {
+                                        // Close menu on sublink click too
+                                        setActiveDesktopMenu(null);
+                                      }}
                                     >
                                       {group.label}
                                     </Link>
@@ -505,6 +574,10 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                                         key={linkIndex}
                                         href={link.href || '#'}
                                         className="block text-gray-600 py-1 text-sm hover:text-blue-800"
+                                        onClick={() => {
+                                          // Close menu on sublink click
+                                          setActiveDesktopMenu(null);
+                                        }}
                                       >
                                         {link.label}
                                       </Link>
@@ -530,94 +603,153 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
         <div className="h-[200px] w-full"></div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 z-[9999] flex">
-            <div
-              className="fixed inset-0 bg-black bg-opacity-50"
-              onClick={toggleMobileMenu}
-            ></div>
+      {/* Update the Mobile Menu section to include Sign In/Register or Account/Sign Out */}
 
-            <div className="relative flex-1 flex flex-col w-full max-w-xs bg-white overflow-y-auto">
-              <div className="px-4 py-3 border-b border-gray-200">
-                <h2 className="text-lg font-medium text-blue-900">Menu</h2>
-              </div>
+{/* Mobile Menu */}
+{mobileMenuOpen && (
+  <div className="lg:hidden fixed inset-0 z-[9999] flex">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50"
+      onClick={toggleMobileMenu}
+    ></div>
 
-              <div className="divide-y divide-gray-100">
-                {navigationLinks.map((item, index) => (
-                  <div key={index} className="py-2">
-                    <div className="flex items-center justify-between px-4">
-                      <Link
-                        href={item.href || '#'}
-                        className="py-2 text-gray-900 font-bold text-[15px]"
-                        onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
-                      >
-                        {item.label}
-                      </Link>
+    <div className="relative flex-1 flex flex-col w-full max-w-xs bg-white h-full overflow-y-auto">
+      <div className="sticky top-0 px-4 py-3 border-b border-gray-200 bg-white z-10">
+        <h2 className="text-lg font-medium text-blue-900">Menu</h2>
+      </div>
 
-                      {item.groups && item.groups.length > 0 && (
-                        <button
-                          className="p-2 text-gray-500"
-                          onClick={() => toggleDropdown(index)}
-                          aria-expanded={activeDropdown === index}
-                        >
-                          <ChevronDown
-                            className={clsx(
-                              "h-5 w-5 transition-transform",
-                              activeDropdown === index ? "rotate-180" : ""
-                            )}
-                          />
-                        </button>
-                      )}
-                    </div>
-   
-                    {activeDropdown === index && item.groups && (
-                      <div className="mt-2 pl-4 pr-2 pb-2">
-                        {item.groups.map((group, groupIndex) => (
-                          <div key={groupIndex} className="mb-3">
-                            {group.label && (
-                              <Link
-                                href={group.href || '#'}
-                                className="block font-semibold text-gray-800 mb-2 hover:text-blue-800"
-                                onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
-                              >
-                                {group.label}
-                              </Link>
-                            )}
-                            <div className="space-y-1 pl-2">
-                              {group.links && group.links.map((link, linkIndex) => (
-                                <Link
-                                  key={linkIndex}
-                                  href={link.href || '#'}
-                                  className="block text-gray-600 py-1 text-sm hover:text-blue-800"
-                                  onClick={() => setMobileMenuOpen(false)}
-                                >
-                                  {link.label}
-                                </Link>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
-                <Link href="/about-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
-                  About Us
-                </Link>
-                <Link href="/contact-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
-                  Contact Us
-                </Link>
-                <Link href="tel:+14388002658" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
-                  Call Us: 438 800 2658
-                </Link>
-              </div>
+      {/* Add Authentication Section at the top of mobile menu */}
+      <div className="px-4 py-3 border-b border-gray-200">
+        {customerAccessToken ? (
+          <div className="flex items-center mb-2">
+            <div className='user-icon mr-2'>
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
+                <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
+                <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
+              </svg>
+            </div>
+            <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
+              <Link
+                href="/account/orders"
+                className="text-gray-900 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Account
+              </Link>
+              <Link
+                href="/logout"
+                className="text-gray-600 text-sm"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Sign Out
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center mb-2">
+            <div className='user-icon mr-2'>
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
+                <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
+                <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
+              </svg>
+            </div>
+            <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
+              <Link 
+                href="/login" 
+                className="text-gray-900 font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Sign In
+              </Link>
+              <Link 
+                href="/register/" 
+                className="text-gray-600 text-sm"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Register
+              </Link>
             </div>
           </div>
         )}
+      </div>
+
+      <div className="divide-y divide-gray-100 overflow-y-auto flex-grow">
+        {navigationLinks.map((item, index) => (
+          <div key={index} className="py-2">
+            <div className="flex items-center justify-between px-4">
+              <Link
+                href={item.href || '#'}
+                className="py-2 text-gray-900 font-bold text-[15px]"
+                onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
+              >
+                {item.label}
+              </Link>
+
+              {item.groups && item.groups.length > 0 && (
+                <button
+                  className="p-2 text-gray-500"
+                  onClick={() => toggleDropdown(index)}
+                  aria-expanded={activeDropdown === index}
+                >
+                  <ChevronDown
+                    className={clsx(
+                      "h-5 w-5 transition-transform",
+                      activeDropdown === index ? "rotate-180" : ""
+                    )}
+                  />
+                </button>
+              )}
+            </div>
+
+            {activeDropdown === index && item.groups && (
+              <div className="mt-2 pl-4 pr-2 pb-2 overflow-visible">
+                {item.groups.map((group, groupIndex) => (
+                  <div key={groupIndex} className="mb-3">
+                    {group.label && (
+                      <Link
+                        href={group.href || '#'}
+                        className="block font-semibold text-gray-800 mb-2 hover:text-blue-800"
+                        onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
+                      >
+                        {group.label}
+                      </Link>
+                    )}
+                    <div className="space-y-1 pl-2">
+                      {group.links && group.links.map((link, linkIndex) => (
+                        <Link
+                          key={linkIndex}
+                          href={link.href || '#'}
+                          className="block text-gray-600 py-1 text-sm hover:text-blue-800"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {link.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
+        <Link href="/about-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
+          About Us
+        </Link>
+        <Link href="/contact-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
+          Contact Us
+        </Link>
+        <Link href="tel:+14388002658" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
+          Call Us: 438 800 2658
+        </Link>
+      </div>
+    </div>
+  </div>
+)}
 
         {/* Features section - updated with consistent styling */}
         <div className="border-t border-b border-gray-200 bg-white py-4 shadow-md hidden md:block mt-10">

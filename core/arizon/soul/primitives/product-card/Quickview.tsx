@@ -7,7 +7,7 @@ import { X, ChevronUp, ChevronDown } from 'lucide-react';
 
 import { useCommonContext } from '~/components/common-context/common-provider';
 import { Gallery } from '../../pages/product/[slug]/_components/gallery';
-import { Details } from '../../sections/product-detail/details';
+
 import { Description } from '../../sections/product-detail/description';
 import { Warranty } from '../../sections/product-detail/warranty';
 
@@ -110,12 +110,12 @@ const QuickView = ({ product }: QuickViewProps) => {
               <Dialog.Description></Dialog.Description>
               <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                 <div className="a1 mb-12 mt-4 lg:grid lg:grid-cols-2 lg:gap-8">
-                  {/* <Gallery product={productInfo} /> */}
-                  {/* <Details product={productInfo} /> */}
+                  <Gallery product={productInfo} />
+                  
                 </div>
                 <div className="lg:col-span-2" id="tabsection1">
-                  {/* <Description product={productInfo} />
-                  <Warranty product={productInfo} /> */}
+                  <Description product={productInfo} />
+                  <Warranty product={productInfo} />
                 </div>
               </div>
             </div>
