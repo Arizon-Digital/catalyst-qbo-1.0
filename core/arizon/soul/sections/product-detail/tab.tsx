@@ -6,6 +6,7 @@ import Bulk from './bulkprice';
 import Deliveryinformation from './DeliveryInformation';
 import { FragmentOf } from '~/client/graphql';
 import { WarrantyFragment } from './warranty';
+import FeefoReview from './Feeforeview';
 
 interface TabComponentProps {
   product: FragmentOf<typeof WarrantyFragment> & {

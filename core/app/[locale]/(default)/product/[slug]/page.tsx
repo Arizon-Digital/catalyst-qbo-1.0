@@ -17,6 +17,7 @@ import { ProductSchema } from './_components/product-schema';
 import { ProductViewed } from './_components/product-viewed';
 import { PaginationSearchParamNames, Reviews } from './_components/reviews';
 import { getProductData } from '@/arizon/soul/pages/product/[slug]/page-data';
+import TabComponent from '@/arizon/soul/sections/product-detail/tab';
 
 const cachedProductDataVariables = cache(
   async (productId: string, searchParams: Props['searchParams']) => {
@@ -282,7 +283,13 @@ export default async function Product(props: Props) {
         quantityLabel={t('ProductDetails.quantity')}
         thumbnailLabel={t('ProductDetails.thumbnail')}
       />
-
+      <Stream fallback={null} value={getProductData(variables)}>
+        {(product) => (
+          <div className="lg:col-span-2" id="tabsection">
+            <TabComponent product={product} />
+          </div>
+        )}
+      </Stream>
       <FeaturedProductsCarousel
         cta={{ label: t('RelatedProducts.cta'), href: '/shop-all' }}
         emptyStateSubtitle={t('RelatedProducts.browseCatalog')}
