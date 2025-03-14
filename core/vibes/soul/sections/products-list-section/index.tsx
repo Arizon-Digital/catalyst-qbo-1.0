@@ -82,7 +82,29 @@ export function ProductsListSection({
           </Stream>
 
           <div className="flex flex-col items-start justify-between gap-4 pb-8 pt-6 text-foreground">
-            
+            <Stream value={categoryBannerImage}>
+              {(image) =>
+                image && (
+                  <div className="w-full relative mb-8 rounded-lg overflow-hidden">
+                    <div className="relative">
+                      <img
+                        src={image?.url?.replace('.original', '')}
+                        alt="Category banner"
+                        className="w-full h-48 md:h-64 object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-between px-6 py-4">
+                        <h1 className="font-heading text-3xl font-medium leading-none text-white @lg:text-4xl @2xl:text-5xl">
+                          <span>{title}</span>
+                        </h1>
+                        <span className="text-white text-2xl @lg:text-3xl bg-black/50 px-4 py-2 rounded-lg">
+                          <span className="font-normal">{totalCount}</span> Products
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
+            </Stream>
 
             {/* Controls row - MODIFIED */}
             <div className="w-full flex gap-8 @4xl:gap-10">
