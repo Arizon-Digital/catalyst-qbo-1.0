@@ -38,6 +38,7 @@ export default async function Register() {
 
   const { addressFields, customerFields } = registerCustomerData;
 
+
   return (
     <DynamicFormSection
       action={registerCustomer}

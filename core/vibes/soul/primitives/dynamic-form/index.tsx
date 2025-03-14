@@ -96,9 +96,8 @@ export function DynamicForm<F extends Field>({
   return (
     <FormProvider context={form.context}>
       <form {...getFormProps(form)} action={formAction}>
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 gap-y-3 sm:grid-cols-2 sm:gap-x-4">
           {fields.map((field, index) => {
-            console.log("field", field);
             if (Array.isArray(field)) {
               return (
                 <div className="flex gap-4" key={index}>
@@ -136,15 +135,17 @@ export function DynamicForm<F extends Field>({
                 {cancelLabel}
               </Button>
             )}
-            <SubmitButton name={submitName} size={buttonSize} value={submitValue}>
-              {submitLabel}
-            </SubmitButton>
           </div>
           {form.errors?.map((error, index) => (
             <FormStatus key={index} type="error">
               {error}
             </FormStatus>
           ))}
+        </div>
+        <div className='flex justify-center'>
+        <SubmitButton name={submitName} size={buttonSize} value={submitValue}>
+          {submitLabel}
+        </SubmitButton>
         </div>
       </form>
     </FormProvider>
@@ -165,7 +166,7 @@ function SubmitButton({
   const { pending } = useFormStatus();
 
   return (
-    <Button loading={pending} name={name} size={size} type="submit" value={value}>
+    <Button loading={pending} className='mt-7' name={name} size={size} type="submit" value={value}>
       {children}
     </Button>
   );
@@ -351,9 +352,9 @@ function DynamicFormField({
           disabledDays={
             field.minDate != null && field.maxDate != null
               ? {
-                  before: new Date(field.minDate),
-                  after: new Date(field.maxDate),
-                }
+                before: new Date(field.minDate),
+                after: new Date(field.maxDate),
+              }
               : undefined
           }
           errors={formField.errors}
