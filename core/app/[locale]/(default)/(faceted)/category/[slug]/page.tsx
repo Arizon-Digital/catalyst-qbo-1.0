@@ -38,6 +38,12 @@ async function getCategory(props: Props) {
   return category;
 }
 
+interface CategoryImageProps {
+  altText: string;
+  isDefault: boolean;
+  url: string;
+}
+
 const createCategorySearchParamsCache = cache(async (props: Props) => {
   const { slug } = await props.params;
   const category = cacheCategoryFacetedSearch(slug);
@@ -118,6 +124,11 @@ async function getTitle(props: Props): Promise<string | null> {
   return category.name;
 }
 
+async function getCategoryImageUrl(props: Props): Promise<CategoryImageProps | null> {
+  const category = await getCategory(props);
+  return category?.defaultImage;
+}
+
 const getSearch = cache(async (props: Props) => {
   const search = await getRefinedSearch(props);
 
@@ -178,12 +189,6 @@ async function getFilters(props: Props): Promise<Filter[]> {
   const subCategoriesFilters = await getSubCategoriesFilters(props);
 
   return [...subCategoriesFilters, ...filters];
-}
-
-async function getCategoryImageUrl(props: Props) {
-  const category = await getCategory(props);
-
-  return category?.defaultImage;
 }
 
 async function getSortLabel(): Promise<string> {

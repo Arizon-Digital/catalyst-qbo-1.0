@@ -42,7 +42,7 @@ interface Props {
   emptyStateSubtitle?: Streamable<string | null>;
   emptyStateTitle?: Streamable<string | null>;
   placeholderCount?: number;
-  categoryBannerImage?: Streamable<string | null>;
+  categoryBannerImage?: any;
 }
 
 export function ProductsListSection({
@@ -68,7 +68,7 @@ export function ProductsListSection({
   emptyStateSubtitle,
   emptyStateTitle,
   placeholderCount = 8,
-  categoryBannerImage = "/api/placeholder/1200/300",
+  categoryBannerImage,
 }: Props) {
   return (
     <div className="group/products-list-section @container">
