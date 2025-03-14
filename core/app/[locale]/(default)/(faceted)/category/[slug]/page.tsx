@@ -124,10 +124,6 @@ async function getTitle(props: Props): Promise<string | null> {
   return category.name;
 }
 
-async function getCategoryImageUrl(props: Props): Promise<CategoryImageProps | null> {
-  return '';
-}
-
 const getSearch = cache(async (props: Props) => {
   const search = await getRefinedSearch(props);
 
@@ -307,7 +303,6 @@ export default async function Category(props: Props) {
         sortParamName="sort"
         title={getTitle(props)}
         totalCount={getTotalCount(props)}
-        categoryBannerImage={getCategoryImageUrl(props)}
       />
       <Stream value={Promise.all([getCategory(props), getProducts(props)])}>
         {([category, products]) => (
