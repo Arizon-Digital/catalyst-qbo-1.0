@@ -1,9 +1,10 @@
 
 import { useTranslations } from 'next-intl';
 import { FragmentOf, graphql } from '~/client/graphql';
-import TabComponent from '../_components/tab';
+
 import { log } from 'console';
 import TechData  from './techdata';
+import TabComponent from './tab';
 
 export const DescriptionFragment = graphql(`
   fragment DescriptionFragment on Product {
@@ -28,7 +29,7 @@ export const Description = ({ product }: any) => {
     <>
       
       {/* Pass product description to the TabComponent */}
-      <TabComponent product={product} />
+      {/* <TabComponent product={product} /> */}
       {/* <TechData product={product} /> */}
     </>
     
