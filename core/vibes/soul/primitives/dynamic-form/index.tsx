@@ -98,6 +98,7 @@ export function DynamicForm<F extends Field>({
       <form {...getFormProps(form)} action={formAction}>
         <div className="space-y-6">
           {fields.map((field, index) => {
+            console.log("field", field);
             if (Array.isArray(field)) {
               return (
                 <div className="flex gap-4" key={index}>

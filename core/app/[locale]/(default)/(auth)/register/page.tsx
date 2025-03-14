@@ -8,8 +8,8 @@ import { getTranslations } from 'next-intl/server';
 import { DynamicFormSection } from '@/arizon/soul/sections/dynamic-form-section';
 import { formFieldTransformer } from '~/data-transformers/form-field-transformer';
 import {
-  CUSTOMER_FIELDS_TO_EXCLUDE,
-  FULL_NAME_FIELDS,
+  PASSWORD_FIELDS,
+  ALL_FIELDS,
 } from '~/data-transformers/form-field-transformer/utils';
 import { exists } from '~/lib/utils';
 
@@ -37,18 +37,17 @@ export default async function Register() {
   }
 
   const { addressFields, customerFields } = registerCustomerData;
-  // const reCaptcha = await bypassReCaptcha(reCaptchaSettings);
 
   return (
     <DynamicFormSection
       action={registerCustomer}
       fields={[
-        addressFields
-          .filter((field) => FULL_NAME_FIELDS.includes(field.entityId))
+        ...addressFields
+          .filter((field) => ALL_FIELDS.includes(field.entityId))
           .map(formFieldTransformer)
           .filter(exists),
         ...customerFields
-          .filter((field) => !CUSTOMER_FIELDS_TO_EXCLUDE.includes(field.entityId))
+          .filter((field) => PASSWORD_FIELDS.includes(field.entityId))
           .map(formFieldTransformer)
           .filter(exists),
       ]}

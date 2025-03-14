@@ -45,6 +45,27 @@ export const BOTH_CUSTOMER_ADDRESS_FIELDS = [
   FieldNameToFieldId.phone,
 ];
 
+export const PASSWORD_FIELDS = [
+  FieldNameToFieldId.email, 
+  FieldNameToFieldId.password, 
+  FieldNameToFieldId.confirmPassword,
+]
+
+export const ALL_FIELDS = [
+  FieldNameToFieldId.firstName, 
+  FieldNameToFieldId.lastName, 
+  FieldNameToFieldId.company, 
+  FieldNameToFieldId.phone, 
+  FieldNameToFieldId.address1, 
+  FieldNameToFieldId.address2, 
+  FieldNameToFieldId.city, 
+  FieldNameToFieldId.countryCode, 
+  FieldNameToFieldId.stateOrProvince, 
+  FieldNameToFieldId.postalCode, 
+  FieldNameToFieldId.currentPassword, 
+  FieldNameToFieldId.exclusiveOffers, 
+]
+
 export const FULL_NAME_FIELDS = [FieldNameToFieldId.firstName, FieldNameToFieldId.lastName];
 
 export const ADDRESS_FORM_LAYOUT = [
