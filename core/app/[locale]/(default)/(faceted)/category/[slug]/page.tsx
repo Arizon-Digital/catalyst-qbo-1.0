@@ -125,8 +125,7 @@ async function getTitle(props: Props): Promise<string | null> {
 }
 
 async function getCategoryImageUrl(props: Props): Promise<CategoryImageProps | null> {
-  const category = await getCategory(props);
-  return category?.defaultImage;
+  return '';
 }
 
 const getSearch = cache(async (props: Props) => {
