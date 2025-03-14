@@ -90,18 +90,16 @@ export function ProductsListSection({
           <div className="flex flex-col items-start justify-between gap-4 pb-8 pt-6 text-foreground">
             <div className="w-full relative mb-8 rounded-lg overflow-hidden">
               <div className="relative">
-                <Stream value={categoryBannerImage}>
+                <Stream value={categoryBannerImage} fallback={
+                    <div className="h-48 w-full animate-pulse rounded-lg bg-contrast-100" />
+                  }>
                   {(image) => <img
                     src={image?.url?.replace('.original', '')}
                     alt={title}
                     className="w-full h-48 md:h-64 object-cover"
                   />}
                 </Stream>
-                <Suspense
-                  fallback={
-                    <div className="h-48 w-full animate-pulse rounded-lg bg-contrast-100" />
-                  }
-                >
+                <Suspense>
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-between px-6 py-4">
                     <h1 className="font-heading text-3xl font-medium leading-none text-white @lg:text-4xl @2xl:text-5xl">
                       <span>{title}</span>
