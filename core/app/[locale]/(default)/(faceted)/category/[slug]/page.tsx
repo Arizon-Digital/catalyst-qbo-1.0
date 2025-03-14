@@ -180,6 +180,12 @@ async function getFilters(props: Props): Promise<Filter[]> {
   return [...subCategoriesFilters, ...filters];
 }
 
+async function getCategoryImageUrl(props: Props) {
+  const category = await getCategory(props);
+
+  return category?.defaultImage;
+}
+
 async function getSortLabel(): Promise<string> {
   const t = await getTranslations('FacetedGroup.SortBy');
 
@@ -297,6 +303,7 @@ export default async function Category(props: Props) {
         sortParamName="sort"
         title={getTitle(props)}
         totalCount={getTotalCount(props)}
+        categoryBannerImage={getCategoryImageUrl(props)}
       />
       <Stream value={Promise.all([getCategory(props), getProducts(props)])}>
         {([category, products]) => (
