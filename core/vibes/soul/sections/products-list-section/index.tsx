@@ -42,6 +42,7 @@ interface Props {
   emptyStateSubtitle?: Streamable<string | null>;
   emptyStateTitle?: Streamable<string | null>;
   placeholderCount?: number;
+  categoryBannerImage?:any;
 }
 
 export function ProductsListSection({
@@ -67,6 +68,7 @@ export function ProductsListSection({
   emptyStateSubtitle,
   emptyStateTitle,
   placeholderCount = 8,
+  categoryBannerImage,
 }: Props) {
   return (
     <div className="group/products-list-section @container">
@@ -84,7 +86,7 @@ export function ProductsListSection({
             <div className="w-full relative mb-8 rounded-lg overflow-hidden">
               <div className="relative">
                 <img
-                  src=""
+                  src={categoryBannerImage?.url?.replace('.original', '')}
                   alt="Category banner"
                   className="w-full h-48 md:h-64 object-cover"
                 />
