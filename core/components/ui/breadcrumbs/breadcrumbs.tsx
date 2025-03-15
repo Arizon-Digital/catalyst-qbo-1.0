@@ -83,7 +83,7 @@ interface Props {
 const Breadcrumbs = ({ breadcrumbs, className }: Props) => {
   return (
     <nav aria-label="Breadcrumb" className={className}>
-      <ul className="flex flex-wrap items-center text-sm tracking-wide text-[#7F7F7F] uppercase breadcrumbs">
+      <ul className="flex flex-wrap items-center text-sm tracking-wide text-[#7F7F7F] uppercase breadcrumbs mb-8">
         <Fragment key="HOME">
           <li className="flex items-center">
             <CustomLink

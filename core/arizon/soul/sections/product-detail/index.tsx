@@ -63,11 +63,11 @@ export function ProductDetail<F extends Field>({
 
   return (
     <section className="@container">
-      <div className="mx-auto w-full max-w-screen-2xl px-4 py-10 @xl:px-6 @xl:py-14 @4xl:px-8 @4xl:py-20">
+      <div className="mx-auto w-full max-w-screen-2xl px-4  @xl:px-6  @4xl:px-8 mt-5 font-robotoslab ">
         <Stream value={streamableProduct}>
           {(product) =>
             product && (
-              <Breadcrumbs category={product?.breadcrumbs} className="mb-6" />
+              <Breadcrumbs category={product?.breadcrumbs} className="mb-12 font-robotoslab" />
             )}
         </Stream>
 
@@ -84,26 +84,26 @@ export function ProductDetail<F extends Field>({
                 {/* Product Details */}
                 <div className="text-foreground">
                   {product.subtitle != null && product.subtitle !== '' && (
-                    <p className="font-mono text-sm uppercase">{product.subtitle}</p>
+                    <p className="font-robotoslab font-bold text-sm uppercase text-[#a5a5a5] mt-4">{product.subtitle}</p>
                   )}
 
-                  <h1 className="mb-3 mt-2 font-heading text-2xl font-medium leading-none @xl:mb-4 @xl:text-3xl @4xl:text-4xl">
+                  <h1 className="mb-3 mt-2  text-2xl font-semibold leading-none @xl:mb-4 @xl:text-3xl @4xl:text-3xl font-robotoslab">
                     {product.title}
                   </h1>
-                  <h1 className="mb-3 mt-2 font-heading text-2xl font-medium leading-none @xl:mb-4 @xl:text-3xl @4xl:text-4xl">
-                    SKU : {product.sku}
-                  </h1>
+                  <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab leading-none @xl:mb-4 @xl:text-base @4xl:text-base">
+                    SKU: <span className='font-robotoslab font-light'>{product.sku}</span>
+                  </p>
                   {Boolean(product?.productData?.availabilityV2?.description) && (
-                    <div>
-                      <h3 className="font-semiboldd flex productView-info-name">Availability <p className="pr productView-info-value ">: {product?.productData?.availabilityV2?.description}</p></h3>
-                    </div>
+                
+                      <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab leading-none @xl:mb-4 @xl:text-base @4xl:text-base">Availability <span className="font-robotoslab font-light ">: {product?.productData?.availabilityV2?.description} </span></p>
+                    
                   )}
                   {(product?.productData?.weight?.value) && (
                     <BulkPricing product={product?.productData} />
                   )}
                   <Stream fallback={<PriceLabelSkeleton />} value={product.price}>
                     {(price) => (
-                      <PriceLabel className="my-3 text-xl @xl:text-2xl" price={price?.replace('CA', 'C') ?? ''} />
+                      <PriceLabel className="mb-3  text-4xl  !text-[#1a2348] font-bold font-robotoslab   @4xl:text-4xl" price={price?.replace('CA', 'C') ?? ''} />
                     )}
                   </Stream>
                   <div className="mb-8 @2xl:hidden">
@@ -143,7 +143,7 @@ export function ProductDetail<F extends Field>({
                       />
                     )}
                   </Stream>
-                  <div className="feefo-reviews">
+                  <div className="feefo-reviews mt-5 mb-3">
                     <a
                       href={`https://www.feefo.com/reviews/quality-bearings-online`}
                       target="_blank"
@@ -278,7 +278,7 @@ function ProductDescriptionSkeleton() {
 
 function ProductDetailFormSkeleton() {
   return (
-    <div className="flex animate-pulse flex-col gap-8 py-8">
+    <div className="flex animate-pulse flex-col gap-8 ">
       <div className="flex flex-col gap-5">
         <div className="h-2 w-10 rounded-md bg-contrast-100" />
         <div className="flex gap-2">

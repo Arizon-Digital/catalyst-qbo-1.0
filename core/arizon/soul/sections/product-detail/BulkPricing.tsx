@@ -49,28 +49,29 @@ export default function BulkPricing({ product }: BulkPricingProps) {
   if (!hasBulkPricing) {
     return (
       <div className="">
-        <h3 className="font-semibold flex items-center productView-info-name">
-          Bulk Pricing :
-        </h3>
-        <div className="ml-2 mt-[51px;] productView-info-value">
+        <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab leading-none @xl:mb-4 @xl:text-base @4xl:text-base">
+          Bulk Pricing : 
+        
+        <span className="font-robotoslab font-light">
           <Link 
             href="/bulk-pricing"
             className="text-black-600 hover:text-blue-700 underline capitalize"
           >
             Click Here to Enquire
           </Link>
-        </div>
+        </span>
+        </p>
       </div>
     );
   }
 
   return (
     <div className="mt-4">
-      <h3 className="font-semibold flex items-center productView-info-name">
-        Bulk Pricing
-      </h3>
+      <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab leading-none @xl:mb-4 @xl:text-base @4xl:text-base">
+        Bulk Pricing :
       
-      <div className="ml-2 mt-[51px] productView-info-value">
+      
+      <span className="font-robotoslab font-light">
         <Dialog.Root>
           <Dialog.Trigger asChild>
             <button className="text-black-600 hover:text-blue-700 underline capitalize">
@@ -101,7 +102,8 @@ export default function BulkPricing({ product }: BulkPricingProps) {
             </Dialog.Content>
           </Dialog.Portal>
         </Dialog.Root>
-      </div>
+      </span>
+      </p>
     </div>
   );
 }

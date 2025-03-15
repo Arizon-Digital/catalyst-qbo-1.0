@@ -74,7 +74,7 @@ const Gallery = ({ className, images, defaultImageIndex = 0 }: Props) => {
           </div>
         )}
       </figure>
-      <nav
+      {/* <nav
         aria-label={t('thumbnailNavigation')}
         className="mt-3 flex w-full flex-wrap items-center gap-4 px-6 py-1 sm:px-1 md:mt-5 md:gap-6"
       >
@@ -105,7 +105,7 @@ const Gallery = ({ className, images, defaultImageIndex = 0 }: Props) => {
             </button>
           );
         })}
-      </nav>
+      </nav> */}
     </div>
   );
 };

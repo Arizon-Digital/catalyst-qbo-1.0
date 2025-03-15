@@ -120,9 +120,9 @@ export function ProductDetailForm<F extends Field>({
   return (
     <FormProvider context={form.context}>
       <FormStateInput />
-      <form {...getFormProps(form)} action={formAction} className="py-8">
+      <form {...getFormProps(form)} action={formAction} className="">
         <input name="id" type="hidden" value={productId} />
-        <div className="space-y-6">
+        <div className="">
           {fields.map((field) => {
             return (
               <FormField
@@ -140,7 +140,8 @@ export function ProductDetailForm<F extends Field>({
               {error}
             </FormStatus>
           ))}
-          <div className="flex gap-x-3 pt-3">
+          <div className="flex ">
+            <div className='mb-2 mt-4 font-robotoslab font-semibold'>QUANTITY :
             <NumberInput
               aria-label={quantityLabel}
               decrementLabel={decrementLabel}
@@ -153,6 +154,9 @@ export function ProductDetailForm<F extends Field>({
               required
               value={quantityControl.value}
             />
+            </div>
+            </div>
+            <div>
             <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
           </div>
         </div>

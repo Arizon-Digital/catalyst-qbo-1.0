@@ -140,7 +140,7 @@ export function ProductDetailForm<F extends Field>({
               {error}
             </FormStatus>
           ))}
-          <div className="flex gap-x-3 pt-3">
+          <div className="flex ">
             <NumberInput
               aria-label={quantityLabel}
               decrementLabel={decrementLabel}
