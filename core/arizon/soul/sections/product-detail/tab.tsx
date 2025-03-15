@@ -1,3 +1,8 @@
+
+
+
+
+
 'use client';
 
 import React, { useState } from 'react';
@@ -41,22 +46,22 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
   const renderDescriptionContent = () => {
     return (
       <div className="space-y-6">
-        {/* Description section with margin */}
-        <div className="md:ml-8">
+        {/* Description section */}
+        <div>
           {/* Description heading with golden underline */}
           <div className="relative pb-4">
-            <h1 className="text-2xl font-bold text-[#03465c]">Description</h1>
+            <h1 className="text-2xl font-bold text-[#03465c] font-robotoslab">Description</h1>
             <div className="absolute bottom-0 left-0 h-0.5 w-full bg-gradient-to-r from-yellow-600 to-yellow-400"></div>
           </div>
           
           {/* Description content with styled elements */}
           <div 
             dangerouslySetInnerHTML={{ __html: product.description }} 
-            className="description-content [&>h2]:font-oswald [&>h2]:text-[30px] [&>h2]:font-normal [&>h2]:my-[25px] [&>h4]:font-semibold [&>h4]:mt-9 [&>p]:mb-6"
+            className="description-content [&>h2]:font-oswald [&>h2]:text-[30px] [&>h2]:font-normal [&>h2]:my-[25px] [&>h4]:font-semibold [&>h4]:mt-9 [&>p]:mb-6 "
           />
         </div>
         
-        {/* Technical Data content without margin */}
+        {/* Technical Data content */}
         <TechData product={productWithoutWarranty} />
       </div>
     );
@@ -83,35 +88,42 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
 
   return (
     <div className="mb-10">
-      {/* Tab layout for desktop view */}
+      {/* Tab layout for desktop view with 130px gaps on both sides */}
       <div className="hidden md:block">
-        <div className="justify-left mb-4 flex pl-8">
-          {Object.entries(tabContent).map(([tab, value]) => (
-            <button
-              key={tab}
-              className={`p-3 ${
-                activeTab === tab ? 'bg-white text-[#03465c]' : 'bg-[#E2E2E2] text-[#03465c]'
-              }`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {value?.label?.toUpperCase()}
-            </button>
-          ))}
-        </div>
-        <div className="bg-white p-4 text-left">
-          <div className="text-base text-[#03465c]">
-            {renderTabContent(activeTab)}
+        {/* Outer container */}
+        <div className="relative" style={{ paddingLeft: '130px', paddingRight: '130px' }}>
+          {/* Tab buttons row with grey background */}
+          <div className="flex bg-[#E2E2E2] border border-gray-300 mt-8 font-robotoslab">
+            {Object.entries(tabContent).map(([tab, value]) => (
+              <button
+                key={tab}
+                className={`px-6 py-3 border-r border-gray-300 ${
+                  activeTab === tab 
+                    ? 'bg-white text-[#03465c] font-medium border-b-0' 
+                    : 'bg-[#E2E2E2] text-[#03465c] hover:bg-gray-200'
+                }`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {value?.label}
+              </button>
+            ))}
+          </div>
+          
+          {/* Tab content with full-width background and border */}
+          <div className="w-full bg-white p-6 text-left border border-gray-300 border-t-0">
+            <div className="text-base text-[#03465c]">
+              {renderTabContent(activeTab)}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Static table layout for mobile view */}
+      {/* Static table layout for mobile view - unchanged */}
       <div className="block rounded-lg bg-[#e7f5f8] md:hidden">
         <table className="w-full table-auto text-left">
           <tbody className="text-sm text-[#03465c]">
             {Object.entries(tabContent).map(([tab, value]) => (
               <tr key={tab} className="border-b border-[#03465c]/10">
-                {/* <th className="p-4 font-bold">{value.label}</th> */}
                 <td className="p-4">{renderTabContent(tab)}</td>
               </tr>
             ))}
