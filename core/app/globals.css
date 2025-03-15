@@ -48,3 +48,20 @@ table {
   border-color: #000;
   margin-top: 10px;
 }
+.deliverytable th {
+  border-bottom: 3px solid #ca9618;
+  background-color: #1a2348;
+  color: #fff;
+  padding: 7px 5px;
+  text-transform: uppercase;
+}
+.deliverytable th:first-child {
+  border-right: 1px solid grey;
+}
+.deliverytable tr:nth-child(odd) {
+  background: #9ba2a8;
+}
+.deliverytable {
+  margin: 0 0 20px;
+  width: 100%;
+}

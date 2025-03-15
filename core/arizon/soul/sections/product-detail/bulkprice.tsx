@@ -30,10 +30,10 @@ const Bulk: React.FC<Props> = ({ product }) => {
   if (!product.bulk_discount_rates || product.bulk_discount_rates.length === 0) {
     return (
       <div className="tab-content" id="tab-bulk" data-emthemesmodez-mobile-collapse>
-        <h2 className="page-heading">Bulk Pricing</h2>
-        <hr className="product-info-hr" />
+        <h2 className="text-4xl font-normal !text-[#000000] font-oswald">Bulk Pricing</h2>
+        <hr className="border-t-2 !border-[#ca9618] my-2" />
         <div className="productView-bulk-tabContent overflow-x-hidden" data-emthemesmodez-mobile-collapse-content>
-          <p>
+          <p className='product-details-item flex justify-between items-center font-robotoslab text-base font-semibold text-black'>
             For bulk discount on this product, contact our dedicated sales team today by filling out the form below:
           </p>
           <HubspotContactForm />
@@ -44,8 +44,8 @@ const Bulk: React.FC<Props> = ({ product }) => {
 
   return (
     <div className="tab-content m-0 p-0 " id="tab-bulk" data-emthemesmodez-mobile-collapse>
-      <h2 className="page-heading">Bulk Pricing</h2>
-      <hr className="product-info-hr" />
+      <h2 className="text-4xl font-normal !text-[#000000] font-oswald">Bulk Pricing</h2>
+      <hr className="border-t-2 !border-[#ca9618] my-2" />
       <div className="productView-bulk-tabContent" data-emthemesmodez-mobile-collapse-content>
       ----  <ul className="bulk-pricing-list">
           {product.bulk_discount_rates.map((rate, index) => (

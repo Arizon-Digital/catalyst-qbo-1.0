@@ -81,7 +81,7 @@ runtime.registerComponent(
             imageSrc: Image(),
             imageAlt: TextInput({ label: 'Image alt', defaultValue: 'Slide image' }),
             showButton: Checkbox({ label: 'Show button', defaultValue: true }),
-            buttonText: TextInput({ label: 'Button text', defaultValue: 'Shop all' }),
+            // buttonText: TextInput({ label: 'Button text', defaultValue: 'Shop all' }),
             buttonLink: Link({ label: 'Button link' }),
             buttonColor: Select({
               label: 'Button color',

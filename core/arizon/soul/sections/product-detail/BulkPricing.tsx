@@ -74,7 +74,7 @@ export default function BulkPricing({ product }: BulkPricingProps) {
       <span className="font-robotoslab font-light">
         <Dialog.Root>
           <Dialog.Trigger asChild>
-            <button className="text-black-600 hover:text-blue-700 underline capitalize">
+            <button className="text-black-600 hover:text-blue-700 underline capitalize font-robotoslab" >
               Click Here to View
             </button>
           </Dialog.Trigger>
@@ -92,7 +92,7 @@ export default function BulkPricing({ product }: BulkPricingProps) {
                 </Dialog.Close>
               </div>
 
-              <p className="text-gray-600 mb-6">
+              <p className="product-details-item flex justify-between items-center font-robotoslab text-base font-semibold text-black">
                 Below are the available bulk discount rates for each individual item when you purchase a certain amount:
               </p>
 

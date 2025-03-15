@@ -21,7 +21,9 @@ const Deliveryinformation: React.FC<Props> = ({ product }) => {
   return (
     <div className="Deliveryinformation">
       <div id="Canada" className="tabcontent">
-        <h2>Canadian Delivery Details</h2>
+            <h1 className="text-4xl font-normal !text-[#000000] font-oswald">Delivery Information</h1>
+            <div className="border-t-2 !border-[#ca9618] my-2"></div>
+        <h2 className='text-4xl font-normal !text-[#000000] font-oswald'>Canadian Delivery Details</h2>
         <br />
         <p>
           We have one of the largest online stocks of bearings and ancillary components available online anywhere in the world, and we take pride in great customer service, superb products, and express delivery to Canada.
