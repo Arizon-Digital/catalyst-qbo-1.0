@@ -1,6 +1,3 @@
-
-
-
 /* eslint-disable valid-jsdoc */
 'use client';
 
@@ -21,7 +18,6 @@ interface CarouselProps extends React.ComponentPropsWithoutRef<'div'> {
   setApi?: (api: CarouselApi) => void;
   carouselScrollbarLabel?: string;
   hideOverflow?: boolean;
-  maxDesktopCards?: number;
 }
 
 type CarouselContextProps = {
@@ -31,7 +27,6 @@ type CarouselContextProps = {
   scrollNext: () => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
-  maxDesktopCards?: number;
 } & CarouselProps;
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
@@ -53,67 +48,11 @@ function Carousel({
   className,
   children,
   hideOverflow = true,
-  maxDesktopCards = 5,
   ...rest
 }: CarouselProps) {
-  // Set up responsive options for the carousel
-  const defaultOpts = {
-    // Default behavior for mobile
-    dragFree: true,
-    containScroll: 'trimSnaps',
-    
-    // Add breakpoints for different screen sizes
-    breakpoints: {
-      // For medium screens and larger, disable dragging if we have 5 or fewer slides
-      '(min-width: 768px)': {
-        dragFree: false,
-      },
-      // For desktop, completely disable dragging - we'll handle layout with CSS
-      '(min-width: 1024px)': {
-        dragFree: false,
-        draggable: false
-      }
-    }
-  };
-
-  // Merge user options with our default options
-  const mergedOpts = { ...defaultOpts, ...opts };
-  
-  const [carouselRef, api] = useEmblaCarousel(mergedOpts, plugins);
+  const [carouselRef, api] = useEmblaCarousel(opts, plugins);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
-  const [totalSlides, setTotalSlides] = useState(0);
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  // Check if we're on desktop and should disable scrolling
-  useEffect(() => {
-    const checkDesktop = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-    };
-    
-    checkDesktop();
-    window.addEventListener('resize', checkDesktop);
-    
-    return () => {
-      window.removeEventListener('resize', checkDesktop);
-    };
-  }, []);
-
-  // Get the total number of slides and disable scrolling if needed
-  useEffect(() => {
-    if (!api) return;
-    
-    const slides = api.slideNodes();
-    setTotalSlides(slides.length);
-    
-    if (isDesktop && slides.length <= maxDesktopCards) {
-      // Disable scrolling on desktop for 5 or fewer cards
-      api.reInit({
-        ...mergedOpts,
-        draggable: false,
-      });
-    }
-  }, [api, isDesktop, maxDesktopCards, mergedOpts]);
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const onSelect = React.useCallback((api: CarouselApi) => {
@@ -158,9 +97,6 @@ function Carousel({
     };
   }, [api, onSelect]);
 
-  // Determine if we should show navigation on desktop
-  const shouldShowNavigation = !isDesktop || totalSlides > maxDesktopCards;
-
   return (
     <CarouselContext.Provider
       value={{
@@ -169,9 +105,8 @@ function Carousel({
         opts,
         scrollPrev,
         scrollNext,
-        canScrollPrev: shouldShowNavigation && canScrollPrev,
-        canScrollNext: shouldShowNavigation && canScrollNext,
-        maxDesktopCards,
+        canScrollPrev,
+        canScrollNext,
       }}
     >
       <div
@@ -188,36 +123,21 @@ function Carousel({
 }
 
 function CarouselContent({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
-  const { carouselRef, maxDesktopCards } = useCarousel();
-  
+  const { carouselRef } = useCarousel();
+
   return (
     <div className="w-full" ref={carouselRef}>
-      <div 
-        {...rest} 
-        className={clsx(
-          '-ml-4 flex @2xl:-ml-5',
-          // Keep the flex layout for horizontal display with fixed spacing
-          '@[1024px]:flex @[1024px]:justify-between @[1024px]:gap-1 @[1024px]:mx-auto @[1024px]:px-0',
-          className
-        )} 
-      />
+      <div {...rest} className={clsx('-ml-4 flex @2xl:-ml-5', className)} />
     </div>
   );
 }
 
 function CarouselItem({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
-  const { maxDesktopCards } = useCarousel();
-  
   return (
     <div
       {...rest}
       aria-roledescription="slide"
-      className={clsx(
-        'min-w-0 shrink-0 grow-0 pl-4 @2xl:pl-5',
-        // On desktop, each item takes equal width with proper spacing
-        '@[1024px]:w-1/5 @[1024px]:max-w-[19%] @[1024px]:pl-0 @[1024px]:mx-0',
-        className
-      )}
+      className={clsx('min-w-0 shrink-0 grow-0 pl-4 @2xl:pl-5', className)}
       role="group"
     />
   );
@@ -247,12 +167,6 @@ function CarouselButtons({
   nextLabel?: string;
 }) {
   const { scrollPrev, scrollNext, canScrollPrev, canScrollNext } = useCarousel();
-
-  // If we can't scroll in either direction (fewer than maxDesktopCards on desktop),
-  // don't show the navigation buttons
-  if (!canScrollPrev && !canScrollNext) {
-    return null;
-  }
 
   return (
     <div
@@ -305,11 +219,6 @@ function CarouselScrollbar({
   const { api, canScrollPrev, canScrollNext } = useCarousel();
   const [progress, setProgress] = useState(0);
   const [scrollbarPosition, setScrollbarPosition] = useState({ width: 0, left: 0 });
-
-  // If we can't scroll (on desktop with 5 or fewer cards), don't show the scrollbar
-  if (!canScrollPrev && !canScrollNext) {
-    return null;
-  }
 
   const findClosestSnap = useCallback(
     (nextProgress: number) => {
@@ -420,3 +329,6 @@ export {
   CarouselButtons,
   CarouselScrollbar,
 };
+
+
+
