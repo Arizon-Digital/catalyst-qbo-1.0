@@ -30,7 +30,7 @@ export function WebPageContent({ webPage: streamableWebPage, breadcrumbs, childr
               <header className="pb-8 @2xl:pb-12 @4xl:pb-16">
                 {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
 
-                <h1 className="mb-4 mt-8 font-heading text-4xl font-medium leading-none @xl:text-5xl @4xl:text-6xl">
+                <h1 className="mb-4 mt-8 font-heading text-4xl font-medium leading-none @xl:text-5xl @4xl:text-6xl font-oswald">
                   {title}
                 </h1>
               </header>
