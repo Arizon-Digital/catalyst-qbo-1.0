@@ -233,12 +233,12 @@ export const CartItem = ({ currencyCode, product }: Props) => {
 
           {/* Product name and SKU */}
           <td className="">
-            <p className="text-xl font-bold md:text-2xl" id="cartbrandname">
+            <p className="text-xl font-bold md:text-2xl font-robotoslab" id="cartbrandname">
               {product.brand}
             </p>
             <Link 
               href={product.url}
-              className="text-xl font-bold md:text-2xl hover:text-blue-600 transition-colors" 
+              className="text-xl font-bold md:text-2xl hover:text-blue-600 transition-colors font-robotoslab" 
               id="cartproductname"
             >
               {product.name}

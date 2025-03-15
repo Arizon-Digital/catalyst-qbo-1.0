@@ -119,7 +119,7 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
       </div>
 
       {/* Static table layout for mobile view - unchanged */}
-      <div className="block rounded-lg bg-[#e7f5f8] md:hidden">
+      <div className="block rounded-lg bg-[#fff] md:hidden">
         <table className="w-full table-auto text-left">
           <tbody className="text-sm text-[#03465c]">
             {Object.entries(tabContent).map(([tab, value]) => (

@@ -153,10 +153,10 @@ export function CartClient<LineItem extends CartLineItem>({
   // New design matching the images provided
   return (
     <div className="w-full px-4 sm:px-6 md:px-0 max-w-[1580px] mx-auto mt-8 mb-8">
-      <div className="flex items-center text-sm text-gray-500 mb-3">
+      <div className="flex items-center text-sm text-gray-500 mb-3 font-robotoslab">
         <a href="/" className="hover:underline">HOME</a>
         <span className="mx-1">/</span>
-        <span>YOUR CART</span>
+        <span className='font-robotoslab'>YOUR CART</span>
       </div>
       
       <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
@@ -170,10 +170,10 @@ export function CartClient<LineItem extends CartLineItem>({
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200">
-                  <th className="text-left font-semibold p-2 sm:p-4 pl-2 sm:pl-4">ITEM</th>
-                  <th className="text-left font-semibold p-2 sm:p-4 w-24 sm:w-32">UNIT PRICE</th>
-                  <th className="text-center font-semibold p-2 sm:p-4 w-24 sm:w-28">QUANTITY</th>
-                  <th className="text-left font-semibold p-2 sm:p-4 pr-2 sm:pr-4 w-24 sm:w-32">TOTAL</th>
+                  <th className="text-left font-semibold p-2 sm:p-4 pl-2 sm:pl-4 font-robotoslab">ITEM</th>
+                  <th className="text-left font-semibold p-2 sm:p-4 w-24 sm:w-32 font-robotoslab">UNIT PRICE</th>
+                  <th className="text-center font-semibold p-2 sm:p-4 w-24 sm:w-28 font-robotoslab">QUANTITY</th>
+                  <th className="text-left font-semibold p-2 sm:p-4 pr-2 sm:pr-4 w-24 sm:w-32 font-robotoslab">TOTAL</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -194,10 +194,10 @@ export function CartClient<LineItem extends CartLineItem>({
                           />
                         </Link>
                         <div>
-                          <div className="text-xs sm:text-sm text-gray-500">
+                          <div className="text-xs sm:text-sm text-gray-500 font-robotoslab">
                             {lineItem.subtitle}
                           </div>
-                          <div className="text-sm sm:text-base font-medium">
+                          <div className="text-sm sm:text-base font-medium font-robotoslab">
                             <Link 
                               href={lineItem.href} 
                               className="hover:text-yellow-600 transition-colors"
@@ -208,7 +208,7 @@ export function CartClient<LineItem extends CartLineItem>({
                         </div>
                       </div>
                     </td>
-                    <td className="p-2 sm:p-4 text-sm sm:text-base">
+                    <td className="p-2 sm:p-4 text-sm sm:text-base font-robotoslab">
                       {lineItem.price}
                     </td>
                     <td className="p-2 sm:p-4 text-center">
@@ -226,7 +226,7 @@ export function CartClient<LineItem extends CartLineItem>({
                         }}
                       />
                     </td>
-                    <td className="p-2 sm:p-4 pr-2 sm:pr-4 text-sm sm:text-base">
+                    <td className="p-2 sm:p-4 pr-2 sm:pr-4 text-sm sm:text-base font-robotoslab">
                       {lineItem.price}
                     </td>
                   </tr>
@@ -240,22 +240,22 @@ export function CartClient<LineItem extends CartLineItem>({
         <div className="w-full lg:w-4/12">
           <div className="border border-gray-200 p-4 sm:p-6">
             <div className="flex justify-between mb-4">
-              <span className="font-medium">Subtotal:</span>
-              <span className="font-medium">{cart.total}</span>
+              <span className="font-medium font-robotoslab">Subtotal:</span>
+              <span className="font-medium font-robotoslab">{cart.total}</span>
             </div>
             
             {cart.summaryItems.map((summaryItem, index) => (
               <div className="flex justify-between py-2" key={index}>
-                <dt>{summaryItem.label}</dt>
-                <dd className="font-medium">{summaryItem.value}</dd>
+                <dt className='font-robotoslab'>{summaryItem.label}</dt>
+                <dd className="font-medium font-robotoslab">{summaryItem.value}</dd>
               </div>
             ))}
             
             <hr className="my-4 border-gray-200" />
 
-            <div className="py-3 flex justify-between font-bold text-lg sm:text-xl">
-              <span>Grand Total:</span>
-              <span>{cart.total}</span>
+            <div className="py-3 flex justify-between font-bold text-lg sm:text-xl font-robotoslab">
+              <span className='font-robotoslab'>Grand Total:</span>
+              <span className=' font-robotoslab'>{cart.total}</span>
             </div>
             
             <CheckoutButton 

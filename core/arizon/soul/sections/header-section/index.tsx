@@ -404,7 +404,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     <div className="absolute right-0 top-12 w-96 z-50 bg-white rounded-lg border border-gray-200 shadow-sm card-cart">
                       <div className="p-4">
                         <div className="mb-4">
-                          <h2 className="text-lg font-bold">Shopping Cart</h2>
+                          <h2 className="text-lg font-bold font-robotoslab">Shopping Cart</h2>
                           {removeError && (
                             <p className="text-red-500 text-sm">{removeError}</p>
                           )}
@@ -432,14 +432,14 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                                       )}
                                     </div>
                                     <div className="flex-1">
-                                      <div className="text-sm text-gray-600">{item.brand || ''}</div>
+                                      <div className="text-sm text-gray-600 font-robotoslab">{item.brand || ''}</div>
                                       <Link
                                         href={item.productUrl || item.url || `/product/${item.productId || item.id}` || '#'}
-                                        className="text-blue-600 font-medium block"
+                                        className="text-blue-600 font-medium block font-robotoslab"
                                       >
                                         {item.name || 'Product Name'}
                                       </Link>
-                                      <div className="text-sm text-gray-600 mt-1">
+                                      <div className="text-sm text-gray-600 mt-1 font-robotoslab">
                                         SKU: {item.entityId || ''}
                                       </div>
                                       <div className="mt-2">
@@ -469,9 +469,9 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                           ) : (
                             <>
                               {loading ? (
-                                <div className="text-center py-4">Loading cart data...</div>
+                                <div className="text-center py-4 font-robotoslab">Loading cart data...</div>
                               ) : (
-                                <div className="text-center py-8 text-gray-500">
+                                <div className="text-center py-8 text-gray-500 font-robotoslab">
                                   Your cart is empty
                                 </div>
                               )}
