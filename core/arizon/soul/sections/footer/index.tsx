@@ -95,8 +95,8 @@ export const Footer = forwardRef(function Footer(
       {/* Subscribe Section - Blue Background */}
       <div className="w-full py-6 bg-[#1a2442] text-white">
         <div className="max-w-screen-xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-          <h2 className="text-2xl font-bold whitespace-nowrap">Subscribe Today</h2>
-          <div className="flex-1 text-sm md:text-base px-4 hidden md:block">
+          <h2 className="text-2xl font-bold whitespace-nowrap font-robotoslab">Subscribe Today</h2>
+          <div className="flex-1 text-sm md:text-base px-4 hidden md:block font-robotoslab">
             Be the first to know about exclusive deals, new product lines, company announcements, and industry news.
           </div>
           <div className="flex w-full md:w-auto">
@@ -105,7 +105,7 @@ export const Footer = forwardRef(function Footer(
               placeholder="Your email address" 
               className="px-4 py-2 bg-white text-black border-none w-full md:w-64"
             />
-            <button className="bg-[#daa520] text-white px-4 py-2 font-semibold whitespace-nowrap">
+            <button className="bg-[#daa520] text-white px-4 py-2 font-semibold whitespace-nowrap font-robotoslab">
               SUBSCRIBE
             </button>
           </div>
@@ -131,11 +131,11 @@ export const Footer = forwardRef(function Footer(
               >
                 {(contactInformation) => (
                   <div>
-                    <h3 className="text-white font-bold mb-2">Quality Bearings Online Ltd</h3>
+                    <h3 className="text-white font-bold mb-2 font-robotoslab">Quality Bearings Online Ltd</h3>
                     <p className="mb-2">
                       Canada - 438 800 2658
                     </p>
-                    <Link href="/contact-us" className="font-bold">
+                    <Link href="/contact-us" className="font-bold font-robotoslab">
                       Contact Us
                     </Link>
                   </div>
@@ -147,16 +147,16 @@ export const Footer = forwardRef(function Footer(
             <div>
               <h3 className="font-bold mb-4 uppercase">Navigate</h3>
               <div className="flex flex-col gap-y-2">
-                <Link href="/" className="text-white opacity-50 hover:opacity-100 transition-opacity">Home</Link>
-                <Link href="/about-us" className="text-white opacity-50 hover:opacity-100 transition-opacity">About Us</Link>
-                <Link href="/contact-us" className="text-white opacity-50 hover:opacity-100 transition-opacity">Contact Us</Link>
-                <Link href="/customer-service" className="text-white opacity-50 hover:opacity-100 transition-opacity">Customer Service</Link>
-                <Link href="/delivery-information" className="text-white opacity-50 hover:opacity-100 transition-opacity">Delivery Information</Link>
-                <Link href="/faqs" className="text-white opacity-50 hover:opacity-100 transition-opacity">FAQs</Link>
-                <Link href="/privacy-policy" className="text-white opacity-50 hover:opacity-100 transition-opacity">Privacy Policy</Link>
-                <Link href="/customer-reviews" className="text-white opacity-50 hover:opacity-100 transition-opacity">Customer Reviews</Link>
-                <Link href="/terms-and-conditions" className="text-white opacity-50 hover:opacity-100 transition-opacity">Terms & Conditions</Link>
-                <Link href="/blog" className="text-white opacity-50 hover:opacity-100 transition-opacity">Blog</Link>
+                <Link href="/" className="text-white opacity-50 hover:opacity-100 transition-opacity font-robotoslab">Home</Link>
+                <Link href="/about-us" className="text-white opacity-50 hover:opacity-100 transition-opacity font-robotoslab">About Us</Link>
+                <Link href="/contact-us" className="text-white opacity-50 hover:opacity-100 transition-opacity font-robotoslab">Contact Us</Link>
+                <Link href="/customer-service" className="text-white opacity-50 hover:opacity-100 transition-opacity font-robotoslab">Customer Service</Link>
+                <Link href="/delivery-information" className="text-white opacity-50 hover:opacity-100 transition-opacity font-robotoslab">Delivery Information</Link>
+                <Link href="/faqs" className="text-white opacity-50 hover:opacity-100 transition-opacity font-robotoslab">FAQs</Link>
+                <Link href="/privacy-policy" className="text-white opacity-50 hover:opacity-100 transition-opacity font-robotoslab">Privacy Policy</Link>
+                <Link href="/customer-reviews" className="text-white opacity-50 hover:opacity-100 transition-opacity font-robotoslab">Customer Reviews</Link>
+                <Link href="/terms-and-conditions" className="text-white opacity-50 hover:opacity-100 transition-opacity font-robotoslab">Terms & Conditions</Link>
+                <Link href="/blog" className="text-white opacity-50 hover:opacity-100 transition-opacity font-robotoslab">Blog</Link>
               </div>
             </div>
 
@@ -198,7 +198,7 @@ export const Footer = forwardRef(function Footer(
                 
                 {/* App Downloads */}
                 <div>
-                  <h3 className="font-bold mb-2">Download Our New Mobile App</h3>
+                  <h3 className="font-bold mb-2 font-robotoslab">Download Our New Mobile App</h3>
                   <div className="flex gap-2 justify-center md:justify-start">
                     <a 
                       href="https://play.google.com/store/apps/details?id=com.qualitybearingsonline.qualitybearingsonline"
@@ -225,7 +225,7 @@ export const Footer = forwardRef(function Footer(
                 
                 {/* Social Media */}
                 <div>
-                  <h3 className="font-bold mb-2">Follow Us on Social Media</h3>
+                  <h3 className="font-bold mb-2 font-robotoslab">Follow Us on Social Media</h3>
                   <div className="flex gap-4 justify-center md:justify-start">
                     <a 
                       href="https://www.facebook.com/qualitybearings"
@@ -264,7 +264,7 @@ export const Footer = forwardRef(function Footer(
 
       {/* Copyright and Payment Section - Darker Black Background */}
       <div className="w-full py-4 bg-[#121212] text-white">
-        <div className="max-w-screen-xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+        <div className="max-w-screen-xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center font-robotoslab">
           <Stream
             fallback={
               <div className="animate-pulse h-5 w-64 bg-gray-700 mb-4 md:mb-0"></div>
@@ -272,7 +272,7 @@ export const Footer = forwardRef(function Footer(
             value={streamableCopyright}
           >
             {(copyright) => (
-              <p className="text-gray-400 text-sm mb-4 md:mb-0">
+              <p className="text-gray-400 text-sm mb-4 md:mb-0 font-robotoslab">
                 © 2025 Quality Bearings Online – All rights reserved.
               </p>
             )}
