@@ -50,14 +50,14 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
         <div>
           {/* Description heading with golden underline */}
           <div className="relative pb-4">
-            <h1 className="text-2xl font-bold text-[#03465c] font-robotoslab">Description</h1>
-            <div className="absolute bottom-0 left-0 h-0.5 w-full bg-gradient-to-r from-yellow-600 to-yellow-400"></div>
+            <h1 className="text-4xl font-normal !text-[#000000] font-oswald">Description</h1>
+            <div className="border-t-2 !border-[#ca9618] my-2"></div>
           </div>
           
           {/* Description content with styled elements */}
           <div 
             dangerouslySetInnerHTML={{ __html: product.description }} 
-            className="description-content [&>h2]:font-oswald [&>h2]:text-[30px] [&>h2]:font-normal [&>h2]:my-[25px] [&>h4]:font-semibold [&>h4]:mt-9 [&>p]:mb-6 "
+            className="description-content [&>h2]:font-oswald [&>h2]:text-[30px] [&>h2]:font-normal [&>h2]:my-[25px] [&>h4]:font-semibold [&>h4]:mt-9 [&>p]:mb-6 font-robotoslab text-black mt-4"
           />
         </div>
         
@@ -91,7 +91,7 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
       {/* Tab layout for desktop view with 130px gaps on both sides */}
       <div className="hidden md:block">
         {/* Outer container */}
-        <div className="relative" style={{ paddingLeft: '130px', paddingRight: '130px' }}>
+        <div className="relative" style={{ paddingLeft: '210px', paddingRight: '210px' }}>
           {/* Tab buttons row with grey background */}
           <div className="flex bg-[#E2E2E2] border border-gray-300 mt-8 font-robotoslab">
             {Object.entries(tabContent).map(([tab, value]) => (
