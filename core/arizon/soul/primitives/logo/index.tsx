@@ -39,7 +39,7 @@ export function Logo({ className, logo: streamableLogo, href, width, height, lab
             className,
           )}
           href={href}
-          style={typeof logo === 'string' ? {} : { width: 600, height: 100 }}
+          style={typeof logo === 'string' ? {} : { width: 350, height: 100 }}
         >
           {typeof logo === 'object' && logo !== null && logo.src !== '' ? (
             <Image
