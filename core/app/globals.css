@@ -67,11 +67,11 @@ table {
 }
 
 .header-global{
-  margin-top: 90px;
+  margin-top: 90px !important;
 }
 
 @media screen and (min-width: 1536px) {
   .header-global{
-    margin-top: 40px;
+    margin-top: 40px !important;
   }
 }
