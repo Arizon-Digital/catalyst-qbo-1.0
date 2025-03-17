@@ -76,7 +76,8 @@ const ViewedItemsPopover = () => {
             productIdsArray = JSON.parse(storedData);
             if(productIdsArray?.length > 0) {
               productIds = productIdsArray?.filter(function (el) {
-                return el != null;
+                let productId: number = parseInt(el, 10);
+                return productId > 0;
               });
             }
           }
