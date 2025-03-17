@@ -65,3 +65,13 @@ table {
   margin: 0 0 20px;
   width: 100%;
 }
+
+.header-global{
+  margin-top: 90px;
+}
+
+@media screen and (min-width: 1536px) {
+  .header-global{
+    margin-top: 40px;
+  }
+}

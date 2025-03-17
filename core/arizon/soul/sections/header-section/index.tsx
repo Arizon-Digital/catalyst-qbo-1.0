@@ -752,7 +752,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 )}
 
         {/* Features section - updated with consistent styling */}
-        <div className="border-t border-b border-gray-200 bg-white py-4 shadow-md hidden md:block mt-10">
+        <div className="border-t border-b border-gray-200 bg-white py-4 shadow-md hidden md:block ">
           <div className="container mx-auto">
             <div className="flex flex-wrap justify-center md:justify-between items-center px-4">
               <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">

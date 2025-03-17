@@ -7,6 +7,20 @@ const config = {
     '!./node_modules/**', // Exclude everything in node_modules to speed up builds
   ],
   theme: {
+    screens : {
+      'xsm' : '450px',
+      'ssm' : '500px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'lgg':'1200px',
+      'xl': '1280px',
+      'x2': '1300px',
+      'x3': '1400px',
+      'x4': '1600px',
+      '2xl': '1536px',
+      '4xl':'1700px',
+    },
     extend: {
       typography: {
         DEFAULT: {
