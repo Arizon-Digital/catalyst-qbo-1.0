@@ -48,6 +48,7 @@ table {
   border-color: #000;
   margin-top: 10px;
 }
+
 .deliverytable th {
   border-bottom: 3px solid #ca9618;
   background-color: #1a2348;
@@ -55,23 +56,33 @@ table {
   padding: 7px 5px;
   text-transform: uppercase;
 }
+
 .deliverytable th:first-child {
   border-right: 1px solid grey;
 }
+
 .deliverytable tr:nth-child(odd) {
   background: #9ba2a8;
 }
+
 .deliverytable {
   margin: 0 0 20px;
   width: 100%;
 }
 
-.header-global{
+.header-global {
   margin-top: 90px !important;
+  display: none;
+}
+
+@media screen and (min-width: 1280px) {
+  .header-global {
+    display: block;
+  }
 }
 
 @media screen and (min-width: 1536px) {
-  .header-global{
+  .header-global {
     margin-top: 40px !important;
   }
 }

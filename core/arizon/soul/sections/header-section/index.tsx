@@ -7,7 +7,7 @@ import { clsx } from 'clsx';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useTransition } from 'react';
 import { useActionState } from 'react';
-import { usePathname } from 'next/navigation'; 
+import { usePathname } from 'next/navigation';
 
 import { Banner } from '@/vibes/soul/primitives/banner';
 import { Navigation } from '@/vibes/soul/primitives/navigation';
@@ -20,7 +20,7 @@ import { BcImage } from '~/components/bc-image';
 import { Button } from '~/components/ui/button/button';
 import DoofinderScriptLoader from '../product-detail/Doofinder';
 import miniCartIcon from '~/public/minicart/mini-cart-icon.a78bafe5.png'
-
+import * as Dialog from '@radix-ui/react-dialog';
 
 type CurrencyAction = (state: any, payload: FormData) => any | Promise<any>;
 
@@ -34,7 +34,7 @@ interface Props {
   banner?: React.ComponentPropsWithoutRef<typeof Banner>;
 
 }
-const dooFinderKey= process.env.DOOFINDER_KEY
+const dooFinderKey = process.env.DOOFINDER_KEY
 
 export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
   ({ navigation, banner }, ref) => {
@@ -42,21 +42,21 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
     const [activeDesktopMenu, setActiveDesktopMenu] = useState<number | null>(null);
-    const pathname = usePathname(); 
-    
+    const pathname = usePathname();
+
     const [customerAccessToken, setCustomerAccessToken] = useState<string | null>(null);
-    
-   
+
+
     useEffect(() => {
-      
+
       const checkIfLoggedIn = () => {
         try {
-       
+
           if (pathname && pathname.includes('/account')) {
             setCustomerAccessToken('logged-in');
             return;
           }
-          
+
           const localStorageKeys = ['customerToken', 'customer_token', 'token', 'auth', 'authToken'];
           for (const key of localStorageKeys) {
             const token = localStorage.getItem(key);
@@ -65,7 +65,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               return;
             }
           }
-          
+
 
           for (const key of localStorageKeys) {
             const token = sessionStorage.getItem(key);
@@ -74,30 +74,30 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               return;
             }
           }
-          
-          if (document.cookie.includes('token') || 
-              document.cookie.includes('customer') || 
-              document.cookie.includes('auth')) {
+
+          if (document.cookie.includes('token') ||
+            document.cookie.includes('customer') ||
+            document.cookie.includes('auth')) {
             setCustomerAccessToken('cookie-auth');
             return;
           }
-          
-          
+
+
           if (window.location.href.includes('/account/')) {
             setCustomerAccessToken('account-page');
             return;
           }
-          
-   
+
+
           setCustomerAccessToken(null);
         } catch (error) {
           console.error('Error checking auth status:', error);
         }
       };
-      
+
       checkIfLoggedIn();
     }, [pathname]);
-    
+
 
     // MiniCart states
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -134,8 +134,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
         try {
           const cartIdData = await getCartId();
           setCartId(cartIdData);
-          
-          
+
+
         } catch (error) {
           console.error('Error getting cart ID:', error);
         }
@@ -233,7 +233,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
         <div ref={ref} className="fixed top-0 left-0 right-0 w-full z-[9999] bg-white shadow-md">
           {banner && <Banner {...banner} />}
 
-          <div className="bg-black text-white py-2 px-4">
+          <div className="bg-black text-white py-2 px-4 hidden sm:block">
             <div className="container mx-auto flex justify-end items-center">
               <div className="flex items-center gap-2 md:gap-6 flex-wrap justify-end font-oswald">
                 <Link href="/about-us" className="flex items-center gap-1 text-white hover:text-gray-300 font-medium text-xs sm:text-sm">
@@ -263,6 +263,47 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 </Link>
               </div>
             </div>
+          </div>
+
+          <div className="navbar-tab flex h-[50px] flex-row items-center justify-center bg-[#1a2348] sm:hidden">
+            <Dialog.Root>
+              <Dialog.Trigger asChild>
+                <button className="">
+                  <div className="flex items-center gap-[10px] hover:cursor-pointer">
+                    <div>
+                      <Phone stroke="white" fill="white" strokeWidth={0} />
+                    </div>
+                    <div className="text-[18px] font-[700] leading-[1.5] text-[#ffffff]">
+                      Call Us
+                    </div>
+                  </div>
+                </button>
+              </Dialog.Trigger>
+              <Dialog.Portal>
+                <Dialog.Overlay className="DialogOverlay" />
+                <Dialog.Content className="DialogContent relative z-[99999999999] !p-0 text-[#131313] !shadow-[0_10px_38px_2000px_#0e121659,_0_10px_20px_2000px_#0e121633] !max-w-[80vw]">
+                  <div className=" border-b border-b-[#ccc] bg-[#fafafa]">
+                    <div className='flex items-center justify-between mx-[2%] p-[12px]'>
+                      <Dialog.Title className="flex-1 text-center text-[#000000] text-[30px] font-[700]">
+                        Give Us A Call
+                      </Dialog.Title>
+                      <Dialog.Close asChild>
+                        <button className="" aria-label="Close">
+                          <X />
+                        </button>
+                      </Dialog.Close>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center justify-center gap-[5px] p-[40px_15px] bg-[#f1f1f2]">
+                    <div className='text-left'>
+                      <Link href="tel:4388003614" className='hover:text-blue-800'>
+                        <Dialog.Description className="text-[1rem] text-[#131313] font-[700]">CAN: <span className='text-[#282828] font-[300]'>438 800 3614</span></Dialog.Description>
+                      </Link>
+                    </div>
+                  </div>
+                </Dialog.Content>
+              </Dialog.Portal>
+            </Dialog.Root>
           </div>
 
           <div className="bg-white">
@@ -312,12 +353,12 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     placeholder={navigation.searchInputPlaceholder || 'Search by reference'}
                     className="w-full border border-black -300 rounded-l px-4 py-2 md:py-3 focus:outline-none focus:ring-1 focus:ring-blue-800 font-light"
                   />
-                 <button
-  type="submit"
-  className="absolute right-0 top-0 h-full px-3 md:px-4 rounded-r text-white bg-gradient-to-r from-blue-900 to-blue-900/70"
-  aria-label={navigation.searchLabel || 'Search'}
->
- <DoofinderScriptLoader value={dooFinderKey} />
+                  <button
+                    type="submit"
+                    className="absolute right-0 top-0 h-full px-3 md:px-4 rounded-r text-white bg-gradient-to-r from-blue-900 to-blue-900/70"
+                    aria-label={navigation.searchLabel || 'Search'}
+                  >
+                    <DoofinderScriptLoader value={dooFinderKey} />
                     <Search size={20} />
                   </button>
                 </form>
@@ -373,7 +414,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 <div className="text-xs md:text-sm hidden sm:block">
                   <ViewedItemsPopover />
                 </div>
-    
+
                 {/* MiniCart Component */}
                 <div className="relative" ref={cartRef}>
                   <button
@@ -391,11 +432,11 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     ) : (
                       <ShoppingBag size={30} className="text-blue-900" />
                     )}
-                    
+
                     <span className="absolute right-1.5 mini-cart-count top-3 h-[20px] w-[30px] flex items-center justify-center rounded-full bg-[#1c2541] text-white text-xs font-bold mini-cart-badge">
                       {navigation.cartCount || 0}
                     </span>
-                    
+
                     <span className="text-[#1a2348] mini-cart-text block font-light text-sm font-robotoslab">Cart</span>
                   </button>
 
@@ -527,8 +568,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               <div className="container mx-auto">
                 <ul className="flex items-center justify-center  lg:gap-4 flex-wrap navbar-list-blue">
                   {navigationLinks.map((item, index) => (
-                    <li 
-                      key={index} 
+                    <li
+                      key={index}
                       className="static font-oswald"
                       onMouseEnter={() => setActiveDesktopMenu(index)}
                       onMouseLeave={() => setActiveDesktopMenu(null)}
@@ -551,7 +592,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
                       {item.groups && item.groups.length > 0 && activeDesktopMenu === index && (
                         <div className="absolute left-0 w-full bg-white shadow-lg z-50 border-t border-gray-200 max-w-[90%] ml-[120px]">
-                          <div className="container mx-auto py-6" style={{maxHeight: '80vh', overflowY: 'auto'}}>
+                          <div className="container mx-auto py-6" style={{ maxHeight: '80vh', overflowY: 'auto' }}>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 font-robotoslab ml-10">
                               {item.groups.map((group, groupIndex) => (
                                 <div key={groupIndex} className="mb-4">
@@ -602,156 +643,156 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
         <div className="h-[200px] w-full"></div>
 
-      {/* Update the Mobile Menu section to include Sign In/Register or Account/Sign Out */}
+        {/* Update the Mobile Menu section to include Sign In/Register or Account/Sign Out */}
 
-{/* Mobile Menu */}
-{mobileMenuOpen && (
-  <div className="lg:hidden fixed inset-0 z-[9999] flex">
-    <div
-      className="fixed inset-0 bg-black bg-opacity-50"
-      onClick={toggleMobileMenu}
-    ></div>
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden fixed inset-0 z-[9999] flex">
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50"
+              onClick={toggleMobileMenu}
+            ></div>
 
-    <div className="relative flex-1 flex flex-col w-full max-w-xs bg-white h-full overflow-y-auto">
-      <div className="sticky top-0 px-4 py-3 border-b border-gray-200 bg-white z-10">
-        <h2 className="text-lg font-medium text-blue-900">Menu</h2>
-      </div>
+            <div className="relative flex-1 flex flex-col w-full max-w-xs bg-white h-full overflow-y-auto">
+              <div className="sticky top-0 px-4 py-3 border-b border-gray-200 bg-white z-10">
+                <h2 className="text-lg font-medium text-blue-900">Menu</h2>
+              </div>
 
-      {/* Add Authentication Section at the top of mobile menu */}
-      <div className="px-4 py-3 border-b border-gray-200">
-        {customerAccessToken ? (
-          <div className="flex items-center mb-2">
-            <div className='user-icon mr-2'>
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
-                <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
-                <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
-              </svg>
-            </div>
-            <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
-              <Link
-                href="/account/orders"
-                className="text-gray-900 font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Account
-              </Link>
-              <Link
-                href="/logout"
-                className="text-gray-600 text-sm"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Sign Out
-              </Link>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center mb-2">
-            <div className='user-icon mr-2'>
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
-                <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
-                <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
-              </svg>
-            </div>
-            <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
-              <Link 
-                href="/login" 
-                className="text-gray-900 font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Sign In
-              </Link>
-              <Link 
-                href="/register/" 
-                className="text-gray-600 text-sm"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Register
-              </Link>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="divide-y divide-gray-100 overflow-y-auto flex-grow">
-        {navigationLinks.map((item, index) => (
-          <div key={index} className="py-2">
-            <div className="flex items-center justify-between px-4">
-              <Link
-                href={item.href || '#'}
-                className="py-2 text-gray-900 font-bold text-[15px]"
-                onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
-              >
-                {item.label}
-              </Link>
-
-              {item.groups && item.groups.length > 0 && (
-                <button
-                  className="p-2 text-gray-500"
-                  onClick={() => toggleDropdown(index)}
-                  aria-expanded={activeDropdown === index}
-                >
-                  <ChevronDown
-                    className={clsx(
-                      "h-5 w-5 transition-transform",
-                      activeDropdown === index ? "rotate-180" : ""
-                    )}
-                  />
-                </button>
-              )}
-            </div>
-
-            {activeDropdown === index && item.groups && (
-              <div className="mt-2 pl-4 pr-2 pb-2 overflow-visible">
-                {item.groups.map((group, groupIndex) => (
-                  <div key={groupIndex} className="mb-3">
-                    {group.label && (
-                      <Link
-                        href={group.href || '#'}
-                        className="block font-semibold text-gray-800 mb-2 hover:text-blue-800"
-                        onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
-                      >
-                        {group.label}
-                      </Link>
-                    )}
-                    <div className="space-y-1 pl-2">
-                      {group.links && group.links.map((link, linkIndex) => (
-                        <Link
-                          key={linkIndex}
-                          href={link.href || '#'}
-                          className="block text-gray-600 py-1 text-sm hover:text-blue-800"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
+              {/* Add Authentication Section at the top of mobile menu */}
+              <div className="px-4 py-3 border-b border-gray-200">
+                {customerAccessToken ? (
+                  <div className="flex items-center mb-2">
+                    <div className='user-icon mr-2'>
+                      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
+                        <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
+                        <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
+                      </svg>
                     </div>
+                    <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
+                      <Link
+                        href="/account/orders"
+                        className="text-gray-900 font-medium"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Account
+                      </Link>
+                      <Link
+                        href="/logout"
+                        className="text-gray-600 text-sm"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Sign Out
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center mb-2">
+                    <div className='user-icon mr-2'>
+                      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
+                        <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
+                        <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
+                      </svg>
+                    </div>
+                    <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
+                      <Link
+                        href="/login"
+                        className="text-gray-900 font-medium"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        href="/register/"
+                        className="text-gray-600 text-sm"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Register
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="divide-y divide-gray-100 overflow-y-auto flex-grow">
+                {navigationLinks.map((item, index) => (
+                  <div key={index} className="py-2">
+                    <div className="flex items-center justify-between px-4">
+                      <Link
+                        href={item.href || '#'}
+                        className="py-2 text-gray-900 font-bold text-[15px]"
+                        onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
+                      >
+                        {item.label}
+                      </Link>
+
+                      {item.groups && item.groups.length > 0 && (
+                        <button
+                          className="p-2 text-gray-500"
+                          onClick={() => toggleDropdown(index)}
+                          aria-expanded={activeDropdown === index}
+                        >
+                          <ChevronDown
+                            className={clsx(
+                              "h-5 w-5 transition-transform",
+                              activeDropdown === index ? "rotate-180" : ""
+                            )}
+                          />
+                        </button>
+                      )}
+                    </div>
+
+                    {activeDropdown === index && item.groups && (
+                      <div className="mt-2 pl-4 pr-2 pb-2 overflow-visible">
+                        {item.groups.map((group, groupIndex) => (
+                          <div key={groupIndex} className="mb-3">
+                            {group.label && (
+                              <Link
+                                href={group.href || '#'}
+                                className="block font-semibold text-gray-800 mb-2 hover:text-blue-800"
+                                onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
+                              >
+                                {group.label}
+                              </Link>
+                            )}
+                            <div className="space-y-1 pl-2">
+                              {group.links && group.links.map((link, linkIndex) => (
+                                <Link
+                                  key={linkIndex}
+                                  href={link.href || '#'}
+                                  className="block text-gray-600 py-1 text-sm hover:text-blue-800"
+                                  onClick={() => setMobileMenuOpen(false)}
+                                >
+                                  {link.label}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
-            )}
-          </div>
-        ))}
-      </div>
 
-      <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
-        <Link href="/about-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
-          About Us
-        </Link>
-        <Link href="/contact-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
-          Contact Us
-        </Link>
-        <Link href="tel:+14388002658" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
-          Call Us: 438 800 2658
-        </Link>
-      </div>
-    </div>
-  </div>
-)}
+              <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
+                <Link href="/about-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
+                  About Us
+                </Link>
+                <Link href="/contact-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
+                  Contact Us
+                </Link>
+                <Link href="tel:+14388002658" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
+                  Call Us: 438 800 2658
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Features section - updated with consistent styling */}
-        <div className="header-global border-t border-b border-gray-200 bg-white py-4 shadow-md hidden md:block ">
+        <div className="header-global border-t border-b border-gray-200 bg-white py-4 shadow-md">
           <div className="container mx-auto">
             <div className="flex flex-wrap justify-center md:justify-between items-center px-4">
               <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
