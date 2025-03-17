@@ -110,7 +110,7 @@ const QuickView = ({ product }: QuickViewProps) => {
               <Dialog.Description></Dialog.Description>
               <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                 <div className="a1 mb-12 mt-4 lg:grid lg:grid-cols-2 lg:gap-8">
-                  {/* <Gallery product={productInfo} /> */}
+                  <Gallery product={productInfo} />
                   
                 </div>
                 <div className="lg:col-span-2" id="tabsection1">

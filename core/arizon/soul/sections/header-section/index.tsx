@@ -19,6 +19,7 @@ import ViewedItemsPopover from './Recently Viewed Products Popover';
 import { BcImage } from '~/components/bc-image';
 import { Button } from '~/components/ui/button/button';
 import DoofinderScriptLoader from '../product-detail/Doofinder';
+import miniCartIcon from '~/public/minicart/mini-cart-icon.a78bafe5.png'
 
 
 type CurrencyAction = (state: any, payload: FormData) => any | Promise<any>;
@@ -97,8 +98,6 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       checkIfLoggedIn();
     }, [pathname]);
     
-    // Add miniCartIcon variable with the specific image URL
-    const miniCartIcon = "https://www.qualitybearingsonline.ca/_next/static/media/mini-cart-icon.a78bafe5.png";
 
     // MiniCart states
     const [isCartOpen, setIsCartOpen] = useState(false);
