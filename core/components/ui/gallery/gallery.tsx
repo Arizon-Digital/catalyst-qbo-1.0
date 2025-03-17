@@ -35,8 +35,8 @@ const Gallery = ({ className, images, defaultImageIndex = 0 }: Props) => {
             src={selectedImage.src}
           />
         ) : (
-          <div className="flex aspect-square items-center justify-center bg-gray-200">
-            <div className="text-base font-semibold text-gray-500">Coming soon</div>
+          <div className="">
+            {/* <div className="text-base font-semibold text-gray-500">Coming soon</div> */}
           </div>
         )}
         {images.length > 1 && (

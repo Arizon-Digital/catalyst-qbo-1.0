@@ -612,7 +612,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                                       <Link
                                         key={linkIndex}
                                         href={link.href || '#'}
-                                        className="block text-white -600 py-1 text-sm hover:text-blue-800"
+                                        className="block text-gray -600 py-1 text-sm hover:text-blue-800"
                                         onClick={() => {
                                           // Close menu on sublink click
                                           setActiveDesktopMenu(null);
@@ -776,13 +776,13 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               </div>
 
               <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
-                <Link href="/about-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/about-us" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
                   About Us
                 </Link>
-                <Link href="/contact-us" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/contact-us" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
                   Contact Us
                 </Link>
-                <Link href="tel:+14388002658" className="block py-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="tel:+14388002658" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
                   Call Us: 438 800 2658
                 </Link>
               </div>
