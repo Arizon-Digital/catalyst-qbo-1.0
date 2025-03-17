@@ -553,7 +553,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                       {item.groups && item.groups.length > 0 && activeDesktopMenu === index && (
                         <div className="absolute left-0 w-full bg-white shadow-lg z-50 border-t border-gray-200 max-w-[90%] ml-[120px]">
                           <div className="container mx-auto py-6" style={{maxHeight: '80vh', overflowY: 'auto'}}>
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 font-robotoslab">
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 font-robotoslab ml-10">
                               {item.groups.map((group, groupIndex) => (
                                 <div key={groupIndex} className="mb-4">
                                   {group.label && (
