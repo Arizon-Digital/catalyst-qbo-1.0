@@ -266,45 +266,44 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
           </div>
 
           <div className="navbar-tab flex h-[50px] flex-row items-center justify-center bg-[#1a2348] sm:hidden">
-            <Dialog.Root>
-              <Dialog.Trigger asChild>
-                <button className="">
-                  <div className="flex items-center gap-[10px] hover:cursor-pointer">
-                    <div>
-                      <Phone stroke="white" fill="white" strokeWidth={0} />
-                    </div>
-                    <div className="text-[18px] font-[700] leading-[1.5] text-[#ffffff]">
-                      Call Us
-                    </div>
-                  </div>
-                </button>
-              </Dialog.Trigger>
-              <Dialog.Portal>
-                <Dialog.Overlay className="DialogOverlay" />
-                <Dialog.Content className="DialogContent relative z-[99999999999] !p-0 text-[#131313] !shadow-[0_10px_38px_2000px_#0e121659,_0_10px_20px_2000px_#0e121633] !max-w-[80vw]">
-                  <div className=" border-b border-b-[#ccc] bg-[#fafafa]">
-                    <div className='flex items-center justify-between mx-[2%] p-[12px]'>
-                      <Dialog.Title className="flex-1 text-center text-[#000000] text-[30px] font-[700]">
-                        Give Us A Call
-                      </Dialog.Title>
-                      <Dialog.Close asChild>
-                        <button className="" aria-label="Close">
-                          <X />
-                        </button>
-                      </Dialog.Close>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center justify-center gap-[5px] p-[40px_15px] bg-[#f1f1f2]">
-                    <div className='text-left'>
-                      <Link href="tel:4388003614" className='hover:text-blue-800'>
-                        <Dialog.Description className="text-[1rem] text-[#131313] font-[700]">CAN: <span className='text-[#282828] font-[300]'>438 800 3614</span></Dialog.Description>
-                      </Link>
-                    </div>
-                  </div>
-                </Dialog.Content>
-              </Dialog.Portal>
-            </Dialog.Root>
+  <Dialog.Root>
+    <Dialog.Trigger asChild>
+      <button className="flex items-center gap-[10px] hover:cursor-pointer">
+        <Phone stroke="white" fill="white" strokeWidth={0} />
+        <div className="text-[18px] font-b leading-[1.5] text-white">
+          Call Us
+        </div>
+      </button>
+    </Dialog.Trigger>
+    <Dialog.Portal>
+      <Dialog.Overlay className="fixed inset-0 bg-black/50 z-[99999]" />
+      <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm shadow-lg z-[100000] w-[90vw] max-w-md">
+        {/* Header with title and close button */}
+        <div className="border-b border-b-[#e5e5e5] bg-white">
+          <div className="flex items-center justify-between p-4">
+            <Dialog.Title className="flex-1 text-center text-[#000000] text-xl font-bold">
+              Give Us A Call
+            </Dialog.Title>
+            <Dialog.Close asChild>
+              <button className="text-gray-500 hover:text-gray-700" aria-label="Close">
+                <X size={20} />
+              </button>
+            </Dialog.Close>
           </div>
+        </div>
+        
+        {/* Body with phone number */}
+        <div className="bg-gray-100 p-6">
+          <div className="text-center">
+            <Dialog.Description className="text-base text-[#131313]">
+              CAN: <Link href="tel:4388003614" className="text-[#3161a1] hover:underline">438 800 3614</Link>
+            </Dialog.Description>
+          </div>
+        </div>
+      </Dialog.Content>
+    </Dialog.Portal>
+  </Dialog.Root>
+</div>
 
           <div className="bg-white">
             <div className="container mx-auto py-3 md:py-5 flex items-center justify-between px-4">
@@ -613,7 +612,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                                       <Link
                                         key={linkIndex}
                                         href={link.href || '#'}
-                                        className="block text-gray-600 py-1 text-sm hover:text-blue-800"
+                                        className="block text-white -600 py-1 text-sm hover:text-blue-800"
                                         onClick={() => {
                                           // Close menu on sublink click
                                           setActiveDesktopMenu(null);
@@ -653,7 +652,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               onClick={toggleMobileMenu}
             ></div>
 
-            <div className="relative flex-1 flex flex-col w-full max-w-xs bg-white h-full overflow-y-auto">
+            <div className="relative flex-1 flex flex-col w-full max-w-xs bg-[#1a2348]  !text-white h-full overflow-y-auto">
               <div className="sticky top-0 px-4 py-3 border-b border-gray-200 bg-white z-10">
                 <h2 className="text-lg font-medium text-blue-900">Menu</h2>
               </div>
@@ -663,7 +662,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 {customerAccessToken ? (
                   <div className="flex items-center mb-2">
                     <div className='user-icon mr-2'>
-                      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
                         <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
                         <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
@@ -672,14 +671,14 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
                       <Link
                         href="/account/orders"
-                        className="text-gray-900 font-medium"
+                        className="text-white -900 font-medium"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Account
                       </Link>
                       <Link
                         href="/logout"
-                        className="text-gray-600 text-sm"
+                        className="text-white -600 text-sm"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Sign Out
@@ -698,14 +697,14 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
                       <Link
                         href="/login"
-                        className="text-gray-900 font-medium"
+                        className="text-white -900 font-medium"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Sign In
                       </Link>
                       <Link
                         href="/register/"
-                        className="text-gray-600 text-sm"
+                        className="text-white 600 text-sm"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Register
@@ -721,7 +720,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     <div className="flex items-center justify-between px-4">
                       <Link
                         href={item.href || '#'}
-                        className="py-2 text-gray-900 font-bold text-[15px]"
+                        className="py-2 text-white -900 font-bold text-[15px]"
                         onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
                       >
                         {item.label}
@@ -729,7 +728,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
                       {item.groups && item.groups.length > 0 && (
                         <button
-                          className="p-2 text-gray-500"
+                          className="p-2 text-white -500"
                           onClick={() => toggleDropdown(index)}
                           aria-expanded={activeDropdown === index}
                         >

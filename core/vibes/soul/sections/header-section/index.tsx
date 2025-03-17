@@ -528,13 +528,13 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 z-[60] flex">
+          <div className="lg:hidden fixed inset-0 z-[9999] flex">
             <div
               className="fixed inset-0 bg-black bg-opacity-50"
               onClick={toggleMobileMenu}
             ></div>
 
-            <div className="relative flex-1 flex flex-col w-full max-w-xs bg-white overflow-y-auto">
+            <div className="relative flex-1 flex flex-col w-full max-w-xs bg-[#1a2348] overflow-y-auto">
               <div className="px-4 py-3 border-b border-gray-200">
                 <h2 className="text-lg font-medium text-blue-900">Menu</h2>
               </div>
