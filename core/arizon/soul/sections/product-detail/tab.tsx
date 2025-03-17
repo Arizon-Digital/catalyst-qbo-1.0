@@ -88,11 +88,11 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
 
   return (
     <div className="mb-10">
-      {/* Tab layout for desktop view with 130px gaps on both sides */}
+    
       <div className="hidden md:block">
-        {/* Outer container */}
-        <div className="relative" style={{ paddingLeft: '210px', paddingRight: '210px' }}>
-          {/* Tab buttons row with grey background */}
+       
+      <div className="relative mx-auto w-full max-w-screen-2xl px-6  @xl:px-6  @4xl:px-8 mt-5 font-robotoslab">
+         
           <div className="flex bg-[#E2E2E2] border border-gray-300 mt-8 font-robotoslab">
             {Object.entries(tabContent).map(([tab, value]) => (
               <button
@@ -110,7 +110,7 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
           </div>
           
           {/* Tab content with full-width background and border */}
-          <div className="w-full bg-white p-6 text-left border border-gray-300 border-t-0">
+          <div className="w-full bg-white p-6 text-left border border-t-0  border-[#dcdcdc]-300 rounded-md shadow-[0_3px_0_#dcdcdc]">
             <div className="text-base text-[#03465c]">
               {renderTabContent(activeTab)}
             </div>
