@@ -38,7 +38,7 @@ export const Gallery = ({ product }: Props) => {
     let productFound = recentlyViewedItems?.find((item: any) => item == productId);
    
     if(!productFound) {
-      recentlyViewedItems.push(productId);
+      recentlyViewedItems.push(Number(productId));
       localStorage.setItem('qbo_recently_viewed_items', JSON.stringify(recentlyViewedItems));
     }
   }, []);
