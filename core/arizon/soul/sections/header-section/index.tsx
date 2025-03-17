@@ -526,7 +526,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
             <nav className="relative hidden lg:block" style={{ backgroundColor: '#1a2348' }}>
               <div className="container mx-auto">
-                <ul className="m-0 p-0 list-none flex justify-center">
+                <ul className="flex items-center justify-center  lg:gap-4 flex-wrap navbar-list-blue">
                   {navigationLinks.map((item, index) => (
                     <li 
                       key={index} 
