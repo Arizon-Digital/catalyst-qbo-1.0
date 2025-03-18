@@ -376,7 +376,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       </div>
       <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
         <Link
-          href="/account/orders"
+          href="/account"
           className="flex items-center ml-1"
           aria-label="My Account"
         >
@@ -670,7 +670,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     </div>
                     <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
                       <Link
-                        href="/account/orders"
+                        href="/account"
                         className="text-white -900 font-medium"
                         onClick={() => setMobileMenuOpen(false)}
                       >

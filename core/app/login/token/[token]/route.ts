@@ -23,7 +23,7 @@ export async function GET(request: Request, { params }: TokenParams) {
     // token validity and signature are checked in the signIn function
     const claims = decodeJwt(token);
     const redirectTo =
-      typeof claims.redirect_to === 'string' ? claims.redirect_to : '/account/orders';
+      typeof claims.redirect_to === 'string' ? claims.redirect_to : '/account';
 
     // sign in with token which will check validity against BigCommerce API
     // and redirect to redirectTo
