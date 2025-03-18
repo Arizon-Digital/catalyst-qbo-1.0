@@ -654,7 +654,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
     <div className="relative flex-1 flex flex-col w-full max-w-xs bg-[#1a2348] !text-white h-full overflow-y-auto">
       <div className="sticky top-0 px-4 py-3 border-b border-gray-200 bg-white z-10">
-        <h2 className="text-lg font-medium text-blue-900">Menu</h2>
+        <h2 className="text-lg font-medium text-blue-900 font-robotoslab">Menu</h2>
       </div>
 
       {/* Remove the authentication section from here */}
@@ -662,7 +662,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       <div className="divide-y divide-gray-100 overflow-y-auto flex-grow">
         {navigationLinks.map((item, index) => (
           <div key={index} className="py-2">
-            <div className="flex items-center justify-between px-4">
+            <div className="flex items-center justify-between px-4 font-robotoslab">
               <Link
                 href={item.href || '#'}
                 className="py-2 text-white -900 font-bold text-[15px]"
@@ -688,7 +688,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
             </div>
 
             {activeDropdown === index && item.groups && (
-              <div className="mt-2 pl-4 pr-2 pb-2 overflow-visible">
+              <div className="mt-2 pl-4 pr-2 pb-2 overflow-visible font-robotoslab">
                 {item.groups.map((group, groupIndex) => (
                   <div key={groupIndex} className="mb-3">
                     {group.label && (
@@ -700,7 +700,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                         {group.label}
                       </Link>
                     )}
-                    <div className="space-y-1 pl-2">
+                    <div className="space-y-1 pl-2 font-robotoslab">
                       {group.links && group.links.map((link, linkIndex) => (
                         <Link
                           key={linkIndex}
@@ -721,31 +721,31 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       </div>
 
       <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
-        <Link href="/about-us" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+        <Link href="/about-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
           About Us
         </Link>
-        <Link href="/contact-us" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+        <Link href="/contact-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
           Contact Us
         </Link>
-        <Link href="/customer-service" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+        <Link href="/customer-service" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
           Customer Service
         </Link>
-        <Link href="/faqs" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+        <Link href="/faqs" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
           FAQs 
         </Link>
-        <Link href="/privacy-policy" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+        <Link href="/privacy-policy" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
           Privacy Policy
         </Link>
-        <Link href="/about-us" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+        <Link href="/about-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
           About Us
         </Link>
-        <Link href="/customer-reviews" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+        <Link href="/customer-reviews" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
           Customer Reviews
         </Link>
-        <Link href="/terms-and-conditionss" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+        <Link href="/terms-and-conditionss" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
           Terms & Conditions
         </Link>
-        <Link href="/blog" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+        <Link href="/blog" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
           Blog
         </Link>
 
@@ -789,14 +789,14 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               <div className='flex flex-col'>
                 <Link
                   href="/login"
-                  className="text-white font-medium"
+                  className="text-white font-medium font-robotoslab"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/register/"
-                  className="text-white text-sm"
+                  className="text-white text-sm font-robotoslab"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Register
