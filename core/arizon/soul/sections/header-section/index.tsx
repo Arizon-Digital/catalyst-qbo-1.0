@@ -320,25 +320,25 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               </button>
 
               <div className="flex-shrink-0">
-                <Logo
-                  className={clsx(navigation.mobileLogo != null ? 'hidden md:flex' : 'flex')}
-                  height={navigation.logoHeight || 330}
-                  href="/"
-                  label={navigation.logoLabel || 'Quality Bearings Online'}
-                  logo={navigation.logo}
-                  width={navigation.logoWidth || 600}
-                />
-                {navigation.mobileLogo != null && (
-                  <Logo
-                    className="flex md:hidden"
-                    height={navigation.mobileLogoHeight || 70}
-                    href="/"
-                    label={navigation.logoLabel || 'Quality Bearings Online'}
-                    logo={navigation.mobileLogo}
-                    width={navigation.mobileLogoWidth || 100}
-                  />
-                )}
-              </div>
+  <Logo
+    className={clsx(navigation.mobileLogo != null ? 'hidden md:flex' : 'flex')}
+    height={navigation.logoHeight || 330}
+    href="/"
+    label={navigation.logoLabel || 'Quality Bearings Online'}
+    logo={navigation.logo}
+    width={navigation.logoWidth || 600}
+  />
+  {navigation.mobileLogo != null && (
+    <Logo
+      className="flex md:hidden"
+      height={navigation.mobileLogoHeight || 70}
+      href="/"
+      label={navigation.logoLabel || 'Quality Bearings Online'}
+      logo={navigation.mobileLogo}
+      width={navigation.mobileLogoWidth || 200} 
+    />
+  )}
+</div>
 
               <div className="hidden sm:flex flex-grow max-w-xl mx-4">
                 <form
@@ -365,50 +365,50 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
               <div className="flex items-center gap-2 md:gap-6 lg:gap-8">
 
-                {customerAccessToken ? (
-                  <div className="flex items-center">
-                    <div className='user-icon'>
-                      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
-                        <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
-                        <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
-                      </svg>
-                    </div>
-                    <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
-                      <Link
-                        href="/account/orders"
-                        className="flex items-center ml-1"
-                        aria-label="My Account"
-                      >
-                        Account
-                      </Link>
-                      <Link
-                        href="/logout"
-                        className="ml-1 text-[#1c2541] font-light font-robotoslab text-left"
-                      >
-                        Sign Out
-                      </Link>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center">
-                    <div className='user-icon'>
-                      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
-                        <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
-                        <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
-                      </svg>
-                    </div>
-                    <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
-                      <Link aria-label="Login" className="flex items-center ml-1" href="/login">
-                        Sign In
-                      </Link>
-                      <Link aria-label="Registration" className="ml-1" href="/register/">
-                        Register
-                      </Link>
-                    </div>
-                  </div>
-                )}
+  {customerAccessToken ? (
+    <div className="flex items-center hidden sm:flex"> {/* Added 'hidden sm:flex' */}
+      <div className='user-icon'>
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
+          <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
+          <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
+        </svg>
+      </div>
+      <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
+        <Link
+          href="/account/orders"
+          className="flex items-center ml-1"
+          aria-label="My Account"
+        >
+          Account
+        </Link>
+        <Link
+          href="/logout"
+          className="ml-1 text-[#1c2541] font-light font-robotoslab text-left"
+        >
+          Sign Out
+        </Link>
+      </div>
+    </div>
+  ) : (
+    <div className="flex items-center hidden sm:flex"> {/* Added 'hidden sm:flex' */}
+      <div className='user-icon'>
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
+          <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
+          <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
+        </svg>
+      </div>
+      <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
+        <Link aria-label="Login" className="flex items-center ml-1" href="/login">
+          Sign In
+        </Link>
+        <Link aria-label="Registration" className="ml-1" href="/register/">
+          Register
+        </Link>
+      </div>
+    </div>
+  )}
 
                 <div className="text-xs md:text-sm hidden sm:block">
                   <ViewedItemsPopover />
