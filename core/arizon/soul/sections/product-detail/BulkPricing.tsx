@@ -52,7 +52,7 @@ export default function BulkPricing({ product }: BulkPricingProps) {
         <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab leading-none @xl:mb-4 @xl:text-base @4xl:text-base">
           Bulk Pricing : 
         
-        <span className="font-robotoslab font-light">
+        <span className="font-robotoslab font-normal">
           <Link 
             href="/bulk-pricing"
             className="text-black-600 hover:text-blue-700 underline capitalize"
@@ -71,7 +71,7 @@ export default function BulkPricing({ product }: BulkPricingProps) {
         Bulk Pricing :
       
       
-      <span className="font-robotoslab font-light">
+      <span className="font-robotoslab font-normal">
         <Dialog.Root>
           <Dialog.Trigger asChild>
             <button className="text-black-600 hover:text-blue-700 underline capitalize font-robotoslab" >
