@@ -22,6 +22,7 @@ export interface CardProduct {
   badge?: string;
   rating?: number;
   entityId?: string;
+  originalPdata?:{}
 }
 
 interface Props {
@@ -66,6 +67,8 @@ export function ProductCard({
   imageSizes = '(min-width: 80rem) 20vw, (min-width: 64rem) 25vw, (min-width: 42rem) 33vw, (min-width: 24rem) 50vw, 100vw',
 }: Props) {
   const [storeId,setStoreId]=useState([]);
+
+  console.log(product,"TestData>>>>>>>>>>>>>>>>>>")
   const { id, title, subtitle, badge, price, image, href, entityId } = product;
   const quickViewProduct = {
     ...product,
@@ -76,7 +79,7 @@ export function ProductCard({
       url: image.src,
       altText: image.alt
     }] : [],
-    prices: price
+    prices: price,
   };
   return (
     <div className={clsx('@container border border-[#dcdcdc] rounded-[4px] shadow-[0_3px_0_#dcdcdc] flex flex-col items-center', className)}>
@@ -126,7 +129,7 @@ export function ProductCard({
                       </svg>
                       QUICK VIEW
                     </button> */}
-                     <QuickView product={quickViewProduct} />
+                     <QuickView product={quickViewProduct} originalPdata={quickViewProduct?.originalPdata} />
                     <button className="bg-yellow-500 text-white font-semibold py-2 px-4 rounded flex items-center justify-center">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z" />

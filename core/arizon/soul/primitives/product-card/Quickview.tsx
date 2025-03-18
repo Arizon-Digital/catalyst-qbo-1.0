@@ -93,6 +93,7 @@ interface QuickViewProps {
   decrementLabel?: string;
   ctaLabel?: Streamable<string | null>;
   ctaDisabled?: Streamable<boolean | null>;
+  originalPdata?:{}
 }
 
 const QuickView = ({
@@ -104,8 +105,9 @@ const QuickView = ({
   decrementLabel,
   ctaLabel: streamableCtaLabel,
   ctaDisabled: streamableCtaDisabled,
+  originalPdata
 }: QuickViewProps) => {
-  console.log("product", initialProduct)
+  console.log("product>>>>>>>>>>>>>>", originalPdata)
   const [isOpen, setIsOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [productInfo, setProductInfo] = useState(initialProduct);
@@ -171,6 +173,9 @@ const QuickView = ({
     };
   }, [isOpen]);
 
+console.log(streamableProduct,"StreamableProduct>>>>")
+
+
   return (
     <>
       <button
@@ -205,7 +210,7 @@ const QuickView = ({
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
           <Dialog.Content
-            className="fixed left-1/2 top-1/2 z-50 max-h-[90vh] w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white shadow-lg"
+            className="fixed left-1/2 top-1/2 max-h-[90vh] w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white shadow-lg"
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -239,12 +244,12 @@ const QuickView = ({
                       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                         <div className="mb-12 mt-4">
                           <div className="max-h-[500px] overflow-y-auto pr-2">
-                            <Gallery product={initialProduct} />
+                            <Gallery product={originalPdata} />
                           </div>
                         </div>
                         <div>
                           <div className="mb-6">
-                            <TabComponent product={product} />
+                            <TabComponent product={originalPdata} />
                           </div>
                           
                           <div className="mt-6">

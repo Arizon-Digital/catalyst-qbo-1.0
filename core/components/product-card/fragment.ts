@@ -11,6 +11,23 @@ export const ProductCardFragment = graphql(
         url: urlTemplate(lossy: true)
         urlResize: url(width: 340, height: 340, lossy: true)
       }
+        description
+      sku
+      weight {
+        value
+        unit
+      }
+      condition
+      customFields {
+        edges {
+          node {
+            entityId
+            name
+            value
+          }
+        }
+      }
+      warranty
       path
       brand {
         name

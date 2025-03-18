@@ -23,7 +23,7 @@ export function AccountSettingsSection({
   return (
     <div className="@container">
       <div className="flex flex-col gap-y-24 @xl:flex-row">
-        <div className="flex w-full flex-col @xl:max-w-lg">
+        <div className="flex w-full flex-col @xl:max-w-[102rem] ml-10 mr-10">
           <div className="pb-12">
             <h1 className="mb-8 text-3xl font-black lg:text-4xl text-center font-robotoslab">{title}</h1>
             <UpdateAccountForm

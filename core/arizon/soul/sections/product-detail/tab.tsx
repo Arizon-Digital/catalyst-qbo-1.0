@@ -21,11 +21,13 @@ interface TabComponentProps {
     DelivaryInformation: any;
     reviews: any;
     sku: string;
-  };
+  }|any;
 }
 
 const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
   const [activeTab, setActiveTab] = useState('Description');
+
+  console.log(product,"TabConytent")
   
   const productWithoutWarranty = {
     ...product,

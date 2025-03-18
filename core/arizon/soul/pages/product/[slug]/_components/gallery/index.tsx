@@ -9,7 +9,7 @@ import { GalleryFragment } from './fragment';
 import { useEffect } from 'react';
 
 interface Props {
-  product: FragmentOf<typeof GalleryFragment>;
+  product: FragmentOf<typeof GalleryFragment>|any;
 }
 
 export const Gallery = ({ product }: Props) => {

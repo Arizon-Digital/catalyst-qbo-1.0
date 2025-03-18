@@ -12,7 +12,7 @@ export interface PriceSale {
   currentValue: string;
 }
 
-export type Price = string | PriceRange | PriceSale;
+export type Price = string | PriceRange | PriceSale|any;
 
 interface Props {
   className?: string;
