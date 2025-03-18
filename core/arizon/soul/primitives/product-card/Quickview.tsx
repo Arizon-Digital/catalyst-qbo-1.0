@@ -210,7 +210,7 @@ console.log(streamableProduct,"StreamableProduct>>>>")
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
           <Dialog.Content
-            className="fixed left-1/2 top-1/2 max-h-[90vh] w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white shadow-lg"
+            className="quickview fixed left-1/2 top-1/2 !h-[900px]  w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white shadow-lg z-[9999]"
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -230,7 +230,7 @@ console.log(streamableProduct,"StreamableProduct>>>>")
               </Dialog.Close>
               
               {typeof Stream !== 'undefined' ? (
-                <Stream fallback={<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                <Stream fallback={<div className="grid grid-cols-1 gap-8 md:grid-cols-1">
                   <div className="mb-12 mt-4">
                     <ProductGallerySkeleton />
                   </div>
@@ -241,7 +241,7 @@ console.log(streamableProduct,"StreamableProduct>>>>")
                 </div>} value={streamableProduct}>
                   {(product) =>
                     product && (
-                      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                      <div className="grid grid-cols-1 gap-8 md:grid-cols-1">
                         <div className="mb-12 mt-4">
                           <div className="max-h-[500px] overflow-y-auto pr-2">
                             <Gallery product={originalPdata} />
@@ -322,7 +322,7 @@ console.log(streamableProduct,"StreamableProduct>>>>")
                 </Stream>
               ) : (
                 productInfo && (
-                  <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-8 md:grid-cols-1">
                     <div className="mb-12 mt-4">
                       <div className="max-h-[500px] overflow-y-auto pr-2">
                         <Gallery product={productInfo} />
@@ -366,15 +366,7 @@ console.log(streamableProduct,"StreamableProduct>>>>")
                         </div>
                       </div>
                       
-                      <div className="mt-6">
-                        <Accordions>
-                          <Accordion title="Warranty">
-                            <div className="prose">
-                              <p>{productInfo.warranty || "Warranty information goes here."}</p>
-                            </div>
-                          </Accordion>
-                        </Accordions>
-                      </div>
+                      
                     </div>
                   </div>
                 )

@@ -645,150 +645,170 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
         {/* Update the Mobile Menu section to include Sign In/Register or Account/Sign Out */}
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 z-[9999] flex">
-            <div
-              className="fixed inset-0 bg-black bg-opacity-50"
-              onClick={toggleMobileMenu}
-            ></div>
+{mobileMenuOpen && (
+  <div className="lg:hidden fixed inset-0 z-[9999] flex">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50"
+      onClick={toggleMobileMenu}
+    ></div>
 
-            <div className="relative flex-1 flex flex-col w-full max-w-xs bg-[#1a2348]  !text-white h-full overflow-y-auto">
-              <div className="sticky top-0 px-4 py-3 border-b border-gray-200 bg-white z-10">
-                <h2 className="text-lg font-medium text-blue-900">Menu</h2>
-              </div>
+    <div className="relative flex-1 flex flex-col w-full max-w-xs bg-[#1a2348] !text-white h-full overflow-y-auto">
+      <div className="sticky top-0 px-4 py-3 border-b border-gray-200 bg-white z-10">
+        <h2 className="text-lg font-medium text-blue-900">Menu</h2>
+      </div>
 
-              {/* Add Authentication Section at the top of mobile menu */}
-              <div className="px-4 py-3 border-b border-gray-200">
-                {customerAccessToken ? (
-                  <div className="flex items-center mb-2">
-                    <div className='user-icon mr-2'>
-                      <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
-                        <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
-                        <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
-                      </svg>
-                    </div>
-                    <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
-                      <Link
-                        href="/account"
-                        className="text-white -900 font-medium"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Account
-                      </Link>
-                      <Link
-                        href="/logout"
-                        className="text-white -600 text-sm"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Sign Out
-                      </Link>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center mb-2">
-                    <div className='user-icon mr-2'>
-                      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
-                        <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
-                        <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
-                      </svg>
-                    </div>
-                    <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
-                      <Link
-                        href="/login"
-                        className="text-white -900 font-medium"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Sign In
-                      </Link>
-                      <Link
-                        href="/register/"
-                        className="text-white 600 text-sm"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Register
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
+      {/* Remove the authentication section from here */}
+      
+      <div className="divide-y divide-gray-100 overflow-y-auto flex-grow">
+        {navigationLinks.map((item, index) => (
+          <div key={index} className="py-2">
+            <div className="flex items-center justify-between px-4">
+              <Link
+                href={item.href || '#'}
+                className="py-2 text-white -900 font-bold text-[15px]"
+                onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
+              >
+                {item.label}
+              </Link>
 
-              <div className="divide-y divide-gray-100 overflow-y-auto flex-grow">
-                {navigationLinks.map((item, index) => (
-                  <div key={index} className="py-2">
-                    <div className="flex items-center justify-between px-4">
-                      <Link
-                        href={item.href || '#'}
-                        className="py-2 text-white -900 font-bold text-[15px]"
-                        onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
-                      >
-                        {item.label}
-                      </Link>
-
-                      {item.groups && item.groups.length > 0 && (
-                        <button
-                          className="p-2 text-white -500"
-                          onClick={() => toggleDropdown(index)}
-                          aria-expanded={activeDropdown === index}
-                        >
-                          <ChevronDown
-                            className={clsx(
-                              "h-5 w-5 transition-transform",
-                              activeDropdown === index ? "rotate-180" : ""
-                            )}
-                          />
-                        </button>
-                      )}
-                    </div>
-
-                    {activeDropdown === index && item.groups && (
-                      <div className="mt-2 pl-4 pr-2 pb-2 overflow-visible">
-                        {item.groups.map((group, groupIndex) => (
-                          <div key={groupIndex} className="mb-3">
-                            {group.label && (
-                              <Link
-                                href={group.href || '#'}
-                                className="block font-semibold text-gray-800 mb-2 hover:text-blue-800"
-                                onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
-                              >
-                                {group.label}
-                              </Link>
-                            )}
-                            <div className="space-y-1 pl-2">
-                              {group.links && group.links.map((link, linkIndex) => (
-                                <Link
-                                  key={linkIndex}
-                                  href={link.href || '#'}
-                                  className="block text-gray-600 py-1 text-sm hover:text-blue-800"
-                                  onClick={() => setMobileMenuOpen(false)}
-                                >
-                                  {link.label}
-                                </Link>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+              {item.groups && item.groups.length > 0 && (
+                <button
+                  className="p-2 text-white -500"
+                  onClick={() => toggleDropdown(index)}
+                  aria-expanded={activeDropdown === index}
+                >
+                  <ChevronDown
+                    className={clsx(
+                      "h-5 w-5 transition-transform",
+                      activeDropdown === index ? "rotate-180" : ""
                     )}
+                  />
+                </button>
+              )}
+            </div>
+
+            {activeDropdown === index && item.groups && (
+              <div className="mt-2 pl-4 pr-2 pb-2 overflow-visible">
+                {item.groups.map((group, groupIndex) => (
+                  <div key={groupIndex} className="mb-3">
+                    {group.label && (
+                      <Link
+                        href={group.href || '#'}
+                        className="block font-semibold text-gray-800 mb-2 hover:text-blue-800"
+                        onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
+                      >
+                        {group.label}
+                      </Link>
+                    )}
+                    <div className="space-y-1 pl-2">
+                      {group.links && group.links.map((link, linkIndex) => (
+                        <Link
+                          key={linkIndex}
+                          href={link.href || '#'}
+                          className="block text-gray-600 py-1 text-sm hover:text-blue-800"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {link.label}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
+            )}
+          </div>
+        ))}
+      </div>
 
-              <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
-                <Link href="/about-us" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
-                  About Us
+      <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
+        <Link href="/about-us" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+          About Us
+        </Link>
+        <Link href="/contact-us" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+          Contact Us
+        </Link>
+        <Link href="/customer-service" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+          Customer Service
+        </Link>
+        <Link href="/faqs" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+          FAQs 
+        </Link>
+        <Link href="/privacy-policy" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+          Privacy Policy
+        </Link>
+        <Link href="/about-us" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+          About Us
+        </Link>
+        <Link href="/customer-reviews" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+          Customer Reviews
+        </Link>
+        <Link href="/terms-and-conditionss" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+          Terms & Conditions
+        </Link>
+        <Link href="/blog" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
+          Blog
+        </Link>
+
+        {/* Add Authentication Section at the bottom */}
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          {customerAccessToken ? (
+            <div className="flex items-center mb-2">
+              <div className='user-icon mr-2'>
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="6" r="4" stroke="white" strokeWidth="1"></circle>
+                  <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="white" strokeWidth="1" fill="none"></path>
+                  <line x1="4" y1="20" x2="20" y2="20" stroke="white" strokeWidth="1" strokeLinecap="round"></line>
+                </svg>
+              </div>
+              <div className='flex flex-col'>
+                <Link
+                  href="/account"
+                  className="text-white font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Account
                 </Link>
-                <Link href="/contact-us" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
-                  Contact Us
-                </Link>
-                <Link href="tel:+14388002658" className="block py-2 text-white -600" onClick={() => setMobileMenuOpen(false)}>
-                  Call Us: 438 800 2658
+                <Link
+                  href="/logout"
+                  className="text-white text-sm"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign Out
                 </Link>
               </div>
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="flex items-center mb-2">
+              <div className='user-icon mr-2'>
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="6" r="4" stroke="white" strokeWidth="1"></circle>
+                  <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="white" strokeWidth="1" fill="none"></path>
+                  <line x1="4" y1="20" x2="20" y2="20" stroke="white" strokeWidth="1" strokeLinecap="round"></line>
+                </svg>
+              </div>
+              <div className='flex flex-col'>
+                <Link
+                  href="/login"
+                  className="text-white font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/register/"
+                  className="text-white text-sm"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Register
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
         {/* Features section - updated with consistent styling */}
         <div className="header-global border-t border-b border-gray-200 bg-white py-4 shadow-md">
