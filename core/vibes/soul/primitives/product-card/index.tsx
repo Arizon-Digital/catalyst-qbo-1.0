@@ -151,11 +151,7 @@ export function ProductCard({
                       <button className="bg-yellow-500 py-2 px-2 rounded-r text-white font-semibold border-l border-yellow-600">
                         ↻
                       </button>
-                      {/* <QuickView   productId={id}
-                        productTitle={title}
-                        productImage={image}
-                        productUrl={href}
-                        productPrice={price} /> */}
+                      {/* <QuickView   product= {product} /> */}
                     </div>
                   </div>
                 </div>

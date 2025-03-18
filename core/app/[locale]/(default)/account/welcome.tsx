@@ -6,7 +6,7 @@ export async function WelcomeMessage() {
   const user = await getSessionUserDetails();
 
   return (
-    <h1 className="mt-1 text-[24px] font-normal leading-[32px]">
+    <h1 className="mt-1 text-[24px] font-normal leading-[32px] ml-12">
       <span>Welcome Back ,</span>
       <span className="text-[#008BB7]">{' '}{user?.name || "Guest"}!</span>
     </h1>

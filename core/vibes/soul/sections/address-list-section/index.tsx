@@ -127,7 +127,8 @@ export function AddressListSection<A extends Address, F extends Field>({
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+     
+      <div className="text-[25px] mt-11 font-robotoslab text-center underline">
         <Title>{title}</Title>
         {!showNewAddressForm && (
           <Button onClick={() => setShowNewAddressForm(true)} size="small">
@@ -137,8 +138,8 @@ export function AddressListSection<A extends Address, F extends Field>({
       </div>
       <div>
         {showNewAddressForm && (
-          <div className="border-b border-contrast-200 pb-6 pt-5">
-            <div className="w-[480px] space-y-4">
+          <div className="border-b border-contrast-200 pb-6 pt-5 justify-center items-center">
+            <div className="w-[480px] space-y-4 justify-center items-center">
               <DynamicForm
                 action={(_prevState, formData) => {
                   setShowNewAddressForm(false);
@@ -192,7 +193,7 @@ export function AddressListSection<A extends Address, F extends Field>({
           });
 
           return (
-            <div className="border-b border-contrast-200 pb-6 pt-5" key={address.id}>
+            <div className="border-b border-contrast-200 pb-6 pt-5 justify-center items-center" key={address.id}>
               {activeAddressIds.includes(address.id) ? (
                 <div className="w-[480px] space-y-4">
                   <DynamicForm
@@ -230,7 +231,7 @@ export function AddressListSection<A extends Address, F extends Field>({
                         : undefined
                     }
                   />
-                  <div className="flex gap-1">
+                  <div className="flex gap-1 ml-10">
                     <Button
                       aria-label={`${editLabel}: ${address.firstName} ${address.lastName}`}
                       onClick={() => setActiveAddressIds((prev) => [...prev, address.id])}
@@ -288,7 +289,7 @@ function Title({ children }: { children: React.ReactNode }) {
   const { pending } = useFormStatus();
 
   return (
-    <h1 className="text-4xl">
+    <h1 className="text-[25px] mt-11 font-robotoslab text-center underline">
       {children}
       {pending && (
         <span className="ml-2">
@@ -301,7 +302,7 @@ function Title({ children }: { children: React.ReactNode }) {
 
 function AddressPreview({ address, isDefault = false }: { address: Address; isDefault?: boolean }) {
   return (
-    <div className="flex gap-10">
+    <div className="flex gap-10 ml-10 ">
       <div className="text-sm">
         <p className="font-bold">
           {address.firstName} {address.lastName}

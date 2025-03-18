@@ -25,7 +25,7 @@ export function AccountSettingsSection({
       <div className="flex flex-col gap-y-24 @xl:flex-row">
         <div className="flex w-full flex-col @xl:max-w-lg">
           <div className="pb-12">
-            <h1 className="mb-10 text-4xl font-medium leading-none @xl:text-4xl">{title}</h1>
+            <h1 className="mb-8 text-3xl font-black lg:text-4xl text-center font-robotoslab">{title}</h1>
             <UpdateAccountForm
               account={account}
               action={updateAccountAction}
@@ -33,7 +33,7 @@ export function AccountSettingsSection({
             />
           </div>
           <div className="border-t border-contrast-100 pt-12">
-            <h1 className="mb-10 text-2xl font-medium leading-none @xl:text-2xl">
+            <h1 className="mb-10 text-2xl font-medium leading-none @xl:text-2xl font-robotoslab">
               {changePasswordTitle}
             </h1>
             <ChangePasswordForm

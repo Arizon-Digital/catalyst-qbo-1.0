@@ -22,7 +22,7 @@ const AccountItem = ({ children, title, description, href }: AccountItem) => {
     >
       {children}
       <span>
-        <h3 className="text-xl font-bold lg:text-2xl">{title}</h3>
+        <h3 className="font-bold text-base font-robotoslab">{title}</h3>
         {description ? <p>{description}</p> : null}
       </span>
     </Link>
@@ -42,17 +42,17 @@ export default function Account() {
 
   return (
     <div className="mx-auto">
-      <h1 className="my-8 text-4xl font-black lg:my-8 lg:text-5xl">{t('heading')}</h1>
+      <h1 className="my-8 text-2xl  font-normal lg:my-8 lg:text-2xl font-robotoslab text-center"> My Account</h1>
       <WelcomeMessage />
 
-      <div className="mb-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <AccountItem href="/account/orders" title={t('orders')}>
-          <Package className="me-8" size={48} strokeWidth={1.5} />
+      <div className="mb-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3 ml-12 mr-12">
+        <AccountItem  href="/account/orders" title='Order'>
+          <Package className="me-8 " size={48} strokeWidth={1.5} />
         </AccountItem>
-        <AccountItem href="/account/addresses" title={t('addresses')}>
+        <AccountItem href="/account/addresses" title='Addresses'>
           <BookUser className="me-8" size={48} strokeWidth={1.5} />
         </AccountItem>
-        <AccountItem href="/account/settings" title={t('settings')}>
+        <AccountItem href="/account/settings" title='Account settings'>
           <Settings className="me-8" size={48} strokeWidth={1.5} />
         </AccountItem>
         <AccountItem href="/account/return-form" title="Return Form">

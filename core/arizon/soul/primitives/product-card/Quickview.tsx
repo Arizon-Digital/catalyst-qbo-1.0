@@ -1,18 +1,16 @@
-
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { X } from 'lucide-react';
+import { X, ChevronUp, ChevronDown } from 'lucide-react';
 import { Gallery } from '@/arizon/soul/pages/product/[slug]/_components/gallery';
 import { PriceLabel } from '@/arizon/soul/primitives/price-label';
-import { Description } from '@/arizon/soul/sections/product-detail/description';
 import { ProductDetailForm, ProductDetailFormAction } from '@/arizon/soul/sections/product-detail/product-detail-form';
 import { Accordion, Accordions } from '@/vibes/soul/primitives/accordions';
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
-import { ProductDetailSkeleton } from '../../sections/product-detail';
+import { useCommonContext } from '~/components/common-context/common-provider';
+import TabComponent from '@/arizon/soul/sections/product-detail/tab';
 
-// Define or import the ProductGallerySkeleton
 const ProductGallerySkeleton = () => (
   <div className="@container">
     <div className="w-full overflow-hidden rounded-xl @xl:rounded-2xl">
@@ -31,12 +29,10 @@ const ProductGallerySkeleton = () => (
   </div>
 );
 
-// Define or import the PriceLabelSkeleton
 const PriceLabelSkeleton = () => (
   <div className="my-4 h-4 w-20 animate-pulse rounded-md bg-contrast-100" />
 );
 
-// Define or import the ProductDetailFormSkeleton
 const ProductDetailFormSkeleton = () => (
   <div className="flex animate-pulse flex-col gap-8">
     <div className="flex flex-col gap-5">
@@ -64,10 +60,34 @@ const ProductDetailFormSkeleton = () => (
   </div>
 );
 
+const getProductData = async (productContext, product) => {
+  if (!productContext?.getCurrencyCode) {
+    console.error("Product context or getCurrencyCode not available");
+    return product;
+  }
+  
+  try {
+    let currencyCode = await productContext.getCurrencyCode;
+    const productData = await fetch(
+      `/api/get-product/?productId=${product?.entityId || product?.id}&currencyCode=${currencyCode}`,
+    )
+      .then((data) => data.json())
+      .then((data) => data)
+      .catch((err) => {
+        console.log(err);
+        return product;
+      });
+    return productData;
+  } catch (err) {
+    console.error("Error fetching product data:", err);
+    return product;
+  }
+};
+
 interface QuickViewProps {
-  product: Streamable<ProductDetailProduct | null>;
-  action: ProductDetailFormAction<any>;
-  fields: Streamable<any[]>;
+  product: any;
+  action?: ProductDetailFormAction<any>;
+  fields?: Streamable<any[]>;
   quantityLabel?: string;
   incrementLabel?: string;
   decrementLabel?: string;
@@ -76,7 +96,7 @@ interface QuickViewProps {
 }
 
 const QuickView = ({
-  product: streamableProduct,
+  product: initialProduct,
   action,
   fields: streamableFields,
   quantityLabel,
@@ -85,23 +105,79 @@ const QuickView = ({
   ctaLabel: streamableCtaLabel,
   ctaDisabled: streamableCtaDisabled,
 }: QuickViewProps) => {
+  console.log("product", initialProduct)
   const [isOpen, setIsOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [productInfo, setProductInfo] = useState(initialProduct);
+  const productContext = useCommonContext?.();
+  
+  const streamableProduct = productInfo && typeof Streamable !== 'undefined' && Streamable.of 
+    ? Streamable.of(productInfo) 
+    : { value: productInfo };
 
-  const openQuickView = () => {
+  const openQuickView = async (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
     setIsOpen(true);
+    
+    if (productContext) {
+      try {
+        const productData = await getProductData(productContext, initialProduct);
+        if (productData) {
+          console.log("Quick view product data:", productData);
+          setProductInfo(productData);
+        }
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+        setProductInfo(initialProduct);
+      }
+    } else {
+      console.log("Using initial product data:", initialProduct);
+      setProductInfo(initialProduct);
+    }
   };
 
-  const closeQuickView = () => {
+  const handleIncrement = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
+  };
+
+  const closeQuickView = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    const handleEscapeKey = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        closeQuickView();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isOpen]);
 
   return (
     <>
       <button
-        onClick={openQuickView}
-        className="z-10 quick-view-btn flex w-full items-center justify-center gap-2 rounded-[4px] border border-[#ca9618] bg-[#ca9618] p-0 text-[13px] font-[700] text-[#ffffff] shadow-sm transition-all duration-300 hover:bg-[#fff] hover:text-[#ca9618]"
+        onClick={(e) => openQuickView(e)}
+        className="z-10 flex w-full items-center justify-center gap-2 rounded-[4px] border border-amber-600 bg-amber-600 p-0 text-sm font-bold text-white shadow-sm transition-all duration-300 hover:bg-white hover:text-amber-600"
       >
-        <div className="flex items-center justify-center gap-[5px]">
+        <div className="flex items-center justify-center gap-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -112,7 +188,7 @@ const QuickView = ({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="pl-[3px]"
+            className="pl-1"
           >
             <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0a4.5 4.5 0 1 1-.01-8.99A4.5 4.5 0 0 1 14 10.5c0 2.49-2.01 4.5-4.5 4.5z" />
           </svg>
@@ -120,81 +196,184 @@ const QuickView = ({
         </div>
       </button>
 
-      <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog.Root 
+        open={isOpen} 
+        onOpenChange={(open) => {
+          setIsOpen(open);
+        }}
+      >
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
           <Dialog.Content
-            className="fixed left-[50%] top-[50%] max-h-[90vh] w-[90vw] max-w-4xl translate-x-[-50%] translate-y-[-50%] overflow-y-auto rounded-lg bg-white shadow-lg quickview"
-            style={{ zIndex: 9999 }} // Add z-index here
-            onClick={(e) => e.stopPropagation()} // Prevent event propagation
+            className="fixed left-1/2 top-1/2 z-50 max-h-[90vh] w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white shadow-lg"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            onPointerDownOutside={(e) => {
+              e.preventDefault();
+            }}
           >
             <div className="p-8">
-              <Dialog.Close className="absolute right-4 top-4 rounded-full p-2 hover:bg-gray-100">
-                <X className="h-6 w-6" />
-                <span className="sr-only">Close</span>
+              <Dialog.Close asChild>
+                <button 
+                  className="absolute right-4 top-4 rounded-full p-2 hover:bg-gray-100"
+                  onClick={(e) => closeQuickView(e)}
+                >
+                  <X className="h-6 w-6" />
+                  <span className="sr-only">Close</span>
+                </button>
               </Dialog.Close>
-              <Stream fallback={<ProductDetailSkeleton />} value={streamableProduct}>
-                {(product) =>
-                  product && (
-                    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                      <div className="a1 mb-12 mt-4 lg:grid lg:grid-cols-2 lg:gap-8">
-                        <Stream fallback={<ProductGallerySkeleton />} value={product.images ?? []}>
-                          {(images) => <Gallery product={{ ...product, images }} />}
-                        </Stream>
-                      </div>
-                      <div className="lg:col-span-2" id="tabsection1">
-                        <Description product={product} />
-                        <div className="mt-6">
-                          <div className="flex items-center justify-between">
-                            <span className="text-lg font-semibold">Price:</span>
-                            <Stream fallback={<PriceLabelSkeleton />} value={product.price}>
-                              {(price) => (
-                                <PriceLabel
-                                  className="text-lg font-bold"
-                                  price={price?.replace('CA', 'C') ?? ''}
-                                />
-                              )}
-                            </Stream>
+              
+              {typeof Stream !== 'undefined' ? (
+                <Stream fallback={<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                  <div className="mb-12 mt-4">
+                    <ProductGallerySkeleton />
+                  </div>
+                  <div>
+                    <PriceLabelSkeleton />
+                    <ProductDetailFormSkeleton />
+                  </div>
+                </div>} value={streamableProduct}>
+                  {(product) =>
+                    product && (
+                      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                        <div className="mb-12 mt-4">
+                          <div className="max-h-[500px] overflow-y-auto pr-2">
+                            <Gallery product={initialProduct} />
                           </div>
-                          <Stream
-                            fallback={<ProductDetailFormSkeleton />}
-                            value={Streamable.all([
-                              streamableFields ?? [], // Ensure fields is defined
-                              streamableCtaLabel,
-                              streamableCtaDisabled,
-                            ])}
-                          >
-                            {([fields, ctaLabel, ctaDisabled]) => (
-                              <ProductDetailForm
-                                action={action}
-                                ctaDisabled={ctaDisabled ?? undefined}
-                                ctaLabel={ctaLabel ?? undefined}
-                                decrementLabel={decrementLabel}
-                                fields={fields ?? []} // Ensure fields is defined
-                                incrementLabel={incrementLabel}
-                                productId={product.id}
-                                quantityLabel={quantityLabel}
-                              />
-                            )}
-                          </Stream>
                         </div>
-                        <Accordions>
-                          <Accordion title="Specifications">
-                            <div className="prose">
-                              <p>Product specifications go here.</p>
+                        <div>
+                          <div className="mb-6">
+                            <TabComponent product={product} />
+                          </div>
+                          
+                          <div className="mt-6">
+                            <div className="flex items-center justify-between">
+                              <span className="text-lg font-semibold">Price:</span>
+                              <Stream fallback={<PriceLabelSkeleton />} value={product.price}>
+                                {(price) => (
+                                  <PriceLabel
+                                    className="text-lg font-bold"
+                                    price={price?.replace('CA', 'C') ?? ''}
+                                  />
+                                )}
+                              </Stream>
                             </div>
-                          </Accordion>
+                            
+                            {action ? (
+                              <Stream
+                                fallback={<ProductDetailFormSkeleton />}
+                                value={Streamable.all([
+                                  streamableFields ?? [],
+                                  streamableCtaLabel,
+                                  streamableCtaDisabled,
+                                ])}
+                              >
+                                {([fields, ctaLabel, ctaDisabled]) => (
+                                  <ProductDetailForm
+                                    action={action}
+                                    ctaDisabled={ctaDisabled ?? undefined}
+                                    ctaLabel={ctaLabel ?? undefined}
+                                    decrementLabel={decrementLabel}
+                                    fields={fields ?? []}
+                                    incrementLabel={incrementLabel}
+                                    productId={product.id}
+                                    quantityLabel={quantityLabel}
+                                  />
+                                )}
+                              </Stream>
+                            ) : (
+                              <div className="mt-6 flex items-center gap-4">
+                                <div className="flex items-center rounded-md border">
+                                  <button
+                                    onClick={handleDecrement}
+                                    className="flex h-10 w-10 items-center justify-center border-r"
+                                    disabled={quantity <= 1}
+                                  >
+                                    <ChevronDown className="h-4 w-4" />
+                                  </button>
+                                  <div className="flex h-10 w-12 items-center justify-center">
+                                    {quantity}
+                                  </div>
+                                  <button
+                                    onClick={handleIncrement}
+                                    className="flex h-10 w-10 items-center justify-center border-l"
+                                  >
+                                    <ChevronUp className="h-4 w-4" />
+                                  </button>
+                                </div>
+                                <button className="rounded-full bg-amber-600 px-6 py-2 text-white hover:bg-amber-700">
+                                  Add to Cart
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                          
+                          
+                        </div>
+                      </div>
+                    )
+                  }
+                </Stream>
+              ) : (
+                productInfo && (
+                  <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                    <div className="mb-12 mt-4">
+                      <div className="max-h-[500px] overflow-y-auto pr-2">
+                        <Gallery product={productInfo} />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="mb-6">
+                        <TabComponent product={productInfo} />
+                      </div>
+                      
+                      <div className="mt-6">
+                        <div className="flex items-center justify-between">
+                          <span className="text-lg font-semibold">Price:</span>
+                          <span className="text-lg font-bold">
+                            {productInfo.price?.replace('CA', 'C') || ''}
+                          </span>
+                        </div>
+                        
+                        <div className="mt-6 flex items-center gap-4">
+                          <div className="flex items-center rounded-md border">
+                            <button
+                              onClick={handleDecrement}
+                              className="flex h-10 w-10 items-center justify-center border-r"
+                              disabled={quantity <= 1}
+                            >
+                              <ChevronDown className="h-4 w-4" />
+                            </button>
+                            <div className="flex h-10 w-12 items-center justify-center">
+                              {quantity}
+                            </div>
+                            <button
+                              onClick={handleIncrement}
+                              className="flex h-10 w-10 items-center justify-center border-l"
+                            >
+                              <ChevronUp className="h-4 w-4" />
+                            </button>
+                          </div>
+                          <button className="rounded-full bg-amber-600 px-6 py-2 text-white hover:bg-amber-700">
+                            Add to Cart
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-6">
+                        <Accordions>
                           <Accordion title="Warranty">
                             <div className="prose">
-                              <p>Warranty information goes here.</p>
+                              <p>{productInfo.warranty || "Warranty information goes here."}</p>
                             </div>
                           </Accordion>
                         </Accordions>
                       </div>
                     </div>
-                  )
-                }
-              </Stream>
+                  </div>
+                )
+              )}
             </div>
           </Dialog.Content>
         </Dialog.Portal>
