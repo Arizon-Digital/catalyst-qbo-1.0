@@ -23,20 +23,8 @@ export default async function Layout({ children, params }: Props) {
   }
 
   return (
-    <StickySidebarLayout
-      sidebar={
-        <SidebarMenu
-          links={[
-            { href: '/account/orders', label: t('orders') },
-            { href: '/account/addresses', label: t('addresses') },
-            { href: '/account/settings', label: t('settings') },
-            { href: '/logout', label: t('logout'), prefetch: 'none' },
-          ]}
-        />
-      }
-      sidebarSize="small"
-    >
+    <>
       {children}
-    </StickySidebarLayout>
+    </>
   );
 }
