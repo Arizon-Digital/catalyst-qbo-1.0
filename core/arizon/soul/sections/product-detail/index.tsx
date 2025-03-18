@@ -63,11 +63,11 @@ export function ProductDetail<F extends Field>({
 
   return (
     <section className="@container">
-      <div className="mx-auto w-full max-w-screen-2xl px-4  @xl:px-6  @4xl:px-8 mt-5 font-robotoslab ">
+      <div className="mx-auto w-full max-w-screen-2xl px-4  @xl:px-6  @4xl:px-8 mt-9 font-robotoslab ">
         <Stream value={streamableProduct}>
           {(product) =>
             product && (
-              <Breadcrumbs category={product?.breadcrumbs} className="mb-12 font-robotoslab" />
+              <Breadcrumbs category={product?.breadcrumbs} className="mb-12 font-robotoslab mt-5" />
             )}
         </Stream>
 

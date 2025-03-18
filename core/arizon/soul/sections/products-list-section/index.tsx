@@ -1,6 +1,8 @@
 
 
-import { Sliders } from 'lucide-react';
+
+
+import { Sliders, Filter } from 'lucide-react';
 import { Suspense } from 'react';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
@@ -11,7 +13,7 @@ import { Button } from '@/vibes/soul/primitives/button';
 import { CursorPagination, CursorPaginationInfo } from '@/vibes/soul/primitives/cursor-pagination';
 import { ListProduct, ProductsList } from '@/vibes/soul/primitives/products-list';
 import * as SidePanel from '@/vibes/soul/primitives/side-panel';
-import { Filter, FiltersPanel } from '@/arizon/soul/sections/products-list-section/filters-panel';
+import { Filter as FilterType, FiltersPanel } from '@/arizon/soul/sections/products-list-section/filters-panel';
 import {
   Sorting,
   SortingSkeleton,
@@ -30,7 +32,7 @@ interface Props {
   title?: Streamable<string | null>;
   totalCount: Streamable<number>;
   products: Streamable<ListProduct[]>;
-  filters: Streamable<Filter[]>;
+  filters: Streamable<FilterType[]>;
   sortOptions: Streamable<SortOption[]>;
   compareProducts?: Streamable<ListProduct[] | null>;
   paginationInfo?: Streamable<CursorPaginationInfo>;
@@ -112,9 +114,51 @@ export function ProductsListSection({
               </div>
             </div>
 
-            {/* Controls row - MODIFIED */}
-            <div className="w-full flex gap-8 @4xl:gap-10">
-              {/* Can't Find Product button - full height to cover both rows */}
+            {/* Mobile: "Can't Find Product" full width */}
+            <div className="w-full block md:hidden mb-4">
+              <div className="bg-[#CA9619] rounded px-4 py-3 w-full flex items-center justify-center">
+                <Link
+                  className="text-white text-base font-normal hover:text-[#131313] transition-colors duration-200"
+                  href="/can't-find-what-are-you-looking-for"
+                  rel="noopener noreferrer"
+                >
+                  Can't Find The Product You Are Looking For?
+                </Link>
+              </div>
+            </div>
+
+            {/* Mobile: Show Filters button */}
+            <div className="w-full block md:hidden mb-4">
+              <SidePanel.Root>
+                <SidePanel.Trigger asChild>
+                  <Button 
+                    size="medium" 
+                    variant="secondary" 
+                    className="w-full bg-[#CA9619] text-white rounded flex items-center justify-center gap-2 py-3 px-6"
+                  >
+                    <Filter size={20} />
+                    Show Filters
+                  </Button>
+                </SidePanel.Trigger>
+                <Stream value={streamableFiltersPanelTitle}>
+                  {(filtersPanelTitle) => (
+                    <SidePanel.Content title={<h2>{filtersPanelTitle}</h2>}>
+                      <FiltersPanel
+                        filters={filters}
+                        paginationInfo={paginationInfo}
+                        rangeFilterApplyLabel={rangeFilterApplyLabel}
+                        resetFiltersLabel={resetFiltersLabel}
+                      />
+                    </SidePanel.Content>
+                  )}
+                </Stream>
+              </SidePanel.Root>
+            </div>
+
+            {/* Desktop layout - original code unchanged */}
+            <div className="w-full hidden md:flex gap-8 @4xl:gap-10">
+              
+              {/* "Can't Find Product" section - desktop only */}
               <div className="bg-[#CA9619] rounded px-4 py-3 flex-shrink-0 flex items-center max-w-[240px]">
                 <Link
                   className="text-white text-base font-normal hover:text-[#131313] transition-colors duration-200"
@@ -125,9 +169,10 @@ export function ProductsListSection({
                 </Link>
               </div>
 
-              {/* Right side - Search and Controls in two rows */}
+              {/* Filter controls container - desktop only */}
               <div className="flex-grow flex flex-col gap-4">
-                {/* Top row - Search field (full width) */}
+              
+                {/* Search input */}
                 <div className="w-full">
                   <input
                     className="w-full border border-gray-300 rounded px-3 py-2"
@@ -138,9 +183,9 @@ export function ProductsListSection({
                   />
                 </div>
 
-                {/* Second row - Controls */}
+                {/* Controls row */}
                 <div className="w-full flex items-center">
-                  {/* Sort dropdown - aligned with search field */}
+                  {/* Sort dropdown */}
                   <div className="mr-auto">
                     <Stream
                       fallback={<SortingSkeleton />}
@@ -151,7 +196,7 @@ export function ProductsListSection({
                       ])}
                     >
                       {([label, options, placeholder]) => (
-                        <div className="border  rounded">
+                        <div className="border rounded">
                           <Sorting
                             defaultValue={sortDefaultValue}
                             label={label}
@@ -174,30 +219,6 @@ export function ProductsListSection({
                     {/* Products Per Page */}
                     <div className="hidden md:block">
                       <ProductCountFilter />
-                    </div>
-
-                    {/* Mobile filters button */}
-                    <div className="md:hidden">
-                      <SidePanel.Root>
-                        <SidePanel.Trigger asChild>
-                          <Button size="medium" variant="secondary">
-                            {filterLabel}
-                            <Sliders size={20} />
-                          </Button>
-                        </SidePanel.Trigger>
-                        <Stream value={streamableFiltersPanelTitle}>
-                          {(filtersPanelTitle) => (
-                            <SidePanel.Content title={<h2>{filtersPanelTitle}</h2>}>
-                              <FiltersPanel
-                                filters={filters}
-                                paginationInfo={paginationInfo}
-                                rangeFilterApplyLabel={rangeFilterApplyLabel}
-                                resetFiltersLabel={resetFiltersLabel}
-                              />
-                            </SidePanel.Content>
-                          )}
-                        </Stream>
-                      </SidePanel.Root>
                     </div>
                   </div>
                 </div>
