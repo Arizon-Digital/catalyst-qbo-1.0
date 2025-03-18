@@ -91,7 +91,7 @@ export function ProductDetail<F extends Field>({
                     {product.title}
                   </h1>
                   <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab leading-none @xl:mb-4 @xl:text-base @4xl:text-base">
-                    SKU: <span className='font-robotoslab font-light'>{product.sku}</span>
+                    SKU: <span className='font-robotoslab font-normal'>{product.sku}</span>
                   </p>
                   {Boolean(product?.productData?.availabilityV2?.description) && (
                 
