@@ -180,7 +180,7 @@ console.log(streamableProduct,"StreamableProduct>>>>")
     <>
       <button
         onClick={(e) => openQuickView(e)}
-        className="z-10 flex w-full items-center justify-center gap-2 rounded-[4px] border border-amber-600 bg-amber-600 p-0 text-sm font-bold text-white shadow-sm transition-all duration-300 hover:bg-white hover:text-amber-600"
+        className="z-10 flex w-full items-center justify-center gap-2 rounded-[4px] border border-amber-600 bg-yellow -600 p-0 text-sm font-bold text-white shadow-sm transition-all duration-300 hover:bg-white hover:text-amber-600"
       >
         <div className="flex items-center justify-center gap-1">
           <svg

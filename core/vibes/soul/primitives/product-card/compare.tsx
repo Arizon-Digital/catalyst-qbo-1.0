@@ -1,13 +1,13 @@
 
 
+
 'use client';
 
-import { Checkbox } from '@radix-ui/react-checkbox';
 import { Label } from '@radix-ui/react-label';
 import { useTranslations } from 'next-intl';
 import { useEffect, useId, useState } from 'react';
 import { useCompareDrawerContext } from '~/components/ui/compare-drawer';
-import { Check } from 'lucide-react';
+import { ArrowLeftRight } from 'lucide-react'; 
 
 interface Image {
   altText?: string;
@@ -35,7 +35,7 @@ export const Compare = ({
   paramName = 'compare',
   label,
 }: Props) => {
-  const checkboxId = useId();
+  const iconId = useId();
   const t = useTranslations('Components.ProductCard.Compare');
   const displayLabel = label || t('compare');
   
@@ -66,16 +66,18 @@ export const Compare = ({
     }
   }, [productId, products]);
   
-  const isChecked = () => {
+  const isSelected = () => {
     if (Array.isArray(productId)) {
       return productId.every(id => selectedIds.includes(id));
     }
     return selectedIds.includes(productId);
   };
 
-  const handleOnCheckedChange = (isChecked: boolean) => {
+  const handleToggleCompare = () => {
+    const newIsSelected = !isSelected();
+    
     if (Array.isArray(productId)) {
-      if (isChecked) {
+      if (newIsSelected) {
         const newIds = [...selectedIds];
         productId.forEach(id => {
           if (!newIds.includes(id)) {
@@ -104,7 +106,7 @@ export const Compare = ({
         setProducts(products.filter(p => !productId.includes(p.id)));
       }
     } else {
-      if (isChecked) {
+      if (newIsSelected) {
         setSelectedIds(prev => [...prev, productId]);
         
         const productToAdd = {
@@ -125,22 +127,20 @@ export const Compare = ({
 
   return (
     <div className="flex items-center gap-3">
-      <Checkbox
+      <button
         aria-label={displayLabel}
-        checked={isChecked()}
-        className="h-4 w-4 border-2 border-gray-300 rounded focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 relative flex items-center justify-center"
-        id={checkboxId}
-        onCheckedChange={handleOnCheckedChange}
+        className={`flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+        id={iconId}
+        onClick={handleToggleCompare}
+        type="button"
       >
-        {isChecked() && (
-          <Check 
-            className="h-3 w-3 text-blue-600"
-            strokeWidth={2}
-          />
-        )}
-      </Checkbox>
-      <Label className="font-normal" htmlFor={checkboxId}>
-        {displayLabel}
+        <ArrowLeftRight
+          className={`h-5 w-5 ${isSelected() ? 'text-blue-600' : 'text-gray-500'}`}
+          strokeWidth={2}
+        />
+      </button>
+      <Label className="font-normal cursor-pointer" htmlFor={iconId} onClick={handleToggleCompare}>
+     
       </Label>
     </div>
   );

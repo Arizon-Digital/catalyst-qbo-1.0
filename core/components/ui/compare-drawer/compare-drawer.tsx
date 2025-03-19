@@ -55,7 +55,7 @@ const Product = ({ product, onDismiss }: { product: Product; onDismiss: () => vo
       </small>
       <Button
         aria-label={t('removeProductAriaLabel', { product: product.name })}
-        className="grow-1 ms-auto w-auto border-0 bg-transparent p-0 text-black hover:bg-transparent hover:text-primary focus-visible:text-primary"
+        className="grow-1 relative z-0 inline-flex h-fit select-none items-center justify-center overflow-hidden border text-center font-[family-name:var(--button-font-family,var(--font-family-body))] font-semibold leading-normal after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:transition-[opacity,transform] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:after:translate-x-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-focus,hsl(var(--primary)))] focus-visible:ring-offset-2 border-[var(--button-primary-border,hsl(var(--primary)))] bg-[#ca9618] text-[var(--button-primary-foreground)] after:bg-[#BF9117] rounded-lg after:rounded-lg hover:after:translate-x-0 w-auto @xl:w-56"
         onClick={onDismiss}
         type="button"
       >

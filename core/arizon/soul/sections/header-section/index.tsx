@@ -694,7 +694,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     {group.label && (
                       <Link
                         href={group.href || '#'}
-                        className="block font-semibold text-gray-800 mb-2 hover:text-blue-800"
+                        className="block font-semibold text-white -800 mb-2 hover:text-blue-800"
                         onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
                       >
                         {group.label}
@@ -705,7 +705,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                         <Link
                           key={linkIndex}
                           href={link.href || '#'}
-                          className="block text-gray-600 py-1 text-sm hover:text-blue-800"
+                          className="block text-white -600 py-1 text-sm hover:text-blue-800"
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           {link.label}
