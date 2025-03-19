@@ -15,7 +15,7 @@ interface Props {
 function Content({ title, children }: Props) {
   return (
     <Dialog.Portal>
-      <Dialog.Overlay className="fixed inset-0 z-30 bg-foreground/50 @container">
+      <Dialog.Overlay className="fixed inset-0 bg-foreground/50 @container z-[99999]">
         <Dialog.Content
           className={clsx(
             'fixed inset-y-0 right-0 flex w-96 max-w-full flex-col bg-background transition duration-500 [animation-timing-function:cubic-bezier(0.25,1,0,1)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right',
