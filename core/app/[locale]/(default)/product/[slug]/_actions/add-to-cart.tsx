@@ -31,6 +31,8 @@ export const addToCart = async (
   fields: Field[];
   lastResult: SubmissionResult | null;
   successMessage?: ReactNode;
+  cartCount?: number,
+  cartId?: string;
 }> => {
   const t = await getTranslations('Product.ProductDetails');
 
@@ -187,6 +189,8 @@ export const addToCart = async (
       return {
         lastResult: submission.reply(),
         fields: prevState.fields,
+        cartCount: cart?.lineItems?.totalQuantity,
+        cartId: cart?.entityId,
         successMessage: t.rich('successMessage', {
           cartItems: quantity,
           cartLink: (chunks) => (
@@ -223,6 +227,8 @@ export const addToCart = async (
     return {
       lastResult: submission.reply(),
       fields: prevState.fields,
+      cartCount: cart?.lineItems?.totalQuantity,
+      cartId: cart?.entityId,
       successMessage: t.rich('successMessage', {
         cartItems: quantity,
         cartLink: (chunks) => (

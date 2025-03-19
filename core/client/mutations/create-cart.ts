@@ -10,6 +10,9 @@ const CreateCartMutation = graphql(`
       createCart(input: $createCartInput) {
         cart {
           entityId
+          lineItems {
+            totalQuantity
+          }
         }
       }
     }

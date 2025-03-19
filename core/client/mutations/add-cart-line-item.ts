@@ -9,6 +9,9 @@ const AddCartLineItemMutation = graphql(`
       addCartLineItems(input: $input) {
         cart {
           entityId
+          lineItems {
+            totalQuantity
+          }
         }
       }
     }

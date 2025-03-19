@@ -10,7 +10,7 @@ import { pricesTransformer } from '~/data-transformers/prices-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import { productOptionsTransformer } from '~/data-transformers/product-options-transformer';
 import { getPreferredCurrencyCode } from '~/lib/currency';
-import { ProductDetail } from '~/lib/makeswift/components/product-detail';
+import { ProductDetail } from '@/arizon/soul/sections/product-detail';
 
 import { addToCart } from './_actions/add-to-cart';
 import { ProductSchema } from './_components/product-schema';
@@ -48,6 +48,7 @@ export const getProduct = async (props: Props) => {
   const format = await getFormatter();
 
   const { slug } = await props.params;
+  console.log('========server loaded=======');
   const variables = await cachedProductDataVariables(slug, props.searchParams);
   const product = await getProductData(variables);
 
