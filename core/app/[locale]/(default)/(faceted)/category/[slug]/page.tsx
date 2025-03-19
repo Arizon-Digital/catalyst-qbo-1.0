@@ -142,7 +142,7 @@ async function getTotalCount(props: Props): Promise<number> {
 
 async function getProducts(props: Props) {
   const search = await getSearch(props);
-console.log(search,"SearchedProducts>>>>>>>>>>")
+
   return search.products.items;
 }
 
@@ -150,7 +150,7 @@ console.log(search,"SearchedProducts>>>>>>>>>>")
 async function getListProducts(props: Props): Promise<ListProduct[]> {
   const products = await getProducts(props);
   const format = await getFormatter();
-console.log(products,"ListOfProducts???????>>>>>>>>>>")
+
   return products.map((product) => ({
     id: product.entityId.toString(),
     title: product.name,

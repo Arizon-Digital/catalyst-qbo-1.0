@@ -107,7 +107,7 @@ const QuickView = ({
   ctaDisabled: streamableCtaDisabled,
   originalPdata
 }: QuickViewProps) => {
-  console.log("product>>>>>>>>>>>>>>", originalPdata)
+  
   const [isOpen, setIsOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [productInfo, setProductInfo] = useState(initialProduct);
@@ -129,7 +129,7 @@ const QuickView = ({
       try {
         const productData = await getProductData(productContext, initialProduct);
         if (productData) {
-          console.log("Quick view product data:", productData);
+          
           setProductInfo(productData);
         }
       } catch (error) {
@@ -137,7 +137,7 @@ const QuickView = ({
         setProductInfo(initialProduct);
       }
     } else {
-      console.log("Using initial product data:", initialProduct);
+      
       setProductInfo(initialProduct);
     }
   };
@@ -173,7 +173,7 @@ const QuickView = ({
     };
   }, [isOpen]);
 
-console.log(streamableProduct,"StreamableProduct>>>>")
+
 
 
   return (

@@ -27,7 +27,7 @@ interface TabComponentProps {
 const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
   const [activeTab, setActiveTab] = useState('Description');
 
-  console.log(product,"TabConytent")
+ 
   
   const productWithoutWarranty = {
     ...product,

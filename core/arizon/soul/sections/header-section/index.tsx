@@ -170,7 +170,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       try {
         // Get real cart data from your API
         const cartData = await getCartData();
-        console.log("Cart data loaded (full cart):", cartData); // Debug full cart data
+        
 
         if (cartData?.lineItems?.physicalItems && cartData.lineItems.physicalItems.length > 0) {
           // Debug the first item to see its structure
