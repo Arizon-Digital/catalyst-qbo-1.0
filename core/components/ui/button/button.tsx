@@ -30,13 +30,13 @@ const Button = forwardRef<ComponentRef<'button'>, Props>(
     return (
       <Comp
         className={cn(
-          'relative flex w-full items-center justify-center border-2 border-primary px-[30px] py-2.5 text-base font-semibold leading-6 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:border-gray-400',
+          'bg-[#CA9619] -500 text-white font-semibold py-2 px-4 rounded flex items-center justify-center',
           variant === 'primary' &&
-            'hover:border-secondary hover:bg-secondary bg-primary text-white disabled:bg-gray-400 disabled:hover:border-gray-400 disabled:hover:bg-gray-400',
+            'bg-[#CA9619] -500 text-white font-semibold py-2 px-4 rounded flex items-center justify-center',
           variant === 'secondary' &&
-            'hover:border-secondary hover:bg-secondary hover:text-secondary bg-transparent text-primary hover:bg-opacity-10 disabled:text-gray-400 disabled:hover:border-gray-400 disabled:hover:bg-transparent disabled:hover:text-gray-400',
+            'bg-[#CA9619] -500 text-white font-semibold py-2 px-4 rounded flex items-center justify-center',
           variant === 'subtle' &&
-            'hover:bg-secondary hover:text-secondary border-none bg-transparent text-primary hover:bg-opacity-10 disabled:text-gray-400 disabled:hover:bg-transparent disabled:hover:text-gray-400',
+            'bg-[#CA9619] -500 text-white font-semibold py-2 px-4 rounded flex items-center justify-center',
           className,
         )}
         disabled={disabled || loading}

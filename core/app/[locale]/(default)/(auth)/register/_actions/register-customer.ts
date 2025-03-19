@@ -1,23 +1,14 @@
 'use server';
 
-import { BigCommerceGQLError } from '@bigcommerce/catalyst-client';
-import { SubmissionResult } from '@conform-to/react';
-import { parseWithZod } from '@conform-to/zod';
-import { getLocale, getTranslations } from 'next-intl/server';
-import { z } from 'zod';
+import { BigCommerceAPIError } from '@bigcommerce/catalyst-client';
+import { getTranslations } from 'next-intl/server';
 
-import { Field, FieldGroup, schema } from '@/vibes/soul/primitives/dynamic-form/schema';
-import { signIn } from '~/auth';
 import { client } from '~/client';
 import { graphql, VariablesOf } from '~/client/graphql';
-import { FieldNameToFieldId } from '~/data-transformers/form-field-transformer/utils';
-import { redirect } from '~/i18n/routing';
+import { parseRegisterCustomerFormData } from '~/components/form-fields/shared/parse-fields';
 
 const RegisterCustomerMutation = graphql(`
-  mutation RegisterCustomerMutation(
-    $input: RegisterCustomerInput!
-    $reCaptchaV2: ReCaptchaV2Input
-  ) {
+  mutation RegisterCustomer($input: RegisterCustomerInput!, $reCaptchaV2: ReCaptchaV2Input) {
     customer {
       registerCustomer(input: $input, reCaptchaV2: $reCaptchaV2) {
         customer {
@@ -43,219 +34,72 @@ const RegisterCustomerMutation = graphql(`
   }
 `);
 
-const stringToNumber = z.string().pipe(z.coerce.number());
+type Variables = VariablesOf<typeof RegisterCustomerMutation>;
+type RegisterCustomerInput = Variables['input'];
 
-const inputSchema = z.object({
-  email: z.string(),
-  password: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
-  formFields: z.object({
-    checkboxes: z.array(
-      z.object({
-        fieldEntityId: stringToNumber,
-        fieldValueEntityIds: z.array(stringToNumber),
-      }),
-    ),
-    multipleChoices: z.array(
-      z.object({
-        fieldEntityId: stringToNumber,
-        fieldValueEntityId: stringToNumber,
-      }),
-    ),
-    numbers: z.array(
-      z.object({
-        fieldEntityId: stringToNumber,
-        number: stringToNumber,
-      }),
-    ),
-    dates: z.array(
-      z.object({
-        fieldEntityId: stringToNumber,
-        date: z.string(),
-      }),
-    ),
-    passwords: z.array(
-      z.object({
-        fieldEntityId: stringToNumber,
-        password: z.string(),
-      }),
-    ),
-    multilineTexts: z.array(
-      z.object({
-        fieldEntityId: stringToNumber,
-        multilineText: z.string(),
-      }),
-    ),
-    texts: z.array(
-      z.object({
-        fieldEntityId: stringToNumber,
-        text: z.string(),
-      }),
-    ),
-  }),
-});
-
-function parseRegisterCustomerInput(
-  value: Record<string, string | number | string[] | undefined>,
-  fields: Array<Field | FieldGroup<Field>>,
-): VariablesOf<typeof RegisterCustomerMutation>['input'] {
-  const customFields = fields
-    .flatMap((f) => (Array.isArray(f) ? f : [f]))
-    .filter(
-      (field) =>
-        ![
-          String(FieldNameToFieldId.email),
-          String(FieldNameToFieldId.password),
-          String(FieldNameToFieldId.confirmPassword),
-          String(FieldNameToFieldId.firstName),
-          String(FieldNameToFieldId.lastName),
-        ].includes(field.name),
-    );
-  const mappedInput = {
-    email: value[FieldNameToFieldId.email],
-    password: value[FieldNameToFieldId.password],
-    firstName: value[FieldNameToFieldId.firstName],
-    lastName: value[FieldNameToFieldId.lastName],
-    formFields: {
-      checkboxes: customFields
-        .filter((field) => ['checkbox-group'].includes(field.type))
-        .filter((field) => Boolean(value[field.name]))
-        .map((field) => {
-          return {
-            fieldEntityId: field.name,
-            fieldValueEntityIds: value[field.name],
-          };
-        }),
-      multipleChoices: customFields
-        .filter((field) => ['radio-group', 'button-radio-group'].includes(field.type))
-        .filter((field) => Boolean(value[field.name]))
-        .map((field) => {
-          return {
-            fieldEntityId: field.name,
-            fieldValueEntityId: value[field.name],
-          };
-        }),
-      numbers: customFields
-        .filter((field) => ['number'].includes(field.type))
-        .filter((field) => Boolean(value[field.name]))
-        .map((field) => {
-          return {
-            fieldEntityId: field.name,
-            number: value[field.name],
-          };
-        }),
-      dates: customFields
-        .filter((field) => ['date'].includes(field.type))
-        .filter((field) => Boolean(value[field.name]))
-        .map((field) => {
-          return {
-            fieldEntityId: field.name,
-            date: new Date(String(value[field.name])).toISOString(),
-          };
-        }),
-      passwords: customFields
-        .filter((field) => ['password'].includes(field.type))
-        .filter((field) => Boolean(value[field.name]))
-        .map((field) => ({
-          fieldEntityId: field.name,
-          password: value[field.name],
-        })),
-      multilineTexts: customFields
-        .filter((field) => ['textarea'].includes(field.type))
-        .filter((field) => Boolean(value[field.name]))
-        .map((field) => ({
-          fieldEntityId: field.name,
-          multilineText: value[field.name],
-        })),
-      texts: customFields
-        .filter((field) => ['text'].includes(field.type))
-        .filter((field) => Boolean(value[field.name]))
-        .map((field) => ({
-          fieldEntityId: field.name,
-          text: value[field.name],
-        })),
-    },
-  };
-
-  return inputSchema.parse(mappedInput);
+interface RegisterCustomerForm {
+  formData: FormData;
+  reCaptchaToken?: string;
 }
 
-export async function registerCustomer<F extends Field>(
-  prevState: { lastResult: SubmissionResult | null; fields: Array<F | FieldGroup<F>> },
-  formData: FormData,
-) {
+const isRegisterCustomerInput = (data: unknown): data is RegisterCustomerInput => {
+  if (typeof data === 'object' && data !== null && 'email' in data) {
+    return true;
+  }
+
+  return false;
+};
+
+export const registerCustomer = async ({ formData, reCaptchaToken }: RegisterCustomerForm) => {
   const t = await getTranslations('Register');
-  const locale = await getLocale();
 
-  const submission = parseWithZod(formData, { schema: schema(prevState.fields) });
+  formData.delete('customer-confirmPassword');
 
-  if (submission.status !== 'success') {
+  const parsedData = parseRegisterCustomerFormData(formData);
+
+  if (!isRegisterCustomerInput(parsedData)) {
     return {
-      lastResult: submission.reply(),
-      fields: prevState.fields,
+      status: 'error',
+      error: t('Errors.inputError'),
     };
   }
 
   try {
-    const input = parseRegisterCustomerInput(submission.value, prevState.fields);
     const response = await client.fetch({
       document: RegisterCustomerMutation,
       variables: {
-        input,
-        // ...(recaptchaToken && { reCaptchaV2: { token: recaptchaToken } }),
+        input: parsedData,
+        ...(reCaptchaToken && { reCaptchaV2: { token: reCaptchaToken } }),
       },
-      fetchOptions: { cache: 'no-store' },
+      fetchOptions: {
+        cache: 'no-store',
+      },
     });
 
     const result = response.data.customer.registerCustomer;
 
-    if (result.errors.length > 0) {
-      return {
-        lastResult: submission.reply({
-          formErrors: response.data.customer.registerCustomer.errors.map((error) => error.message),
-        }),
-        fields: prevState.fields,
-      };
+    if (result.errors.length === 0) {
+      return { status: 'success', data: parsedData };
     }
 
-    await signIn(
-      {
-        type: 'password',
-        email: input.email,
-        password: input.password,
-      },
-      {
-        // We want to use next/navigation for the redirect as it
-        // follows basePath and trailing slash configurations.
-        redirect: false,
-      },
-    );
+    return {
+      status: 'error',
+      error: result.errors.map((error) => error.message).join('\n'),
+    };
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);
 
-    if (error instanceof BigCommerceGQLError) {
+    if (error instanceof BigCommerceAPIError) {
       return {
-        lastResult: submission.reply({
-          formErrors: error.errors.map(({ message }) => message),
-        }),
-        fields: prevState.fields,
-      };
-    }
-
-    if (error instanceof Error) {
-      return {
-        lastResult: submission.reply({ formErrors: [error.message] }),
-        fields: prevState.fields,
+        status: 'error',
+        error: t('Errors.apiError'),
       };
     }
 
     return {
-      lastResult: submission.reply({ formErrors: [t('Errors.error')] }),
-      fields: prevState.fields,
+      status: 'error',
+      error: t('Errors.error'),
     };
   }
-
-  return redirect({ href: '/account', locale });
-}
+};

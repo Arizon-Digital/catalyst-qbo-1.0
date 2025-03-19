@@ -200,7 +200,7 @@ export function CartClient<LineItem extends CartLineItem>({
                           <div className="text-sm sm:text-base font-medium font-robotoslab">
                             <Link 
                               href={lineItem.href} 
-                              className="hover:text-yellow-600 transition-colors"
+                              className="hover:text-[#CA9619] -600 transition-colors"
                             >
                               {lineItem.title}
                             </Link>
@@ -260,7 +260,7 @@ export function CartClient<LineItem extends CartLineItem>({
             
             <CheckoutButton 
               action={checkoutAction} 
-              className="mt-4 w-full bg-yellow-600 text-white py-2 sm:py-3 px-4 font-medium hover:bg-yellow-700 transition-colors uppercase text-center"
+              className="mt-4 w-full bg-[#CA9619] -600 text-white py-2 sm:py-3 px-4 font-medium hover:bg-[#CA9619] -700 transition-colors uppercase text-center"
             >
               {checkoutLabel}
             </CheckoutButton>
@@ -384,8 +384,8 @@ function QuantityControl({
           <button
             aria-label={decrementLabel}
             className={clsx(
-              'flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-yellow-600 text-white rounded',
-              lineItem.quantity === 1 ? 'opacity-50' : 'hover:bg-yellow-700',
+              'flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-[#CA9619] -600 text-white rounded',
+              lineItem.quantity === 1 ? 'opacity-50' : 'hover:bg-[#CA9619] -700',
             )}
             disabled={lineItem.quantity === 1}
             name="intent"
@@ -402,7 +402,7 @@ function QuantityControl({
           
           <button
             aria-label={incrementLabel}
-            className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-yellow-600 text-white rounded hover:bg-yellow-700"
+            className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-[#CA9619] -600 text-white rounded hover:bg-[#CA9619] -700"
             name="intent"
             type="submit"
             value="increment"
