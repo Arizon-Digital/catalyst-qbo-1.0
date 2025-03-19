@@ -5,7 +5,6 @@ import { ChangeEvent, useActionState, useEffect, useRef, useState } from 'react'
 import { useFormStatus } from 'react-dom';
 import { z } from 'zod';
 
-import { logout } from '~/components/header/_actions/logout';
 import { Link } from '~/components/link';
 import { Button } from '~/components/ui/button';
 import {
@@ -110,7 +109,6 @@ export const ChangePasswordForm = () => {
 
   useEffect(() => {
     if (state.status === 'success') {
-      void logout();
 
       setAccountState({
         status: 'success',
