@@ -119,7 +119,7 @@ export function ProductsListSection({
             <div className="w-full block md:hidden mb-4">
               <div className="bg-[#CA9619] rounded px-4 py-3 w-full flex items-center justify-center">
                 <Link
-                  className="text-white text-base font-normal hover:text-[#131313] transition-colors duration-200"
+                  className="text-white text-base  hover:text-[#131313] transition-colors duration-200 font-robotoslab font-medium"
                   href="/can't-find-what-are-you-looking-for"
                   rel="noopener noreferrer"
                 >
@@ -162,7 +162,7 @@ export function ProductsListSection({
               {/* "Can't Find Product" section - desktop only */}
               <div className="bg-[#CA9619] rounded px-4 py-3 flex-shrink-0 flex items-center max-w-[240px]">
                 <Link
-                  className="text-white text-base font-normal hover:text-[#131313] transition-colors duration-200"
+                  className="text-white text-base  hover:text-[#131313] transition-colors duration-200 font-medium font-robotoslab"
                   href="/can't-find-what-are-you-looking-for"
                   rel="noopener noreferrer"
                 >
