@@ -1,3 +1,5 @@
+
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -129,7 +131,6 @@ const QuickView = ({
       try {
         const productData = await getProductData(productContext, initialProduct);
         if (productData) {
-          
           setProductInfo(productData);
         }
       } catch (error) {
@@ -137,7 +138,6 @@ const QuickView = ({
         setProductInfo(initialProduct);
       }
     } else {
-      
       setProductInfo(initialProduct);
     }
   };
@@ -152,18 +152,10 @@ const QuickView = ({
     }
   };
 
-  const closeQuickView = (e) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    setIsOpen(false);
-  };
-
   useEffect(() => {
     const handleEscapeKey = (e) => {
       if (e.key === 'Escape' && isOpen) {
-        closeQuickView();
+        setIsOpen(false);
       }
     };
 
@@ -173,13 +165,10 @@ const QuickView = ({
     };
   }, [isOpen]);
 
-
-
-
   return (
     <>
       <button
-        onClick={(e) => openQuickView(e)}
+        onClick={openQuickView}
         className="z-10 flex w-full items-center justify-center gap-2 rounded-[4px] border border-amber-600 bg-yellow -600 p-0 text-sm font-bold text-white shadow-sm transition-all duration-300 hover:bg-white hover:text-amber-600"
       >
         <div className="flex items-center justify-center gap-1">
@@ -203,31 +192,26 @@ const QuickView = ({
 
       <Dialog.Root 
         open={isOpen} 
-        onOpenChange={(open) => {
-          setIsOpen(open);
-        }}
+        onOpenChange={setIsOpen}
       >
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
           <Dialog.Content
-            className="quickview fixed left-1/2 top-1/2 !h-[900px]  w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white shadow-lg z-[9999]"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            onPointerDownOutside={(e) => {
-              e.preventDefault();
-            }}
+            className="quickview fixed left-1/2 top-1/2 !h-[900px] w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white shadow-lg z-[9999]"
           >
             <div className="p-8">
-              <Dialog.Close asChild>
-                <button 
-                  className="absolute right-4 top-4 rounded-full p-2 hover:bg-gray-100"
-                  onClick={(e) => closeQuickView(e)}
-                >
-                  <X className="h-6 w-6" />
-                  <span className="sr-only">Close</span>
-                </button>
-              </Dialog.Close>
+              {/* Direct close button instead of Dialog.Close */}
+              <button 
+                className="absolute right-4 top-4 rounded-full p-2 hover:bg-gray-100 z-[10000]"
+                onClick={() => {
+                  console.log("Close button clicked");
+                  setIsOpen(false);
+                }}
+                type="button"
+              >
+                <X className="h-6 w-6" />
+                <span className="sr-only">Close</span>
+              </button>
               
               {typeof Stream !== 'undefined' ? (
                 <Stream fallback={<div className="grid grid-cols-1 gap-8 md:grid-cols-1">
