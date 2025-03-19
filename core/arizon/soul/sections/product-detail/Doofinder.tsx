@@ -6,6 +6,10 @@ import { getPreferredCurrencyCode } from "~/lib/currency";
 const DoofinderScriptLoader = ({value}: {value: any}) => {
   const [currency, setCurrency] = useState('CAD');
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isInIframe = window.self !== window.top;
+      if (isInIframe) return
+    }
     const getCurrencyCode = async() => {
       let currencyCode: any = await getPreferredCurrencyCode();
       if(currencyCode != currency) {

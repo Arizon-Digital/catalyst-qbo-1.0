@@ -130,6 +130,10 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
     // Initialize cart and set up outside click handler
     useEffect(() => {
+      if (typeof window !== "undefined") {
+        const isInIframe = window.self !== window.top;
+        if (isInIframe) return
+      }
       const initCart = async () => {
         try {
           const cartIdData = await getCartId();
