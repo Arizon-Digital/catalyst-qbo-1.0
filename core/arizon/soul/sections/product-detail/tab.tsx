@@ -120,19 +120,20 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
         </div>
       </div>
 
-      {/* Static table layout for mobile view - unchanged */}
       <div className="block rounded-lg bg-[#fff] md:hidden">
-        <table className="w-full table-auto text-left">
-          <tbody className="text-sm text-[#03465c]">
-            {Object.entries(tabContent).map(([tab, value]) => (
-              <tr key={tab} className="border-b border-[#03465c]/10">
-                <td className="p-4">{renderTabContent(tab)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <table className="w-full table-auto text-left">
+    <tbody className="text-sm text-[#03465c]">
+      {Object.entries(tabContent)
+        .filter(([tab]) => tab !== 'TechnicalData') // Filter out TechnicalData for mobile
+        .map(([tab, value]) => (
+          <tr key={tab} className="border-b border-[#03465c]/10">
+            <td className="p-4">{renderTabContent(tab)}</td>
+          </tr>
+        ))}
+    </tbody>
+  </table>
+</div>
+</div>
   );
 };
 

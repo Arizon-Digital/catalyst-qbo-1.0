@@ -350,7 +350,7 @@ export const Footer = forwardRef(function Footer(
       
       
           </div>
-//       </div>
-//     </footer>
+    </div>
+   </footer>
   );
 });
