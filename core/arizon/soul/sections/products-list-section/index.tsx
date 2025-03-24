@@ -102,11 +102,16 @@ export function ProductsListSection({
                     className="w-full h-48 md:h-64 object-cover"
                   />}
                 </Stream>
+                <Suspense>
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-between px-6 py-4">
                     <h1 className=" text-2xl font-medium leading-none text-white @lg:text-4xl @2xl:text-5xl font-oswald ">
                       <span>{title}</span>
                     </h1>
+                    <span className="text-white text-2xl @lg:text-3xl bg-black/50 px-4 py-2 rounded-lg font-robotoslab">
+                      <span className="font-normal font-robotoslab">{totalCount}</span> Products
+                    </span>
                   </div>
+                </Suspense>
               </div>
             </div>
 
