@@ -90,7 +90,7 @@ export function SignInSection({
             
             <Link 
               href={createAccountHref} 
-              className="block w-[50%] py-2 bg-yellow-600 text-white font-normal text-center uppercase rounded-md mb-10 font-robotoslab"
+              className="block w-[50%] py-2 bg-[#CA9618] -600 text-white font-normal text-center uppercase rounded-md mb-10 font-robotoslab"
             >
               {createAccountLabel}
             </Link>

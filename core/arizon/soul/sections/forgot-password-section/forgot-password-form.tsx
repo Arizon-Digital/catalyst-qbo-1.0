@@ -68,7 +68,7 @@ function SubmitButton({ children }: { children: React.ReactNode }) {
 
   return (
     <Button 
-      className="mt-auto w-auto h-5 mx-auto px-8 py-2 !bg-[#CA9619] -600 !border !border-[#CA9619] -600 !text-white rounded-md uppercase font-bold transition-colors duration-300 hover:!bg-white hover:!text-[#CA9619] -600 hover:!border-[#CA9619] -600" 
+      className="mt-auto w-auto h-5 mx-auto px-8 py-2 !bg-[#CA9618] -600 !border !border-[#CA9618] -600 !text-white rounded-md uppercase font-bold transition-colors duration-300 hover:!bg-white hover:!text-[#CA9618] -600 hover:!border-[#CA9618] -600" 
       loading={pending} 
       type="submit"
       style={{ backgroundColor: "#ca9618" }}

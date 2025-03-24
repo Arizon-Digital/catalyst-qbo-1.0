@@ -44,7 +44,7 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
         <div className="md:ml-8">
           {/* Description heading with golden underline */}
           <div className="relative pb-4">
-            <h1 className="text-2xl font-bold text-[#03465c]">Description</h1>
+            <h1 className="text-2xl font-bold text-[#1A2348]">Description</h1>
             <div className="absolute bottom-0 left-0 h-0.5 w-full bg-gradient-to-r from-yellow-600 to-yellow-400"></div>
           </div>
           
@@ -89,7 +89,7 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
             <button
               key={tab}
               className={`p-3 ${
-                activeTab === tab ? 'bg-white text-[#03465c]' : 'bg-[#E2E2E2] text-[#03465c]'
+                activeTab === tab ? 'bg-white text-[#1A2348]' : 'bg-[#E2E2E2] text-[#1A2348]'
               }`}
               onClick={() => setActiveTab(tab)}
             >
@@ -98,7 +98,7 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
           ))}
         </div>
         <div className="bg-white p-4 text-left">
-          <div className="text-base text-[#03465c]">
+          <div className="text-base text-[#1A2348]">
             {renderTabContent(activeTab)}
           </div>
         </div>
@@ -107,9 +107,9 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
       {/* Static table layout for mobile view */}
       <div className="block rounded-lg bg-[#e7f5f8] md:hidden">
         <table className="w-full table-auto text-left">
-          <tbody className="text-sm text-[#03465c]">
+          <tbody className="text-sm text-[#1A2348]">
             {Object.entries(tabContent).map(([tab, value]) => (
-              <tr key={tab} className="border-b border-[#03465c]/10">
+              <tr key={tab} className="border-b border-[#1A2348]/10">
                 {/* <th className="p-4 font-bold">{value.label}</th> */}
                 <td className="p-4">{renderTabContent(tab)}</td>
               </tr>

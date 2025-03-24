@@ -55,7 +55,7 @@ const TechData: React.FC<Props> = ({ product }) => {
   return (
     <div className="tech-data">
       <div className="product-info">
-        <h2 className="text-4xl font-normal text-[#000000] font-oswald">Product Information</h2>
+        <h2 className="text-3xl font-normal text-[#1A2348] font-oswald">Product Information</h2>
         <hr className=" border-t-2 !border-[#ca9618] my-2" />
         
         <div className="product-details">
@@ -75,21 +75,21 @@ const TechData: React.FC<Props> = ({ product }) => {
           {product.sku && (
             <div className="product-details-item flex justify-between items-center font-robotoslab text-base font-semibold text-black mb-2">
               <span>SKU:</span>
-              <span className="font-normal">{product.sku}</span>
+              <span className="font-normal uppercase">{product.sku}</span>
             </div>
           )}
           
           {Boolean(product.availabilityV2?.description) && (
             <div className="product-details-item flex justify-between items-center font-robotoslab text-base font-semibold text-black mb-2">
               <span>AVAILABILITY:</span>
-              <span className="font-semibold">{product.availabilityV2.description}</span>
+              <span className="font-normal uppercase">{product.availabilityV2.description}</span>
             </div>
           )}
           
           {product.weight && (
             <div className="product-details-item flex justify-between items-center font-robotoslab text-base font-semibold text-black mb-2">
               <span>WEIGHT:</span>
-              <span className="font-normal">
+              <span className="font-normal uppercase">
                 {product.weight.value} {product.weight.unit}
               </span>
             </div>
@@ -98,14 +98,14 @@ const TechData: React.FC<Props> = ({ product }) => {
       </div>
       
       <div className="product-reviews-header">
-        <h2 className="text-4xl font-normal text-[#000000] font-oswald">Technical Data</h2>
+        <h2 className="text-3xl font-normal !text-[#1A2348] font-oswald">Technical Data</h2>
         <hr className="border-t-2 !border-[#ca9618] my-2" />
         <br />
       </div>
       
       {customFields.length > 0 &&
         customFields.map((customField) => (
-          <div key={customField.entityId} className="custom-field flex justify-between font-robotoslab text-base font-extralight text-black mb-2">
+          <div key={customField.entityId} className="custom-field flex justify-between uppercase font-robotoslab text-base font-extralight text-black mb-2">
             <h3 className="product-details-item flex justify-between items-center font-robotoslab text-base font-semibold text-black">{customField.name}:</h3>
             <p className="custom">{customField.value}</p>
           </div>

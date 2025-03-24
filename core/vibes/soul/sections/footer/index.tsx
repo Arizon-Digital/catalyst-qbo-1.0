@@ -263,7 +263,7 @@ export const Footer = forwardRef(function Footer(
       </div>
 
       {/* Copyright and Payment Section - Darker Black Background */}
-      <div className="w-full py-4 bg-[#121212] text-white">
+      <div className="w-full py-4 bg-[#1A2348] text-white">
         <div className="max-w-screen-xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
           <Stream
             fallback={

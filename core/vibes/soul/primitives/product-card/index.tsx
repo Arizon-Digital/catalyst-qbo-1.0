@@ -144,7 +144,7 @@ export function ProductCard({
             <div className="flex items-center gap-2">
               {/* Add to Cart button */}
               <button 
-                className="flex-1 bg-yellow-500 text-white font-semibold py-2 px-2 rounded-l flex items-center justify-center"
+                className="flex-1 bg-[#CA9618] -500 text-white font-semibold py-2 px-2 rounded-l flex items-center justify-center"
                 onClick={(e) => e.preventDefault()}
               >
               
@@ -153,7 +153,7 @@ export function ProductCard({
               
               {/* Compare button */}
               <button 
-                className="w-10 bg-yellow-500 text-white font-semibold py-2 px-2 rounded-r flex items-center justify-center"
+                className="w-10 bg-[#CA9618]-500 text-white font-semibold py-2 px-2 rounded-r flex items-center justify-center"
                 onClick={(e) => e.preventDefault()}
               >
                 <Compare
@@ -188,7 +188,7 @@ export function ProductCard({
               <div className="flex items-center gap-2">
                 {/* Add to Cart button */}
                 <button 
-                  className="flex-1 bg-yellow-500 text-white font-semibold py-2 px-2 rounded-l flex items-center justify-center"
+                  className="flex-1 bg-[#CA9618] -500 text-white font-semibold py-2 px-2 rounded-l flex items-center justify-center"
                   onClick={(e) => e.preventDefault()}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -199,7 +199,7 @@ export function ProductCard({
                 
                 {/* Compare button */}
                 <button 
-                  className="w-10 bg-yellow-500 text-white font-semibold py-2 px-2 rounded-r flex items-center justify-center"
+                  className="w-10 bg-[#CA9618] -500 text-white font-semibold py-2 px-2 rounded-r flex items-center justify-center"
                   onClick={(e) => e.preventDefault()}
                 >
                   <Compare

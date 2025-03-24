@@ -37,7 +37,7 @@ export function FeaturedProductsCarousel({
     <SectionLayout className="group/pending" hideOverflow>
       <div className="mb-6 flex w-full flex-row flex-wrap items-end justify-between gap-x-8 gap-y-6 text-foreground @4xl:mb-8">
         <div>
-          <h2 className="font-heading text-2xl leading-none @xl:text-3xl @4xl:text-4xl font-robotoslab">{title}</h2>
+          <h2 className="text-[25px] leading-none @xl:text-3xl @4xl:text-[25px] font-robotoslab">{title}</h2>
           {description != null && description !== '' && (
             <p className="mt-3 max-w-xl leading-relaxed text-contrast-500 font-robotoslab">{description}</p>
           )}

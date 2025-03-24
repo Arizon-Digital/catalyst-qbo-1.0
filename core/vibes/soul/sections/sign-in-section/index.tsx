@@ -88,7 +88,7 @@ export function SignInSection({
             <div className="flex items-center justify-between">
               <button 
                 type="submit" 
-                className="px-8 py-3 bg-yellow-600 text-white font-bold uppercase rounded-md"
+                className="px-8 py-3 bg-[#CA9618] -600 text-white font-bold uppercase rounded-md"
               >
                 SIGN IN
               </button>
@@ -117,7 +117,7 @@ export function SignInSection({
             
             <Link 
               href={createAccountHref} 
-              className="block w-[50%] py-2 bg-yellow-600 text-white font-normal text-center uppercase rounded-md mb-10"
+              className="block w-[50%] py-2 bg-[#CA9618] -600 text-white font-normal text-center uppercase rounded-md mb-10"
             >
               CREATE ACCOUNT
             </Link>

@@ -103,7 +103,7 @@ export function ProductsListSection({
             {/* Controls row - MODIFIED */}
             <div className="w-full flex gap-8 @4xl:gap-10">
               {/* Can't Find Product button - full height to cover both rows */}
-              <div className="bg-[#CA9619] rounded px-4 py-3 flex-shrink-0 flex items-center max-w-[240px]">
+              <div className="bg-[#CA9618] rounded px-4 py-3 flex-shrink-0 flex items-center max-w-[240px]">
                 <Link
                   className="text-white text-base font-normal hover:text-[#131313] transition-colors duration-200"
                   href="/can't-find-what-are-you-looking-for"

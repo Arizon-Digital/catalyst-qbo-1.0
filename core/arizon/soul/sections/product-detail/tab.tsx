@@ -52,7 +52,7 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
         <div>
           {/* Description heading with golden underline */}
           <div className="relative pb-4">
-            <h1 className="text-4xl font-normal !text-[#000000] font-oswald">Description</h1>
+            <h1 className="text-3xl font-normal !text-[#1A2348] font-oswald">Description</h1>
             <div className="border-t-2 !border-[#ca9618] my-2"></div>
           </div>
           
@@ -101,8 +101,8 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
                 key={tab}
                 className={`px-6 py-3 border-r border-gray-300 ${
                   activeTab === tab 
-                    ? 'bg-white text-[#03465c] font-medium border-b-0' 
-                    : 'bg-[#E2E2E2] text-[#03465c] hover:bg-gray-200'
+                    ? 'bg-white text-[#1A2348] font-medium border-b-0' 
+                    : 'bg-[#E2E2E2] text-[#1A2348] hover:bg-gray-200'
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -113,7 +113,7 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
           
           {/* Tab content with full-width background and border */}
           <div className="w-full bg-white p-6 text-left border border-t-0  border-[#dcdcdc]-300 rounded-md shadow-[0_3px_0_#dcdcdc]">
-            <div className="text-base text-[#03465c]">
+            <div className="text-base text-[#1A2348]">
               {renderTabContent(activeTab)}
             </div>
           </div>
@@ -122,11 +122,11 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
 
       <div className="block rounded-lg bg-[#fff] md:hidden">
   <table className="w-full table-auto text-left">
-    <tbody className="text-sm text-[#03465c]">
+    <tbody className="text-sm text-[#1A2348]">
       {Object.entries(tabContent)
         .filter(([tab]) => tab !== 'TechnicalData') // Filter out TechnicalData for mobile
         .map(([tab, value]) => (
-          <tr key={tab} className="border-b border-[#03465c]/10">
+          <tr key={tab} className="border-b border-[#1A2348]/10">
             <td className="p-4">{renderTabContent(tab)}</td>
           </tr>
         ))}

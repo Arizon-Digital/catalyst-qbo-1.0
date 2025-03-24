@@ -21,15 +21,14 @@ const Deliveryinformation: React.FC<Props> = ({ product }) => {
   return (
     <div className="Deliveryinformation">
       <div id="Canada" className="tabcontent">
-            <h1 className="text-4xl font-normal !text-[#000000] font-oswald">Delivery Information</h1>
+            <h1 className="text-3xl font-normal !text-[#1a] font-oswald">Delivery Information</h1>
             <div className="border-t-2 !border-[#ca9618] my-2"></div>
-        <h2 className='text-4xl font-normal !text-[#000000] font-oswald'>Canadian Delivery Details</h2>
+      
         <br />
         <p>
-          We have one of the largest online stocks of bearings and ancillary components available online anywhere in the world, and we take pride in great customer service, superb products, and express delivery to Canada.
+        We have one of the largest stocks of bearings, lubricants and ancillary products available online anywhere in Canada. We take pride in our great customer service, quality products and express shipping. 98% of our products are typically dispatch same day, with a 1-3 day delivery to Canada. All of our website prices include any taxes and duties in Canada.
         </p>
-        <h3>98% of our products are typically despatched same day, with a 1-3 day delivery option to anywhere in Canada.</h3>
-        <h3>All of our Canadian Dollar website prices include Taxes and Duty.</h3>
+        
         <table className="delivery-info" style={{ width: '100%' }} border="0px solid #ffffff">
 
 
@@ -41,9 +40,9 @@ const Deliveryinformation: React.FC<Props> = ({ product }) => {
               <td align="center" width="15%" className="delivery1234">
                 <img src="https://cdn11.bigcommerce.com/s-03842/content/NewSite/Icons/DHL.jpg" alt="DHL logo" className="delivery-image" />
               </td>
-              <td align="center" width="15%" className="delivery1234">
+              {/* <td align="center" width="15%" className="delivery1234">
                 <img src="https://cdn11.bigcommerce.com/s-03842/images/stencil/320w/image-manager/fedex-logo.png?t=1739275696" alt="Second delivery logo" className="delivery-image" />
-              </td>
+              </td> */}
             </tr>
           </tbody>
         </table>
