@@ -11,7 +11,7 @@ import {
 } from '@conform-to/react';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import { createSerializer, parseAsString, useQueryStates } from 'nuqs';
-import { ReactNode, useActionState, useCallback, useEffect } from 'react';
+import { ReactNode, useActionState, useCallback, useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { z } from 'zod';
 
@@ -29,6 +29,7 @@ import { toast } from '@/vibes/soul/primitives/toaster';
 import { usePathname, useRouter } from '~/i18n/routing';
 
 import { Field, schema, SchemaRawShape } from './schema';
+import DialogDemo from '../../components/addtocartpopup';
 
 type Action<S, P> = (state: Awaited<S>, payload: P) => S | Promise<S>;
 
@@ -52,6 +53,7 @@ interface Props<F extends Field> {
   decrementLabel?: string;
   ctaDisabled?: boolean;
   prefetch?: boolean;
+  product?: any;
 }
 
 export function ProductDetailForm<F extends Field>({
@@ -64,9 +66,14 @@ export function ProductDetailForm<F extends Field>({
   decrementLabel = 'Decrease quantity',
   ctaDisabled = false,
   prefetch = false,
+  product,
 }: Props<F>) {
   const router = useRouter();
   const pathname = usePathname();
+  
+  const [count, setCount] = useState<any>(1);
+  const [cartIdData, setCartIdData] = useState<any>('');
+  const [open, setOpen] = useState(false);
 
   const searchParams = fields.reduce<Record<string, typeof parseAsString>>((acc, field) => {
     return field.persist === true ? { ...acc, [field.name]: parseAsString } : acc;
@@ -101,8 +108,10 @@ export function ProductDetailForm<F extends Field>({
 
   useEffect(() => {
     if (lastResult?.status === 'success') {
-      console.log('========cartcount=======', cartCount);
+      setCount(cartCount);
+      setCartIdData(cartId);
       toast.success(successMessage);
+      setOpen(true);
     }
   }, [lastResult, successMessage]);
 
@@ -118,51 +127,57 @@ export function ProductDetailForm<F extends Field>({
     shouldRevalidate: 'onInput',
   });
 
-  const quantityControl = useInputControl(formFields.quantity);
+  const handleModalClose = () => {
+    setOpen(false);
+  }
 
+  const quantityControl = useInputControl(formFields.quantity);
   return (
-    <FormProvider context={form.context}>
-      <FormStateInput />
-      <form {...getFormProps(form)} action={formAction} className="">
-        <input name="id" type="hidden" value={productId} />
-        <div className="">
-          {fields.map((field) => {
-            return (
-              <FormField
-                field={field}
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                formField={formFields[field.name]!}
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                key={formFields[field.name]!.id}
-                onPrefetch={onPrefetch}
+    <>
+      <FormProvider context={form.context}>
+        <FormStateInput />
+        <form {...getFormProps(form)} action={formAction} className="">
+          <input name="id" type="hidden" value={productId} />
+          <div className="">
+            {fields.map((field) => {
+              return (
+                <FormField
+                  field={field}
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  formField={formFields[field.name]!}
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  key={formFields[field.name]!.id}
+                  onPrefetch={onPrefetch}
+                />
+              );
+            })}
+            {form.errors?.map((error, index) => (
+              <FormStatus className="pt-3" key={index} type="error">
+                {error}
+              </FormStatus>
+            ))}
+            <div className="flex ">
+              <NumberInput
+                aria-label={quantityLabel}
+                decrementLabel={decrementLabel}
+                incrementLabel={incrementLabel}
+                min={1}
+                name={formFields.quantity.name}
+                onBlur={quantityControl.blur}
+                onChange={(e) => quantityControl.change(e.currentTarget.value)}
+                onFocus={quantityControl.focus}
+                required
+                value={quantityControl.value}
               />
-            );
-          })}
-          {form.errors?.map((error, index) => (
-            <FormStatus className="pt-3" key={index} type="error">
-              {error}
-            </FormStatus>
-          ))}
-          <div className="flex ">
-            <NumberInput
-              aria-label={quantityLabel}
-              decrementLabel={decrementLabel}
-              incrementLabel={incrementLabel}
-              min={1}
-              name={formFields.quantity.name}
-              onBlur={quantityControl.blur}
-              onChange={(e) => quantityControl.change(e.currentTarget.value)}
-              onFocus={quantityControl.focus}
-              required
-              value={quantityControl.value}
-            />
+            </div>
           </div>
-        </div>
-        <div>
-          <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
-        </div>
-      </form>
-    </FormProvider>
+          <div>
+            <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
+          </div>
+        </form>
+      </FormProvider>
+      {open && <DialogDemo data={product} open={open} setOpen={setOpen} handleModalClose={handleModalClose} count={count} cartId={cartIdData} />}
+    </>
   );
 }
 

@@ -5,7 +5,6 @@ import { useFormatter } from 'next-intl';
 import { Link } from '~/components/link';
 import { BcImage } from '~/components/bc-image';
 import { pricesTransformer } from "~/data-transformers/prices-transformer";
-import { getCartId } from "~/components/common-functions";
 
 interface Props {
   data: any;
@@ -29,7 +28,6 @@ const DialogDemo = ({
   handleModalClose?: any
 }) => {
   const [counterSec, setCounterSec] = useState(10);
-  const [cartIdData, setCartIdData] = useState<any>();
 
   useEffect(() => {
     if (counterSec > 0) {
@@ -39,12 +37,6 @@ const DialogDemo = ({
     } else {
       handleModalClose();
     }
-
-    const getCartIdFromCart = async () => {
-      let getCartIdData: any = await getCartId();
-      setCartIdData(getCartIdData);
-    };
-    getCartIdFromCart();
   }, [counterSec, handleModalClose]);
 
   let productPrice: any;
@@ -59,6 +51,7 @@ const DialogDemo = ({
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/20 z-40" />
+        <Dialog.Description></Dialog.Description>
         <Dialog.Content className="fixed top-60 right-4 w-80 bg-white rounded shadow-xl transform transition-all duration-200 ease-in-out z-50">
           <div className="p-3">
             <div className="flex justify-between items-start mb-3">
@@ -90,7 +83,7 @@ const DialogDemo = ({
             </div>
 
             <div className="mt-4 space-y-2">
-              {/*<CheckoutButtonPopUp title="PROCEED TO CHECKOUT" cartId={cartIdData} />*/}
+              {/*<CheckoutButtonPopUp title="PROCEED TO CHECKOUT" cartId={cartId} />*/}
               <Link
                 href="/cart"
                 className="block w-full bg-gray-100 text-center py-2 text-sm text-gray-700 hover:bg-gray-200 rounded uppercase font-medium"

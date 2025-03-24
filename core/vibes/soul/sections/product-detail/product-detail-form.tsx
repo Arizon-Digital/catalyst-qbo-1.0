@@ -101,7 +101,6 @@ export function ProductDetailForm<F extends Field>({
 
   useEffect(() => {
     if (lastResult?.status === 'success') {
-      console.log('========cartcount=======', cartCount);
       toast.success(successMessage);
     }
   }, [lastResult, successMessage]);

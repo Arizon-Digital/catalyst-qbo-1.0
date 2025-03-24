@@ -140,6 +140,7 @@ export function ProductDetail<F extends Field>({
                         prefetch={prefetch}
                         productId={product.id}
                         quantityLabel={quantityLabel}
+                        product={product?.productData}
                       />
                     )}
                   </Stream>
