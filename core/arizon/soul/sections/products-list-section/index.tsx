@@ -105,7 +105,7 @@ export function ProductsListSection({
                       <h1 className="text-3xl font-bold leading-none text-center text-navy-800 @lg:text-4xl @2xl:text-5xl font-oswald">
                         <span>{title}</span>
                       </h1>
-                      <span className="hide text-white text-2xl @lg:text-3xl bg-black/50 px-4 py-2 rounded-lg font-robotoslab">
+                      <span className="invisible text-white text-2xl @lg:text-3xl bg-black/50 px-4 py-2 rounded-lg font-robotoslab">
                         <span className="font-normal font-robotoslab">{totalCount}</span> Products
                       </span>
                     </div>
