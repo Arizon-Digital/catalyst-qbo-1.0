@@ -91,8 +91,8 @@ export function ProductsListSection({
             <div className="w-full relative mb-8 rounded-lg overflow-hidden">
               <div className="relative">
                 <Stream value={categoryBannerImage} fallback={
-                    <div className="h-48 w-full animate-pulse rounded-lg bg-contrast-100" />
-                  }>
+                  <div className="h-48 w-full animate-pulse rounded-lg bg-contrast-100" />
+                }>
                   {(image) => <img
                     src={image?.url?.replace('.original', '')}
                     alt={title}
@@ -105,6 +105,9 @@ export function ProductsListSection({
                       <h1 className="text-3xl font-bold leading-none text-center text-navy-800 @lg:text-4xl @2xl:text-5xl font-oswald">
                         <span>{title}</span>
                       </h1>
+                      <span className="hide text-white text-2xl @lg:text-3xl bg-black/50 px-4 py-2 rounded-lg font-robotoslab">
+                        <span className="font-normal font-robotoslab">{totalCount}</span> Products
+                      </span>
                     </div>
                   </div>
                 </Suspense>
@@ -128,9 +131,9 @@ export function ProductsListSection({
             <div className="w-full block md:hidden mb-4">
               <SidePanel.Root>
                 <SidePanel.Trigger asChild>
-                  <Button 
-                    size="medium" 
-                    variant="secondary" 
+                  <Button
+                    size="medium"
+                    variant="secondary"
                     className="w-full bg-[#CA9619] text-white rounded flex items-center justify-center gap-2 py-3 px-6"
                   >
                     <Filter size={20} />
@@ -154,7 +157,7 @@ export function ProductsListSection({
 
             {/* Desktop layout - original code unchanged */}
             <div className="w-full hidden md:flex gap-8 @4xl:gap-10">
-              
+
               {/* "Can't Find Product" section - desktop only */}
               <div className="bg-[#CA9619] rounded px-4 py-3 flex-shrink-0 flex items-center max-w-[240px]">
                 <Link
@@ -168,7 +171,7 @@ export function ProductsListSection({
 
               {/* Filter controls container - desktop only */}
               <div className="flex-grow flex flex-col gap-4">
-              
+
                 {/* Search input */}
                 <div className="w-full">
                   <input
