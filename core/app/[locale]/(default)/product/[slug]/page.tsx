@@ -18,6 +18,7 @@ import { ProductViewed } from './_components/product-viewed';
 import { PaginationSearchParamNames, Reviews } from './_components/reviews';
 import { getProductData } from '@/arizon/soul/pages/product/[slug]/page-data';
 import TabComponent from '@/arizon/soul/sections/product-detail/tab';
+import { redirectToCheckout } from '../../cart/_actions/redirect-to-checkout';
 
 const cachedProductDataVariables = cache(
   async (productId: string, searchParams: Props['searchParams']) => {
@@ -48,7 +49,6 @@ export const getProduct = async (props: Props) => {
   const format = await getFormatter();
 
   const { slug } = await props.params;
-  console.log('========server loaded=======');
   const variables = await cachedProductDataVariables(slug, props.searchParams);
   const product = await getProductData(variables);
 
@@ -154,6 +154,7 @@ export const getProduct = async (props: Props) => {
     accordions,
     sku: product.sku,
     breadcrumbs: categoryWithBreadcrumbs,
+    redirectToCheckout: redirectToCheckout,
   };
 };
 

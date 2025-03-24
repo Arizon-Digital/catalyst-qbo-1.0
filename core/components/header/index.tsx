@@ -17,6 +17,7 @@ import { SiteHeader as HeaderSection } from '~/lib/makeswift/components/site-hea
 import { search } from './_actions/search';
 import { switchCurrency } from './_actions/switch-currency';
 import { HeaderFragment } from './fragment';
+import { redirectToCheckout } from '~/app/[locale]/(default)/cart/_actions/redirect-to-checkout';
 
 const GetCartCountQuery = graphql(`
   query GetCartCountQuery($cartId: String) {
@@ -156,6 +157,7 @@ export const Header = async () => {
         currencies,
         activeCurrencyId,
         currencyAction: switchCurrency,
+        redirectToCheckout: redirectToCheckout,
       }}
     />
   );

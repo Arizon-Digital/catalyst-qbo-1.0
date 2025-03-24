@@ -176,7 +176,7 @@ export function ProductDetailForm<F extends Field>({
           </div>
         </form>
       </FormProvider>
-      {open && <DialogDemo data={product} open={open} setOpen={setOpen} handleModalClose={handleModalClose} count={count} cartId={cartIdData} />}
+      {open && <DialogDemo data={product?.productData} open={open} setOpen={setOpen} handleModalClose={handleModalClose} count={count} redirectToCheckout={product?.redirectToCheckout} />}
     </>
   );
 }
