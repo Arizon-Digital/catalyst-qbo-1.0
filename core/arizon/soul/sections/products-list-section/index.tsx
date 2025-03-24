@@ -1,3 +1,7 @@
+
+
+
+
 import { Sliders, Filter } from 'lucide-react';
 import { Suspense } from 'react';
 
@@ -99,12 +103,10 @@ export function ProductsListSection({
                   />}
                 </Stream>
                 <Suspense>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-white -400/120 px-8 py-3 rounded">
-                      <h1 className="text-3xl font-bold leading-none text-center text-navy-800 @lg:text-4xl @2xl:text-5xl font-oswald">
-                        <span>{title}</span>
-                      </h1>
-                    </div>
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-between px-6 py-4">
+                    <h1 className=" text-2xl font-medium leading-none text-white @lg:text-4xl @2xl:text-5xl font-oswald ">
+                      <span>{title}</span>
+                    </h1>
                   </div>
                 </Suspense>
               </div>
