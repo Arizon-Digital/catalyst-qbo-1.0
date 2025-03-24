@@ -130,6 +130,7 @@ export const Header = async () => {
   }));
 
   const currencies = await getCurrencies();
+  currencies.sort((a, b) => a?.label?.localeCompare(b?.label));
   const defaultCurrency = currencies.find(({ isDefault }) => isDefault);
   const activeCurrencyId = currencyCode ?? defaultCurrency?.id;
 

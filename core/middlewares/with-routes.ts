@@ -9,6 +9,7 @@ import { kvKey, STORE_STATUS_KEY } from '~/lib/kv/keys';
 import { kv } from '../lib/kv';
 
 import { type MiddlewareFactory } from './compose-middlewares';
+import { cookies } from 'next/headers';
 
 const GetRouteQuery = graphql(`
   query GetRouteQuery($path: String!) {
@@ -265,6 +266,17 @@ export const withRoutes: MiddlewareFactory = () => {
     const locale = request.headers.get('x-bc-locale') ?? '';
 
     const { route, status } = await getRouteInfo(request, event);
+
+    const cookieStore = await cookies();
+    let currencyCookie = cookieStore.get('currencyCode');
+    if (!currencyCookie) {
+      await cookieStore.set('currencyCode', 'CAD', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'lax',
+        path: '/',
+      });
+    }
 
     if (status === 'MAINTENANCE') {
       // 503 status code not working - https://github.com/vercel/next.js/issues/50155

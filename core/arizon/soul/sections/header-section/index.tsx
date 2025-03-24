@@ -874,7 +874,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     className="w-12 h-12 mr-3"
                   />
                   <div className="text-[14px] font-bold">
-                    <Link href="https://store-03842.mybigcommerce.com/content/ISO_9001_2015_Certificate.pdf" target="_blank" className="hover:text-blue-800 font-robotoslab">
+                    <Link href="https://store-03842.mybigcommerce.com/content/ISO_9001_2015_Certificate_2025.pdf" target="_blank" className="hover:text-blue-800 font-robotoslab">
                       ISO 9001 : 2015<br />
                       Cert. No.291342018
                     </Link>
