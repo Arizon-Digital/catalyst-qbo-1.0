@@ -102,13 +102,11 @@ export function ProductsListSection({
                     className="w-full h-48 md:h-64 object-cover"
                   />}
                 </Stream>
-                <Suspense>
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-between px-6 py-4">
                     <h1 className=" text-2xl font-medium leading-none text-white @lg:text-4xl @2xl:text-5xl font-oswald ">
                       <span>{title}</span>
                     </h1>
                   </div>
-                </Suspense>
               </div>
             </div>
 
