@@ -95,7 +95,7 @@ export function ProductDetail<F extends Field>({
                   </p>
                   {Boolean(product?.productData?.availabilityV2?.description) && (
                 
-                      <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab leading-none @xl:mb-4 @xl:text-base @4xl:text-base">Availability <span className="font-robotoslab font-normal ">: {product?.productData?.availabilityV2?.description} </span></p>
+                      <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab uppercase leading-none @xl:mb-4 @xl:text-base @4xl:text-base">Availability<span className="font-robotoslab font-normal ">: {product?.productData?.availabilityV2?.description} </span></p>
                     
                   )}
                   {(product?.productData?.weight?.value) && (

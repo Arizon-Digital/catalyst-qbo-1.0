@@ -49,32 +49,31 @@ export default function BulkPricing({ product }: BulkPricingProps) {
   if (!hasBulkPricing) {
     return (
       <div className="">
-        <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab leading-none @xl:mb-4 @xl:text-base @4xl:text-base">
-          Bulk Pricing : 
-        
-        <span className="font-robotoslab font-normal">
-          <Link 
-            href="/bulk-pricing"
-            className="text-black-600 hover:text-blue-700 underline capitalize"
-          >
-            Click Here to Enquire
-          </Link>
-        </span>
-        </p>
-      </div>
+  <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab leading-none @xl:mb-4 @xl:text-base @4xl:text-base">
+    <span className="uppercase">BULK PRICING:</span>{" "}
+    <span className="font-robotoslab font-normal">
+      <Link
+        href="/bulk-pricing"
+        className="text-black-600 hover:text-blue-700 underline"
+      >
+        Click Here to Enquire
+      </Link>
+    </span>
+  </p>
+</div>
     );
   }
 
   return (
     <div className="mt-4">
-      <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab leading-none @xl:mb-4 @xl:text-base @4xl:text-base">
+      <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab uppercase leading-none @xl:mb-4 @xl:text-base @4xl:text-base">
         Bulk Pricing :
       
       
       <span className="font-robotoslab font-normal">
         <Dialog.Root>
           <Dialog.Trigger asChild>
-            <button className="text-black-600 hover:text-blue-700 underline capitalize font-robotoslab" >
+            <button className="text-black-600 hover:text-blue-700 underline  font-robotoslab" >
               Click Here to View
             </button>
           </Dialog.Trigger>

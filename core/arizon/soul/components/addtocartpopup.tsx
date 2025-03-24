@@ -50,7 +50,7 @@ const DialogDemo = ({
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/20 z-40" />
+        <Dialog.Overlay className="fixed inset-0 bg-black/20 z-[99999]" />
         <Dialog.Description></Dialog.Description>
         <Dialog.Content className="fixed top-60 right-4 w-80 bg-white rounded shadow-xl transform transition-all duration-200 ease-in-out z-50">
           <div className="p-3">
