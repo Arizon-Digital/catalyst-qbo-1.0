@@ -36,6 +36,8 @@ interface State<F extends Field> {
   fields: F[];
   lastResult: SubmissionResult | null;
   successMessage?: ReactNode;
+  cartCount?:number;
+  cartId?: string;
 }
 
 export type ProductDetailFormAction<F extends Field> = Action<State<F>, FormData>;
@@ -92,13 +94,14 @@ export function ProductDetailForm<F extends Field>({
     { quantity: 1 },
   );
 
-  const [{ lastResult, successMessage }, formAction] = useActionState(action, {
+  const [{ lastResult, successMessage, cartCount, cartId }, formAction] = useActionState(action, {
     fields,
     lastResult: null,
   });
 
   useEffect(() => {
     if (lastResult?.status === 'success') {
+      console.log('========cartcount=======', cartCount);
       toast.success(successMessage);
     }
   }, [lastResult, successMessage]);
@@ -120,9 +123,9 @@ export function ProductDetailForm<F extends Field>({
   return (
     <FormProvider context={form.context}>
       <FormStateInput />
-      <form {...getFormProps(form)} action={formAction} className="py-8">
+      <form {...getFormProps(form)} action={formAction} className="">
         <input name="id" type="hidden" value={productId} />
-        <div className="space-y-6">
+        <div className="">
           {fields.map((field) => {
             return (
               <FormField
@@ -141,6 +144,7 @@ export function ProductDetailForm<F extends Field>({
             </FormStatus>
           ))}
           <div className="flex ">
+            <div className='mb-2 mt-4 font-robotoslab font-semibold'>QUANTITY :
             <NumberInput
               aria-label={quantityLabel}
               decrementLabel={decrementLabel}
@@ -153,6 +157,9 @@ export function ProductDetailForm<F extends Field>({
               required
               value={quantityControl.value}
             />
+            </div>
+            </div>
+            <div>
             <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
           </div>
         </div>
