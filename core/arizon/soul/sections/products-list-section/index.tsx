@@ -87,7 +87,6 @@ export function ProductsListSection({
           </Stream>
 
           <div className="flex flex-col items-start justify-between gap-4 pb-8 pt-6 text-foreground">
-            {/* Updated Banner Image with Centered Title */}
             <div className="w-full relative mb-8 rounded-lg overflow-hidden">
               <div className="relative">
                 <Stream value={categoryBannerImage} fallback={
@@ -99,13 +98,15 @@ export function ProductsListSection({
                     className="w-full h-48 md:h-64 object-cover"
                   />}
                 </Stream>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-white -400/120 px-8 py-3 rounded">
-                    <h1 className="text-3xl font-bold leading-none text-center text-navy-800 @lg:text-4xl @2xl:text-5xl font-oswald">
-                      <span>{title}</span>
-                    </h1>
+                <Suspense>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="bg-white -400/120 px-8 py-3 rounded">
+                      <h1 className="text-3xl font-bold leading-none text-center text-navy-800 @lg:text-4xl @2xl:text-5xl font-oswald">
+                        <span>{title}</span>
+                      </h1>
+                    </div>
                   </div>
-                </div>
+                </Suspense>
               </div>
             </div>
 
