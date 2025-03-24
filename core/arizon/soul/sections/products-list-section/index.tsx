@@ -1,7 +1,3 @@
-
-
-
-
 import { Sliders, Filter } from 'lucide-react';
 import { Suspense } from 'react';
 
@@ -91,6 +87,7 @@ export function ProductsListSection({
           </Stream>
 
           <div className="flex flex-col items-start justify-between gap-4 pb-8 pt-6 text-foreground">
+            {/* Updated Banner Image with Centered Title */}
             <div className="w-full relative mb-8 rounded-lg overflow-hidden">
               <div className="relative">
                 <Stream value={categoryBannerImage} fallback={
@@ -103,13 +100,12 @@ export function ProductsListSection({
                   />}
                 </Stream>
                 <Suspense>
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-between px-6 py-4">
-                    <h1 className=" text-2xl font-medium leading-none text-white @lg:text-4xl @2xl:text-5xl font-oswald ">
-                      <span>{title}</span>
-                    </h1>
-                    <span className="text-white text-2xl @lg:text-3xl bg-black/50 px-4 py-2 rounded-lg font-robotoslab">
-                      <span className="font-normal font-robotoslab">{totalCount}</span> Products
-                    </span>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="bg-white -400/120 px-8 py-3 rounded">
+                      <h1 className="text-3xl font-bold leading-none text-center text-navy-800 @lg:text-4xl @2xl:text-5xl font-oswald">
+                        <span>{title}</span>
+                      </h1>
+                    </div>
                   </div>
                 </Suspense>
               </div>
