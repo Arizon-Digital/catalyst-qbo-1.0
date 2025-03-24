@@ -5,11 +5,12 @@ import { useFormatter } from 'next-intl';
 import { Link } from '~/components/link';
 import { BcImage } from '~/components/bc-image';
 import { pricesTransformer } from "~/data-transformers/prices-transformer";
+import { CheckoutButton } from "../sections/cart/client";
 
 interface Props {
   data: any;
   count?: number;
-  cartId?: any;
+  redirectToCheckout?: any;
 }
 
 const DialogDemo = ({
@@ -17,14 +18,14 @@ const DialogDemo = ({
   setOpen,
   data,
   count,
-  cartId,
+  redirectToCheckout,
   handleModalClose
 }: {
   open: boolean,
   setOpen: any,
   data: any,
   count?: any,
-  cartId?: any,
+  redirectToCheckout?: any,
   handleModalClose?: any
 }) => {
   const [counterSec, setCounterSec] = useState(10);
@@ -83,7 +84,12 @@ const DialogDemo = ({
             </div>
 
             <div className="mt-4 space-y-2">
-              {/*<CheckoutButtonPopUp title="PROCEED TO CHECKOUT" cartId={cartId} />*/}
+              <CheckoutButton
+                action={redirectToCheckout}
+                className="mt-4 w-full bg-[#CA9619] -600 text-white py-2 sm:py-3 px-4 font-medium hover:bg-[#CA9619] -700 transition-colors uppercase text-center"
+              >
+                PROCEED TO CHECKOUT
+              </CheckoutButton>
               <Link
                 href="/cart"
                 className="block w-full bg-gray-100 text-center py-2 text-sm text-gray-700 hover:bg-gray-200 rounded uppercase font-medium"

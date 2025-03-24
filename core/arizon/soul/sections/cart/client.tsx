@@ -457,7 +457,7 @@ function QuantityControl({
   );
 }
 
-function CheckoutButton({
+export function CheckoutButton({
   action,
   ...rest
 }: { action: Action<SubmissionResult | null, FormData> } & React.ComponentPropsWithoutRef<

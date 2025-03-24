@@ -11,7 +11,7 @@ import { useActionState } from 'react';
 
 
 import { Banner } from '@/vibes/soul/primitives/banner';
-import { Navigation } from '@/vibes/soul/primitives/navigation';
+import { Navigation } from '@/arizon/soul/primitives/navigation';
 import { Link } from '~/components/link';
 import { Logo } from '@/vibes/soul/primitives/logo';
 import { Stream } from '@/vibes/soul/lib/streamable';

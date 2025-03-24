@@ -10,7 +10,7 @@ import { useActionState } from 'react';
 import { usePathname } from 'next/navigation';
 
 import { Banner } from '@/vibes/soul/primitives/banner';
-import { Navigation } from '@/vibes/soul/primitives/navigation';
+import { Navigation } from '@/arizon/soul/primitives/navigation';
 import { Link } from '~/components/link';
 import { Logo } from '@/arizon/soul/primitives/logo';
 import { Stream } from '@/vibes/soul/lib/streamable';
@@ -21,6 +21,7 @@ import { Button } from '~/components/ui/button/button';
 import DoofinderScriptLoader from '../product-detail/Doofinder';
 import miniCartIcon from '~/public/minicart/mini-cart-icon.a78bafe5.png'
 import * as Dialog from '@radix-ui/react-dialog';
+import { CheckoutButton } from '../cart/client';
 
 type CurrencyAction = (state: any, payload: FormData) => any | Promise<any>;
 
@@ -174,7 +175,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       try {
         // Get real cart data from your API
         const cartData = await getCartData();
-        
+
 
         if (cartData?.lineItems?.physicalItems && cartData.lineItems.physicalItems.length > 0) {
           // Debug the first item to see its structure
@@ -270,44 +271,44 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
           </div>
 
           <div className="navbar-tab flex h-[50px] flex-row items-center justify-center bg-[#1a2348] sm:hidden">
-  <Dialog.Root>
-    <Dialog.Trigger asChild>
-      <button className="flex items-center gap-[10px] hover:cursor-pointer">
-        <Phone stroke="white" fill="white" strokeWidth={0} />
-        <div className="text-[18px] font-b leading-[1.5] text-white">
-          Call Us
-        </div>
-      </button>
-    </Dialog.Trigger>
-    <Dialog.Portal>
-      <Dialog.Overlay className="fixed inset-0 bg-black/50 z-[99999]" />
-      <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm shadow-lg z-[100000] w-[90vw] max-w-md">
-        {/* Header with title and close button */}
-        <div className="border-b border-b-[#e5e5e5] bg-white">
-          <div className="flex items-center justify-between p-4">
-            <Dialog.Title className="flex-1 text-center text-[#000000] text-xl font-bold">
-              Give Us A Call
-            </Dialog.Title>
-            <Dialog.Close asChild>
-              <button className="text-gray-500 hover:text-gray-700" aria-label="Close">
-                <X size={20} />
-              </button>
-            </Dialog.Close>
+            <Dialog.Root>
+              <Dialog.Trigger asChild>
+                <button className="flex items-center gap-[10px] hover:cursor-pointer">
+                  <Phone stroke="white" fill="white" strokeWidth={0} />
+                  <div className="text-[18px] font-b leading-[1.5] text-white">
+                    Call Us
+                  </div>
+                </button>
+              </Dialog.Trigger>
+              <Dialog.Portal>
+                <Dialog.Overlay className="fixed inset-0 bg-black/50 z-[99999]" />
+                <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm shadow-lg z-[100000] w-[90vw] max-w-md">
+                  {/* Header with title and close button */}
+                  <div className="border-b border-b-[#e5e5e5] bg-white">
+                    <div className="flex items-center justify-between p-4">
+                      <Dialog.Title className="flex-1 text-center text-[#000000] text-xl font-bold">
+                        Give Us A Call
+                      </Dialog.Title>
+                      <Dialog.Close asChild>
+                        <button className="text-gray-500 hover:text-gray-700" aria-label="Close">
+                          <X size={20} />
+                        </button>
+                      </Dialog.Close>
+                    </div>
+                  </div>
+
+                  {/* Body with phone number */}
+                  <div className="bg-gray-100 p-6">
+                    <div className="text-center">
+                      <Dialog.Description className="text-base text-[#131313]">
+                        CAN: <Link href="tel:4388003614" className="text-[#3161a1] hover:underline">438 800 3614</Link>
+                      </Dialog.Description>
+                    </div>
+                  </div>
+                </Dialog.Content>
+              </Dialog.Portal>
+            </Dialog.Root>
           </div>
-        </div>
-        
-        {/* Body with phone number */}
-        <div className="bg-gray-100 p-6">
-          <div className="text-center">
-            <Dialog.Description className="text-base text-[#131313]">
-              CAN: <Link href="tel:4388003614" className="text-[#3161a1] hover:underline">438 800 3614</Link>
-            </Dialog.Description>
-          </div>
-        </div>
-      </Dialog.Content>
-    </Dialog.Portal>
-  </Dialog.Root>
-</div>
 
           <div className="bg-white">
             <div className="container mx-auto py-3 md:py-5 flex items-center justify-between px-4">
@@ -324,25 +325,25 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               </button>
 
               <div className="flex-shrink-0">
-  <Logo
-    className={clsx(navigation.mobileLogo != null ? 'hidden md:flex' : 'flex')}
-    height={navigation.logoHeight || 330}
-    href="/"
-    label={navigation.logoLabel || 'Quality Bearings Online'}
-    logo={navigation.logo}
-    width={navigation.logoWidth || 600}
-  />
-  {navigation.mobileLogo != null && (
-    <Logo
-      className="flex md:hidden"
-      height={navigation.mobileLogoHeight || 70}
-      href="/"
-      label={navigation.logoLabel || 'Quality Bearings Online'}
-      logo={navigation.mobileLogo}
-      width={navigation.mobileLogoWidth || 200} 
-    />
-  )}
-</div>
+                <Logo
+                  className={clsx(navigation.mobileLogo != null ? 'hidden md:flex' : 'flex')}
+                  height={navigation.logoHeight || 330}
+                  href="/"
+                  label={navigation.logoLabel || 'Quality Bearings Online'}
+                  logo={navigation.logo}
+                  width={navigation.logoWidth || 600}
+                />
+                {navigation.mobileLogo != null && (
+                  <Logo
+                    className="flex md:hidden"
+                    height={navigation.mobileLogoHeight || 70}
+                    href="/"
+                    label={navigation.logoLabel || 'Quality Bearings Online'}
+                    logo={navigation.mobileLogo}
+                    width={navigation.mobileLogoWidth || 200}
+                  />
+                )}
+              </div>
 
               <div className="hidden sm:flex flex-grow max-w-xl mx-4">
                 <form
@@ -369,50 +370,50 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
               <div className="flex items-center gap-2 md:gap-6 lg:gap-8">
 
-  {customerAccessToken ? (
-    <div className="flex items-center hidden sm:flex"> {/* Added 'hidden sm:flex' */}
-      <div className='user-icon'>
-        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
-          <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
-          <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
-        </svg>
-      </div>
-      <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
-        <Link
-          href="/account"
-          className="flex items-center ml-1"
-          aria-label="My Account"
-        >
-          Account
-        </Link>
-        <Link
-          href="/logout"
-          className="ml-1 text-[#1c2541] font-light font-robotoslab text-left"
-        >
-          Sign Out
-        </Link>
-      </div>
-    </div>
-  ) : (
-    <div className="flex items-center hidden sm:flex"> {/* Added 'hidden sm:flex' */}
-      <div className='user-icon'>
-        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
-          <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
-          <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
-        </svg>
-      </div>
-      <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
-        <Link aria-label="Login" className="flex items-center ml-1" href="/login">
-          Sign In
-        </Link>
-        <Link aria-label="Registration" className="ml-1" href="/register/">
-          Register
-        </Link>
-      </div>
-    </div>
-  )}
+                {customerAccessToken ? (
+                  <div className="flex items-center hidden sm:flex"> {/* Added 'hidden sm:flex' */}
+                    <div className='user-icon'>
+                      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
+                        <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
+                        <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
+                      </svg>
+                    </div>
+                    <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
+                      <Link
+                        href="/account"
+                        className="flex items-center ml-1"
+                        aria-label="My Account"
+                      >
+                        Account
+                      </Link>
+                      <Link
+                        href="/logout"
+                        className="ml-1 text-[#1c2541] font-light font-robotoslab text-left"
+                      >
+                        Sign Out
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center hidden sm:flex"> {/* Added 'hidden sm:flex' */}
+                    <div className='user-icon'>
+                      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
+                        <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#000000" strokeWidth="1" fill="none"></path>
+                        <line x1="4" y1="20" x2="20" y2="20" stroke="#000000" strokeWidth="1" strokeLinecap="round"></line>
+                      </svg>
+                    </div>
+                    <div className='flex flex-col sign/registration text-[#1c2541] font-light font-robotoslab'>
+                      <Link aria-label="Login" className="flex items-center ml-1" href="/login">
+                        Sign In
+                      </Link>
+                      <Link aria-label="Registration" className="ml-1" href="/register/">
+                        Register
+                      </Link>
+                    </div>
+                  </div>
+                )}
 
                 <div className="text-xs md:text-sm hidden sm:block">
                   <ViewedItemsPopover />
@@ -524,12 +525,12 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
                         {hasItems && cartItems?.lineItems?.physicalItems?.length > 0 && (
                           <div className="mt-4 flex flex-row gap-[10px]">
-                            <a
-                              href="https://secure.qualitybearingsonline.ca/checkout"
+                            <CheckoutButton
+                              action={navigation?.redirectToCheckout}
                               className="w-full bg-[#ca9618] text-white font-bold text-sm text-center py-3 rounded-sm uppercase"
                             >
-                              CHECKOUT NOW
-                            </a>
+                              PROCEED TO CHECKOUT
+                            </CheckoutButton>
                             <Link
                               href="/cart"
                               className="w-full bg-white border border-gray-300 text-gray-700 font-medium text-sm text-center py-3 rounded-sm uppercase"
@@ -649,47 +650,47 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
         {/* Update the Mobile Menu section to include Sign In/Register or Account/Sign Out */}
 
         {/* Mobile Menu */}
-{mobileMenuOpen && (
-  <div className="lg:hidden fixed inset-0 z-[9999] flex">
-    <div
-      className="fixed inset-0 bg-black bg-opacity-50"
-      onClick={toggleMobileMenu}
-    ></div>
+        {mobileMenuOpen && (
+          <div className="lg:hidden fixed inset-0 z-[9999] flex">
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50"
+              onClick={toggleMobileMenu}
+            ></div>
 
-    <div className="relative flex-1 flex flex-col w-full max-w-xs bg-[#1a2348] !text-white h-full overflow-y-auto">
-      <div className="sticky top-0 px-4 py-3 border-b border-gray-200 bg-white z-10">
-        <h2 className="text-lg font-medium text-blue-900 font-robotoslab">Menu</h2>
-      </div>
+            <div className="relative flex-1 flex flex-col w-full max-w-xs bg-[#1a2348] !text-white h-full overflow-y-auto">
+              <div className="sticky top-0 px-4 py-3 border-b border-gray-200 bg-white z-10">
+                <h2 className="text-lg font-medium text-blue-900 font-robotoslab">Menu</h2>
+              </div>
 
-      {/* Remove the authentication section from here */}
-      
-      <div className="divide-y divide-gray-100 overflow-y-auto flex-grow">
-        {navigationLinks.map((item, index) => (
-          <div key={index} className="py-2">
-            <div className="flex items-center justify-between px-4 font-robotoslab">
-              <Link
-                href={item.href || '#'}
-                className="py-2 text-white -900 font-bold text-[15px]"
-                onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
-              >
-                {item.label}
-              </Link>
+              {/* Remove the authentication section from here */}
 
-              {item.groups && item.groups.length > 0 && (
-                <button
-                  className="p-2 text-white -500"
-                  onClick={() => toggleDropdown(index)}
-                  aria-expanded={activeDropdown === index}
-                >
-                  <ChevronDown
-                    className={clsx(
-                      "h-5 w-5 transition-transform",
-                      activeDropdown === index ? "rotate-180" : ""
-                    )}
-                  />
-                </button>
-              )}
-            </div>
+              <div className="divide-y divide-gray-100 overflow-y-auto flex-grow">
+                {navigationLinks.map((item, index) => (
+                  <div key={index} className="py-2">
+                    <div className="flex items-center justify-between px-4 font-robotoslab">
+                      <Link
+                        href={item.href || '#'}
+                        className="py-2 text-white -900 font-bold text-[15px]"
+                        onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
+                      >
+                        {item.label}
+                      </Link>
+
+                      {item.groups && item.groups.length > 0 && (
+                        <button
+                          className="p-2 text-white -500"
+                          onClick={() => toggleDropdown(index)}
+                          aria-expanded={activeDropdown === index}
+                        >
+                          <ChevronDown
+                            className={clsx(
+                              "h-5 w-5 transition-transform",
+                              activeDropdown === index ? "rotate-180" : ""
+                            )}
+                          />
+                        </button>
+                      )}
+                    </div>
 
             {activeDropdown === index && item.groups && (
               <div className="mt-2 pl-4 pr-2 pb-2 overflow-visible font-robotoslab">
@@ -724,95 +725,95 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
         ))}
       </div>
 
-      <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
-        <Link href="/about-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-          About Us
-        </Link>
-        <Link href="/contact-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-          Contact Us
-        </Link>
-        <Link href="/customer-service" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-          Customer Service
-        </Link>
-        <Link href="/faqs" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-          FAQs 
-        </Link>
-        <Link href="/privacy-policy" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-          Privacy Policy
-        </Link>
-        <Link href="/about-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-          About Us
-        </Link>
-        <Link href="/customer-reviews" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-          Customer Reviews
-        </Link>
-        <Link href="/terms-and-conditionss" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-          Terms & Conditions
-        </Link>
-        <Link href="/blog" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-          Blog
-        </Link>
+              <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
+                <Link href="/about-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                  About Us
+                </Link>
+                <Link href="/contact-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                  Contact Us
+                </Link>
+                <Link href="/customer-service" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                  Customer Service
+                </Link>
+                <Link href="/faqs" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                  FAQs
+                </Link>
+                <Link href="/privacy-policy" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                  Privacy Policy
+                </Link>
+                <Link href="/about-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                  About Us
+                </Link>
+                <Link href="/customer-reviews" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                  Customer Reviews
+                </Link>
+                <Link href="/terms-and-conditionss" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                  Terms & Conditions
+                </Link>
+                <Link href="/blog" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                  Blog
+                </Link>
 
-        {/* Add Authentication Section at the bottom */}
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          {customerAccessToken ? (
-            <div className="flex items-center mb-2">
-              <div className='user-icon mr-2'>
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="6" r="4" stroke="white" strokeWidth="1"></circle>
-                  <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="white" strokeWidth="1" fill="none"></path>
-                  <line x1="4" y1="20" x2="20" y2="20" stroke="white" strokeWidth="1" strokeLinecap="round"></line>
-                </svg>
-              </div>
-              <div className='flex flex-col'>
-                <Link
-                  href="/account"
-                  className="text-white font-medium"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Account
-                </Link>
-                <Link
-                  href="/logout"
-                  className="text-white text-sm"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Sign Out
-                </Link>
+                {/* Add Authentication Section at the bottom */}
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  {customerAccessToken ? (
+                    <div className="flex items-center mb-2">
+                      <div className='user-icon mr-2'>
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="12" cy="6" r="4" stroke="white" strokeWidth="1"></circle>
+                          <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="white" strokeWidth="1" fill="none"></path>
+                          <line x1="4" y1="20" x2="20" y2="20" stroke="white" strokeWidth="1" strokeLinecap="round"></line>
+                        </svg>
+                      </div>
+                      <div className='flex flex-col'>
+                        <Link
+                          href="/account"
+                          className="text-white font-medium"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Account
+                        </Link>
+                        <Link
+                          href="/logout"
+                          className="text-white text-sm"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Sign Out
+                        </Link>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center mb-2">
+                      <div className='user-icon mr-2'>
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="12" cy="6" r="4" stroke="white" strokeWidth="1"></circle>
+                          <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="white" strokeWidth="1" fill="none"></path>
+                          <line x1="4" y1="20" x2="20" y2="20" stroke="white" strokeWidth="1" strokeLinecap="round"></line>
+                        </svg>
+                      </div>
+                      <div className='flex flex-col'>
+                        <Link
+                          href="/login"
+                          className="text-white font-medium font-robotoslab"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Sign In
+                        </Link>
+                        <Link
+                          href="/register/"
+                          className="text-white text-sm font-robotoslab"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Register
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          ) : (
-            <div className="flex items-center mb-2">
-              <div className='user-icon mr-2'>
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="6" r="4" stroke="white" strokeWidth="1"></circle>
-                  <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="white" strokeWidth="1" fill="none"></path>
-                  <line x1="4" y1="20" x2="20" y2="20" stroke="white" strokeWidth="1" strokeLinecap="round"></line>
-                </svg>
-              </div>
-              <div className='flex flex-col'>
-                <Link
-                  href="/login"
-                  className="text-white font-medium font-robotoslab"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/register/"
-                  className="text-white text-sm font-robotoslab"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Register
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+          </div>
+        )}
 
         {/* Features section - updated with consistent styling */}
         <div className="header-global border-t border-b border-gray-200 bg-white py-4 shadow-md">
