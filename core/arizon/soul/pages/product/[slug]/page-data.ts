@@ -252,6 +252,38 @@ const ProductPageQuery = graphql(
             metaDescription
             metaKeywords
           }
+        }
+      }
+    }
+  `,
+  [
+    ProductDetailsFragment,
+    ProductViewedFragment,
+    ProductSchemaFragment,
+    BreadcrumbsCategoryFragment,
+  ],
+);
+
+const RelatedProductPageQuery = graphql(
+  `
+    query ProductPageQuery(
+      $entityId: Int!
+      $optionValueIds: [OptionValueId!]
+      $useDefaultOptionSelections: Boolean
+      $currencyCode: currencyCode
+    ) {
+      site {
+        product(
+          entityId: $entityId
+          optionValueIds: $optionValueIds
+          useDefaultOptionSelections: $useDefaultOptionSelections
+        ) {
+          entityId
+          name
+          defaultImage {
+            url: urlTemplate(lossy: true)
+            altText
+          }
           relatedProducts(first: 8) {
             edges {
               node {
@@ -264,11 +296,7 @@ const ProductPageQuery = graphql(
     }
   `,
   [
-    ProductDetailsFragment,
-    ProductViewedFragment,
-    ProductSchemaFragment,
-    FeaturedProductsCarouselFragment,
-    BreadcrumbsCategoryFragment,
+    FeaturedProductsCarouselFragment
   ],
 );
 
@@ -280,6 +308,26 @@ export const getProductData = cache(async (variables: Variables) => {
 
   const { data } = await client.fetch({
     document: ProductPageQuery,
+    variables: { ...variables, currencyCode },
+    customerAccessToken,
+    fetchOptions: customerAccessToken ? { cache: 'no-store' } : { next: { revalidate } },
+  });
+
+  const product = data.site.product;
+
+  if (!product) {
+    return notFound();
+  }
+
+  return product;
+});
+
+export const getRelatedProductData = cache(async (variables: Variables) => {
+  const customerAccessToken = await getSessionCustomerAccessToken();
+  const currencyCode = await getPreferredCurrencyCode();
+
+  const { data } = await client.fetch({
+    document: RelatedProductPageQuery,
     variables: { ...variables, currencyCode },
     customerAccessToken,
     fetchOptions: customerAccessToken ? { cache: 'no-store' } : { next: { revalidate } },

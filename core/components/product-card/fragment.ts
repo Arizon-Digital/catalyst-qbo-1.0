@@ -105,7 +105,7 @@ const AddToCartButtonFragment = graphql(`
   }
 `);
 
-export const ProductFormFragment = graphql(
+const ProductFormFragment = graphql(
   `
     fragment ProductFormFragment on Product {
       entityId

@@ -16,7 +16,7 @@ import { addToCart } from './_actions/add-to-cart';
 import { ProductSchema } from './_components/product-schema';
 import { ProductViewed } from './_components/product-viewed';
 import { PaginationSearchParamNames, Reviews } from './_components/reviews';
-import { getProductData } from '@/arizon/soul/pages/product/[slug]/page-data';
+import { getProductData, getRelatedProductData } from '@/arizon/soul/pages/product/[slug]/page-data';
 import TabComponent from '@/arizon/soul/sections/product-detail/tab';
 import { redirectToCheckout } from '../../cart/_actions/redirect-to-checkout';
 
@@ -214,7 +214,7 @@ const getRelatedProducts = async (props: Props) => {
 
   const { slug } = await props.params;
   const variables = await cachedProductDataVariables(slug, props.searchParams);
-  const product = await getProductData(variables);
+  const product = await getRelatedProductData(variables);
 
   const relatedProducts = removeEdgesAndNodes(product.relatedProducts);
 
