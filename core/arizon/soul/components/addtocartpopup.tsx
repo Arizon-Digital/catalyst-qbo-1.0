@@ -53,11 +53,11 @@ const DialogDemo = ({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/20 z-[99999]" />
         <Dialog.Description></Dialog.Description>
-        <Dialog.Content className="fixed top-60 right-4 w-80 bg-white rounded shadow-xl transform transition-all duration-200 ease-in-out z-50">
+        <Dialog.Content className="fixed mt-[200px] right-4 w-80 bg-white rounded shadow-xl transform transition-all duration-200 ease-in-out z-[99999]">
           <div className="p-3">
             <div className="flex justify-between items-start mb-3">
               <Dialog.Title className="text-sm font-medium text-gray-900">
-                {count} items were added to your cart
+                {count} items were added to your cart 
               </Dialog.Title>
               <Dialog.Close className="absolute top-2 right-2 text-gray-400 hover:text-gray-500">
                 <span className="sr-only">Close</span>

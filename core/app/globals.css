@@ -100,3 +100,25 @@ table {
     margin-top: 40px !important;
   }
 }
+.product-details-dt {
+  font-family: "Roboto Slab", serif;
+  font-size: 16px;
+  font-style: normal;
+  float: left;
+
+  letter-spacing: 1.5px;
+  line-height: 1.1875;
+  margin-left: 5px;
+  text-transform: uppercase;
+}
+.product-details-dd {
+  float: right;
+  font-family: "Roboto Slab", serif;
+  font-size: 16px;
+  font-style: normal;
+  
+  letter-spacing: 1.5px;
+  line-height: 1.1875;
+  padding-right: 0;
+  text-transform: uppercase;
+}
