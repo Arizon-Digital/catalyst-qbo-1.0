@@ -40,11 +40,11 @@ export function PriceLabel({ className, colorScheme = 'light', price }: Props) {
       <span
         className={clsx(
           'block font-semibold text-[#1A2348]',
-          {
-            light: 'text-[var(--price-light-text,hsl(var(--foreground)))]',
-            dark: 'text-[var(--price-dark-text,hsl(var(--background)))]',
-          }[colorScheme],
-          className,
+          // {
+          //   light: 'text-[var(--price-light-text,hsl(var(--foreground)))]',
+          //   dark: 'text-[var(--price-dark-text,hsl(var(--background)))]',
+          // }[colorScheme],
+          // className,
         )}
       >
         {price?.replace('CA', 'C')}
