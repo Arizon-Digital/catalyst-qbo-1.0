@@ -157,7 +157,7 @@ export const Footer = forwardRef(function Footer(
                   />
                   
                   {/* App Download Links */}
-                  <div className="mt-3">
+                  {/* <div className="mt-3">
                     <h3 className="text-xs font-bold mb-2 font-robotoslab">DOWNLOAD OUR NEW MOBILE</h3>
                     <div className="flex gap-2">
                       <a href="https://play.google.com/store/apps/details?id=com.qualitybearingsonline.qualitybearingsonline">
@@ -175,7 +175,7 @@ export const Footer = forwardRef(function Footer(
                         />
                       </a>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -249,7 +249,7 @@ export const Footer = forwardRef(function Footer(
                   </div>
                   
                   {/* App Downloads */}
-                  <div>
+                  {/* <div>
                     <h3 className="font-bold mb-2 font-robotoslab">Download Our New Mobile App</h3>
                     <div className="flex gap-2">
                       <a 
@@ -273,7 +273,7 @@ export const Footer = forwardRef(function Footer(
                         />
                       </a>
                     </div>
-                  </div>
+                  </div> */}
                   
                   {/* Social Media */}
                   <div>

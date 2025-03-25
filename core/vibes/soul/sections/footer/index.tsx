@@ -197,7 +197,7 @@ export const Footer = forwardRef(function Footer(
                 </div>
                 
                 {/* App Downloads */}
-                <div>
+                {/* <div>
                   <h3 className="font-bold mb-2">Download Our New Mobile App</h3>
                   <div className="flex gap-2 justify-center md:justify-start">
                     <a 
@@ -221,7 +221,7 @@ export const Footer = forwardRef(function Footer(
                       />
                     </a>
                   </div>
-                </div>
+                </div> */}
                 
                 {/* Social Media */}
                 <div>
