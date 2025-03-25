@@ -2,156 +2,192 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, cache } from 'react';
+import { useTranslations, useFormatter } from 'next-intl';
 import * as Dialog from '@radix-ui/react-dialog';
-import { X, ChevronUp, ChevronDown } from 'lucide-react';
-import { Gallery } from '@/arizon/soul/pages/product/[slug]/_components/gallery';
-import { PriceLabel } from '@/arizon/soul/primitives/price-label';
-import { ProductDetailForm, ProductDetailFormAction } from '@/arizon/soul/sections/product-detail/product-detail-form';
-import { Accordion, Accordions } from '@/vibes/soul/primitives/accordions';
+import { X } from 'lucide-react';
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
-import { useCommonContext } from '~/components/common-context/common-provider';
 import TabComponent from '@/arizon/soul/sections/product-detail/tab';
-
-const ProductGallerySkeleton = () => (
-  <div className="@container">
-    <div className="w-full overflow-hidden rounded-xl @xl:rounded-2xl">
-      <div className="flex">
-        <div className="aspect-[4/5] h-full w-full shrink-0 grow-0 basis-full animate-pulse bg-contrast-100" />
-      </div>
-    </div>
-    <div className="mt-2 flex max-w-full gap-2 overflow-x-auto">
-      {[...Array(4)].map((_, index) => (
-        <div
-          key={index}
-          className="h-12 w-12 shrink-0 animate-pulse rounded-lg bg-contrast-100 @md:h-16 @md:w-16"
-        />
-      ))}
-    </div>
-  </div>
-);
-
-const PriceLabelSkeleton = () => (
-  <div className="my-4 h-4 w-20 animate-pulse rounded-md bg-contrast-100" />
-);
-
-const ProductDetailFormSkeleton = () => (
-  <div className="flex animate-pulse flex-col gap-8">
-    <div className="flex flex-col gap-5">
-      <div className="h-2 w-10 rounded-md bg-contrast-100" />
-      <div className="flex gap-2">
-        <div className="h-11 w-[72px] rounded-full bg-contrast-100" />
-        <div className="h-11 w-[72px] rounded-full bg-contrast-100" />
-        <div className="h-11 w-[72px] rounded-full bg-contrast-100" />
-      </div>
-    </div>
-    <div className="flex flex-col gap-5">
-      <div className="h-2 w-16 rounded-md bg-contrast-100" />
-      <div className="flex gap-4">
-        <div className="h-10 w-10 rounded-full bg-contrast-100" />
-        <div className="h-10 w-10 rounded-full bg-contrast-100" />
-        <div className="h-10 w-10 rounded-full bg-contrast-100" />
-        <div className="h-10 w-10 rounded-full bg-contrast-100" />
-        <div className="h-10 w-10 rounded-full bg-contrast-100" />
-      </div>
-    </div>
-    <div className="flex gap-2">
-      <div className="h-12 w-[120px] rounded-lg bg-contrast-100" />
-      <div className="h-12 w-[216px] rounded-full bg-contrast-100" />
-    </div>
-  </div>
-);
-
-const getProductData = async (productContext, product) => {
-  if (!productContext?.getCurrencyCode) {
-    console.error("Product context or getCurrencyCode not available");
-    return product;
-  }
-  
-  try {
-    let currencyCode = await productContext.getCurrencyCode;
-    const productData = await fetch(
-      `/api/get-product/?productId=${product?.entityId || product?.id}&currencyCode=${currencyCode}`,
-    )
-      .then((data) => data.json())
-      .then((data) => data)
-      .catch((err) => {
-        console.log(err);
-        return product;
-      });
-    return productData;
-  } catch (err) {
-    console.error("Error fetching product data:", err);
-    return product;
-  }
-};
+import { Gallery } from '~/components/ui/gallery';
+import { PriceLabel } from '../price-label';
+import { ProductDetailForm } from '../../sections/product-detail/product-detail-form';
+import { productOptionsTransformer } from '~/data-transformers/product-options-transformer-client';
+import { addToCart } from '~/app/[locale]/(default)/product/[slug]/_actions/add-to-cart';
+import { pricesTransformer } from '~/data-transformers/prices-transformer';
+import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
+import { redirectToCheckout } from '~/app/[locale]/(default)/cart/_actions/redirect-to-checkout';
+import { ProductDetail } from '../../sections/product-detail';
 
 interface QuickViewProps {
   product: any;
-  action?: ProductDetailFormAction<any>;
-  fields?: Streamable<any[]>;
-  quantityLabel?: string;
-  incrementLabel?: string;
-  decrementLabel?: string;
-  ctaLabel?: Streamable<string | null>;
-  ctaDisabled?: Streamable<boolean | null>;
-  originalPdata?:{}
+  originalPdata?: any
 }
 
+const getProduct = (product: any) => {
+  const t = useTranslations('Product.ProductDetails.Accordions');
+
+  const format = useFormatter();
+  const images = removeEdgesAndNodes(product.images).map((image) => ({
+    src: image.url,
+    alt: image.altText,
+  }));
+
+  const customFields = removeEdgesAndNodes(product.customFields);
+
+  const specifications = [
+    {
+      name: t('sku'),
+      value: product.sku,
+    },
+    {
+      name: t('weight'),
+      value: `${product.weight?.value} ${product.weight?.unit}`,
+    },
+    {
+      name: t('condition'),
+      value: product.condition,
+    },
+    ...customFields.map((field) => ({
+      name: field.name,
+      value: field.value,
+    })),
+  ];
+
+  const accordions = [
+    ...(specifications.length
+      ? [
+        {
+          title: t('specifications'),
+          content: (
+            <div className="prose @container">
+              <dl className="flex flex-col gap-4">
+                {specifications.map((field, index) => (
+                  <div className="grid grid-cols-1 gap-2 @lg:grid-cols-2" key={index}>
+                    <dt>
+                      <strong>{field.name}</strong>
+                    </dt>
+                    <dd>{field.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ),
+        },
+      ]
+      : []),
+    ...(product.warranty
+      ? [
+        {
+          title: t('warranty'),
+          content: (
+            <div className="prose" dangerouslySetInnerHTML={{ __html: product.warranty }} />
+          ),
+        },
+      ]
+      : []),
+  ];
+
+  const categories = (product?.categories) ? removeEdgesAndNodes(product?.categories) : [];
+
+  // Find the category with the longest breadcrumb trail
+  const categoryWithMostBreadcrumbs = categories.reduce((longest, current) => {
+    const longestLength = longest?.breadcrumbs?.edges?.length || 0;
+    const currentLength = current?.breadcrumbs?.edges?.length || 0;
+    return currentLength > longestLength ? current : longest;
+  }, categories[0]);
+
+  // Create breadcrumbs structure only for the most complete path
+  const categoryWithBreadcrumbs = categoryWithMostBreadcrumbs
+    ? {
+      ...categoryWithMostBreadcrumbs,
+      breadcrumbs: {
+        edges: [
+          ...(categoryWithMostBreadcrumbs?.breadcrumbs?.edges || []),
+          {
+            node: {
+              name: product.name || '',
+              path: '#',
+            },
+          },
+        ].filter(Boolean),
+      },
+    }
+    : null;
+  return {
+    id: product.entityId.toString(),
+    title: product.name,
+    description: <div dangerouslySetInnerHTML={{ __html: product.description }} />,
+    plainTextDescription: product.plainTextDescription,
+    href: product.path,
+    images: product.defaultImage
+      ? [{ src: product.defaultImage.url, alt: product.defaultImage.altText }, ...images]
+      : images,
+    productData: product,
+    price: pricesTransformer(product.prices, format),
+    subtitle: product.brand?.name,
+    rating: product.reviewSummary.averageRating,
+    accordions,
+    sku: product.sku,
+    breadcrumbs: categoryWithBreadcrumbs,
+    redirectToCheckout: redirectToCheckout,
+  };
+};
+
+const getFields = async (product: any) => {
+  return await productOptionsTransformer(product.productOptions);
+};
+
+const getCtaLabel = async (product: any) => {
+  const t = useTranslations('Product.ProductDetails.Submit');
+
+  if (product?.availabilityV2?.status === 'Unavailable') {
+    return t('unavailable');
+  }
+
+  if (product?.availabilityV2?.status === 'Preorder') {
+    return t('preorder');
+  }
+
+  if (!product?.inventory?.isInStock) {
+    return t('outOfStock');
+  }
+
+  return t('addToCart');
+};
+
+const getCtaDisabled = async (product: any) => {
+
+  if (product?.availabilityV2?.status === 'Unavailable') {
+    return true;
+  }
+
+  if (product?.availabilityV2?.status === 'Preorder') {
+    return false;
+  }
+
+  if (!product?.inventory?.isInStock) {
+    return true;
+  }
+
+  return false;
+};
+
 const QuickView = ({
-  product: initialProduct,
-  action,
-  fields: streamableFields,
-  quantityLabel,
-  incrementLabel,
-  decrementLabel,
-  ctaLabel: streamableCtaLabel,
-  ctaDisabled: streamableCtaDisabled,
-  originalPdata
+  product
 }: QuickViewProps) => {
-  
+  const productId: number = product?.id;
+  const t = useTranslations('Product');
   const [isOpen, setIsOpen] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-  const [productInfo, setProductInfo] = useState(initialProduct);
-  const productContext = useCommonContext?.();
-  
-  const streamableProduct = productInfo && typeof Streamable !== 'undefined' && Streamable.of 
-    ? Streamable.of(productInfo) 
-    : { value: productInfo };
+  let productUpdated: any = getProduct(product);
 
   const openQuickView = async (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    
+
     setIsOpen(true);
-    
-    if (productContext) {
-      try {
-        const productData = await getProductData(productContext, initialProduct);
-        if (productData) {
-          setProductInfo(productData);
-        }
-      } catch (error) {
-        console.error("Error fetching product data:", error);
-        setProductInfo(initialProduct);
-      }
-    } else {
-      setProductInfo(initialProduct);
-    }
-  };
-
-  const handleIncrement = () => {
-    setQuantity((prev) => prev + 1);
-  };
-
-  const handleDecrement = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
-    }
-  };
-
+  }
   useEffect(() => {
     const handleEscapeKey = (e) => {
       if (e.key === 'Escape' && isOpen) {
@@ -190,18 +226,20 @@ const QuickView = ({
         </div>
       </button>
 
-      <Dialog.Root 
-        open={isOpen} 
+      <Dialog.Root
+        open={isOpen}
         onOpenChange={setIsOpen}
       >
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
+          <Dialog.Title></Dialog.Title>
+          <Dialog.Description></Dialog.Description>
           <Dialog.Content
             className="quickview fixed left-1/2 top-1/2 !h-[900px] w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white shadow-lg z-[9999]"
           >
             <div className="p-8">
               {/* Direct close button instead of Dialog.Close */}
-              <button 
+              <button
                 className="absolute right-4 top-4 rounded-full p-2 hover:bg-gray-100 z-[10000]"
                 onClick={() => {
                   console.log("Close button clicked");
@@ -212,149 +250,31 @@ const QuickView = ({
                 <X className="h-6 w-6" />
                 <span className="sr-only">Close</span>
               </button>
-              
-              {typeof Stream !== 'undefined' ? (
-                <Stream fallback={<div className="grid grid-cols-1 gap-8 md:grid-cols-1">
-                  <div className="mb-12 mt-4">
-                    <ProductGallerySkeleton />
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-1">
+                <div className="mb-12 mt-4">
+                  <div className="max-h-[500px] overflow-y-auto pr-2">
+                    <ProductDetail
+                      action={addToCart}
+                      additionalInformationLabel={t('ProductDetails.additionalInformation')}
+                      ctaDisabled={getCtaDisabled(product)}
+                      ctaLabel={getCtaLabel(product)}
+                      decrementLabel={t('ProductDetails.decreaseQuantity')}
+                      fields={getFields(product)}
+                      incrementLabel={t('ProductDetails.increaseQuantity')}
+                      prefetch={true}
+                      product={getProduct(product)}
+                      productId={productId}
+                      quantityLabel={t('ProductDetails.quantity')}
+                      thumbnailLabel={t('ProductDetails.thumbnail')}
+                    />
                   </div>
-                  <div>
-                    <PriceLabelSkeleton />
-                    <ProductDetailFormSkeleton />
+                </div>
+                <div>
+                  <div className="mb-6">
+                    <TabComponent product={product} />
                   </div>
-                </div>} value={streamableProduct}>
-                  {(product) =>
-                    product && (
-                      <div className="grid grid-cols-1 gap-8 md:grid-cols-1">
-                        <div className="mb-12 mt-4">
-                          <div className="max-h-[500px] overflow-y-auto pr-2">
-                            <Gallery product={originalPdata} />
-                          </div>
-                        </div>
-                        <div>
-                          <div className="mb-6">
-                            <TabComponent product={originalPdata} />
-                          </div>
-                          
-                          <div className="mt-6">
-                            <div className="flex items-center justify-between">
-                              <span className="text-lg font-semibold">Price:</span>
-                              <Stream fallback={<PriceLabelSkeleton />} value={product.price}>
-                                {(price) => (
-                                  <PriceLabel
-                                    className="text-lg font-bold"
-                                    price={price?.replace('CA', 'C') ?? ''}
-                                  />
-                                )}
-                              </Stream>
-                            </div>
-                            
-                            {action ? (
-                              <Stream
-                                fallback={<ProductDetailFormSkeleton />}
-                                value={Streamable.all([
-                                  streamableFields ?? [],
-                                  streamableCtaLabel,
-                                  streamableCtaDisabled,
-                                ])}
-                              >
-                                {([fields, ctaLabel, ctaDisabled]) => (
-                                  <ProductDetailForm
-                                    action={action}
-                                    ctaDisabled={ctaDisabled ?? undefined}
-                                    ctaLabel={ctaLabel ?? undefined}
-                                    decrementLabel={decrementLabel}
-                                    fields={fields ?? []}
-                                    incrementLabel={incrementLabel}
-                                    productId={product.id}
-                                    quantityLabel={quantityLabel}
-                                  />
-                                )}
-                              </Stream>
-                            ) : (
-                              <div className="mt-6 flex items-center gap-4">
-                                <div className="flex items-center rounded-md border">
-                                  <button
-                                    onClick={handleDecrement}
-                                    className="flex h-10 w-10 items-center justify-center border-r"
-                                    disabled={quantity <= 1}
-                                  >
-                                    <ChevronDown className="h-4 w-4" />
-                                  </button>
-                                  <div className="flex h-10 w-12 items-center justify-center">
-                                    {quantity}
-                                  </div>
-                                  <button
-                                    onClick={handleIncrement}
-                                    className="flex h-10 w-10 items-center justify-center border-l"
-                                  >
-                                    <ChevronUp className="h-4 w-4" />
-                                  </button>
-                                </div>
-                                <button className="rounded-full bg-amber-600 px-6 py-2 text-white hover:bg-amber-700">
-                                  Add to Cart
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                          
-                          
-                        </div>
-                      </div>
-                    )
-                  }
-                </Stream>
-              ) : (
-                productInfo && (
-                  <div className="grid grid-cols-1 gap-8 md:grid-cols-1">
-                    <div className="mb-12 mt-4">
-                      <div className="max-h-[500px] overflow-y-auto pr-2">
-                        <Gallery product={productInfo} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="mb-6">
-                        <TabComponent product={productInfo} />
-                      </div>
-                      
-                      <div className="mt-6">
-                        <div className="flex items-center justify-between">
-                          <span className="text-lg font-semibold">Price:</span>
-                          <span className="text-lg font-bold">
-                            {productInfo.price?.replace('CA', 'C') || ''}
-                          </span>
-                        </div>
-                        
-                        <div className="mt-6 flex items-center gap-4">
-                          <div className="flex items-center rounded-md border">
-                            <button
-                              onClick={handleDecrement}
-                              className="flex h-10 w-10 items-center justify-center border-r"
-                              disabled={quantity <= 1}
-                            >
-                              <ChevronDown className="h-4 w-4" />
-                            </button>
-                            <div className="flex h-10 w-12 items-center justify-center">
-                              {quantity}
-                            </div>
-                            <button
-                              onClick={handleIncrement}
-                              className="flex h-10 w-10 items-center justify-center border-l"
-                            >
-                              <ChevronUp className="h-4 w-4" />
-                            </button>
-                          </div>
-                          <button className="rounded-full bg-amber-600 px-6 py-2 text-white hover:bg-amber-700">
-                            Add to Cart
-                          </button>
-                        </div>
-                      </div>
-                      
-                      
-                    </div>
-                  </div>
-                )
-              )}
+                </div>
+              </div>
             </div>
           </Dialog.Content>
         </Dialog.Portal>

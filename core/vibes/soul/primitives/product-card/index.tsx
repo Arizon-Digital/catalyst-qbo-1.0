@@ -180,7 +180,7 @@ export function ProductCard({
           <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-40">
             <div className="flex flex-col gap-2 w-full max-w-[80%]">
               {/* Quick View button */}
-              <QuickView product={quickViewProduct} originalPdata={quickViewProduct?.originalPdata}>
+              <QuickView product={quickViewProduct?.originalPdata}>
                 QUICK VIEW
               </QuickView>
               
