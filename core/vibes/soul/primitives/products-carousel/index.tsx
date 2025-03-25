@@ -72,17 +72,18 @@ export function ProductsCarousel({
 
         return (
           <Carousel className={className} hideOverflow={hideOverflow}>
-            <CarouselContent className="mb-10">
+            <CarouselContent className="mb-10 flex overflow-x-auto gap-4 snap-x snap-mandatory">
               {products.map((product) => (
                 <CarouselItem
-                  className="basis-[calc(100%-1rem)] @md:basis-[calc(50%-0.75rem)] @lg:basis-[calc(33%-0.5rem)] @2xl:basis-[calc(25%-0.25rem)]"
+                  className="basis-[calc(100%-1rem)] @md:basis-[calc(50%-0.75rem)] @lg:basis-[calc(33%-0.5rem)] @2xl:basis-[calc(20%-0.8rem)]"
                   key={product.id}
                 >
                   <ProductCard
                     aspectRatio={aspectRatio}
                     colorScheme={colorScheme}
-                    imageSizes="(min-width: 42rem) 25vw, (min-width: 32rem) 33vw, (min-width: 28rem) 50vw, 100vw"
+                    imageSizes="(min-width: 42rem) 20vw, (min-width: 32rem) 33vw, (min-width: 28rem) 50vw, 100vw"
                     product={product}
+                    className="overflow-hidden"
                   />
                 </CarouselItem>
               ))}
@@ -126,10 +127,10 @@ export function ProductsCarouselSkeleton({
       data-pending={pending ? '' : undefined}
       hideOverflow={hideOverflow}
     >
-      <CarouselContent className="mb-10">
+      <CarouselContent className="mb-10 flex overflow-x-auto gap-4 snap-x snap-mandatory">
         {Array.from({ length: placeholderCount }).map((_, index) => (
           <CarouselItem
-            className="basis-full @md:basis-1/2 @lg:basis-1/3 @2xl:basis-1/4"
+            className="basis-full @md:basis-1/2 @lg:basis-1/3 @2xl:basis-1/5"
             key={index}
           >
             <ProductCardSkeleton />
@@ -157,11 +158,11 @@ export function ProductsCarouselEmptyState({
   return (
     <Carousel className={clsx('relative', className)} hideOverflow={hideOverflow}>
       <CarouselContent
-        className={clsx('mb-10 [mask-image:linear-gradient(to_bottom,_black_0%,_transparent_90%)]')}
+        className={clsx('mb-10 flex overflow-x-auto gap-4 snap-x snap-mandatory [mask-image:linear-gradient(to_bottom,_black_0%,_transparent_90%)]')}
       >
         {Array.from({ length: placeholderCount }).map((_, index) => (
           <CarouselItem
-            className="basis-full @md:basis-1/2 @lg:basis-1/3 @2xl:basis-1/4"
+            className="basis-full @md:basis-1/2 @lg:basis-1/3 @2xl:basis-1/5"
             key={index}
           >
             <ProductCardSkeleton />

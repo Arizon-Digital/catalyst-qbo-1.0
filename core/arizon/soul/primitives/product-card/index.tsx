@@ -120,7 +120,7 @@ export function ProductCard({
 
       <div className="mt-2 flex flex-col items-start gap-x-4 gap-y-3 px-1 @xs:mt-3 @2xl:flex-row">
         <div className="flex-1">
-          <Link className="group text-sm @[16rem]: font-robotoslab" href={href} tabIndex={-1}>
+          <Link className="group text-sm @[16rem]: font-robotoslab text-center" href={href} tabIndex={-1}>
             <span
               className={clsx(
                 'block font-semibold',
