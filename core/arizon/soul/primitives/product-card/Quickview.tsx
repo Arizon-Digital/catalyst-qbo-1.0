@@ -238,7 +238,7 @@ const QuickView = ({
             className="quickview fixed left-1/2 top-1/2 !h-[900px] w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white shadow-lg z-[9999]"
           >
             <div className="p-8">
-              {/* Direct close button instead of Dialog.Close */}
+
               <button
                 className="absolute right-4 top-4 rounded-full p-2 hover:bg-gray-100 z-[10000]"
                 onClick={() => {
@@ -246,6 +246,7 @@ const QuickView = ({
                   setIsOpen(false);
                 }}
                 type="button"
+                style={{ left: 'auto', right: '16px' }}
               >
                 <X className="h-6 w-6" />
                 <span className="sr-only">Close</span>
