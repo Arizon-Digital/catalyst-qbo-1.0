@@ -24,6 +24,7 @@ import { ApplePayIcon } from './payment-icons/apple-pay';
 import { MastercardIcon } from './payment-icons/mastercard';
 import { PayPalIcon } from './payment-icons/paypal';
 import { VisaIcon } from './payment-icons/visa';
+import CookieConsent from '../header/cookie-consent';
 
 const paymentIcons = [
   <AmazonIcon key="amazon" />,
@@ -132,18 +133,21 @@ const getSocialMediaLinks = async () => {
 
 export const Footer = () => {
   const t = useTranslations('Components.Footer');
-
+  const cookieBotKey: any = process.env.COOKIE_BOT_KEY;
   return (
-    <FooterSection
-      contactInformation={getContactInformation()}
-      contactTitle={t('contact')}
-      copyright={getCopyright()}
-      logo={getLogo()}
-      logoHref="/"
-      logoLabel={t('home')}
-      paymentIcons={paymentIcons}
-      sections={getSections()}
-      socialMediaLinks={getSocialMediaLinks()}
-    />
+    <>
+      <FooterSection
+        contactInformation={getContactInformation()}
+        contactTitle={t('contact')}
+        copyright={getCopyright()}
+        logo={getLogo()}
+        logoHref="/"
+        logoLabel={t('home')}
+        paymentIcons={paymentIcons}
+        sections={getSections()}
+        socialMediaLinks={getSocialMediaLinks()}
+      />
+      <CookieConsent value={cookieBotKey} />
+    </>
   );
 };
