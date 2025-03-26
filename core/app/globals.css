@@ -105,20 +105,20 @@ table {
   font-size: 16px;
   font-style: normal;
   float: left;
-
+  font-weight: 700;
   letter-spacing: 1.5px;
   line-height: 1.1875;
   margin-left: 5px;
   text-transform: uppercase;
 }
 .product-details-dd {
-  float: right;
-  font-family: "Roboto Slab", serif;
-  font-size: 16px;
-  font-style: normal;
-  
-  letter-spacing: 1.5px;
-  line-height: 1.1875;
-  padding-right: 0;
-  text-transform: uppercase;
+    float: right;
+    font-family: "Roboto Slab", serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    line-height: 1.1875;
+    padding-right: 0;
+    text-transform: uppercase;
 }
