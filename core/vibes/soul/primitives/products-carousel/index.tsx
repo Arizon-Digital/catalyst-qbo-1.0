@@ -10,9 +10,10 @@ import {
 } from '@/vibes/soul/primitives/carousel';
 import {
   CardProduct,
-  ProductCard,
   ProductCardSkeleton,
 } from '@/arizon/soul/primitives/product-card';
+import { ProductCard } from '../product-card';
+
 
 export type CarouselProduct = CardProduct;
 
@@ -70,6 +71,8 @@ export function ProductsCarousel({
           );
         }
 
+        console.log(products,"products>>>>>>>>>>>>")
+
         return (
           <Carousel className={className} hideOverflow={hideOverflow}>
             <CarouselContent className="mb-10 flex overflow-x-auto gap-4 snap-x snap-mandatory">
@@ -79,18 +82,20 @@ export function ProductsCarousel({
                   key={product.id}
                 >
                   <ProductCard
-                    aspectRatio={aspectRatio}
-                    colorScheme={colorScheme}
-                    imageSizes="(min-width: 42rem) 20vw, (min-width: 32rem) 33vw, (min-width: 28rem) 50vw, 100vw"
-                    product={product}
-                    className="overflow-hidden"
+                   aspectRatio={aspectRatio}
+                   colorScheme={colorScheme}
+                   compareLabel=''
+                   compareParamName=''
+                   imageSizes="(min-width: 80rem) 20vw, (min-width: 64rem) 25vw, (min-width: 42rem) 33vw, (min-width: 24rem) 50vw, 100vw"
+                   key={product.id}
+                   product={product}
                   />
                 </CarouselItem>
               ))}
             </CarouselContent>
             {(showButtons || showScrollbar) && (
               <div className="mt-10 flex w-full items-center justify-between gap-8">
-                <CarouselScrollbar
+                {/* <CarouselScrollbar
                   className={clsx(!showScrollbar && 'pointer-events-none invisible')}
                   colorScheme={colorScheme}
                   label={scrollbarLabel}
@@ -100,7 +105,7 @@ export function ProductsCarousel({
                   colorScheme={colorScheme}
                   nextLabel={nextLabel}
                   previousLabel={previousLabel}
-                />
+                /> */}
               </div>
             )}
           </Carousel>

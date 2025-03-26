@@ -18,7 +18,8 @@ const DialogDemo = ({
   data,
   count,
   redirectToCheckout,
-  handleModalClose
+  handleModalClose,
+  from,
 }: {
   open: boolean,
   setOpen: any,
@@ -26,7 +27,9 @@ const DialogDemo = ({
   count?: any,
   redirectToCheckout?: any,
   handleModalClose?: any
+  from:string;
 }) => {
+  console.log("data", data)
   const [counterSec, setCounterSec] = useState(10);
   
   useEffect(() => {
@@ -46,7 +49,7 @@ const DialogDemo = ({
     const format = useFormatter();
     productPrice = pricesTransformer(data?.prices, format);
   }
-  
+  console.log("111111", from)
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>
@@ -69,7 +72,16 @@ const DialogDemo = ({
             
             {/* Product info */}
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-16 h-16 flex-shrink-0">
+           < div className={`w-16 h-16 flex-shrink-0 ${from === "plp" ? "show": "hidden"}`}>
+                <BcImage
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-cover rounded"
+                  src={data?.image?.src}
+                  alt={data?.image?.altText}
+                />
+              </div>
+              <div className={`w-16 h-16 flex-shrink-0 ${from === "plp" ? "hidden" :'show'}`}>
                 <BcImage
                   width={64}
                   height={64}
@@ -79,6 +91,7 @@ const DialogDemo = ({
                 />
               </div>
               <div className="flex-1">
+                <h3 className={`text-sm font-medium text-gray-900 ${from ==="plp" ? "show" : 'hidden'}`}>{data?.title}</h3>
                 <h3 className="text-sm font-medium text-gray-900">{data?.name}</h3>
                 <p className="mt-1 text-xs text-gray-500">1 × {productPrice}</p>
               </div>

@@ -27,41 +27,41 @@ const getProduct = (product: any) => {
   const t = useTranslations('Product.ProductDetails.Accordions');
 
   const format = useFormatter();
-  const images = removeEdgesAndNodes(product.images).map((image) => ({
+  const images = removeEdgesAndNodes(product?.images).map((image) => ({
     src: image.url,
     alt: image.altText,
   }));
 
-  const customFields = removeEdgesAndNodes(product.customFields);
+  const customFields = removeEdgesAndNodes(product?.customFields);
 
   const specifications = [
     {
       name: t('sku'),
-      value: product.sku,
+      value: product?.sku,
     },
     {
       name: t('weight'),
-      value: `${product.weight?.value} ${product.weight?.unit}`,
+      value: `${product?.weight?.value} ${product?.weight?.unit}`,
     },
     {
       name: t('condition'),
-      value: product.condition,
+      value: product?.condition,
     },
-    ...customFields.map((field) => ({
+    ...customFields?.map((field) => ({
       name: field.name,
       value: field.value,
     })),
   ];
 
   const accordions = [
-    ...(specifications.length
+    ...(specifications?.length
       ? [
         {
           title: t('specifications'),
           content: (
             <div className="prose @container">
               <dl className="flex flex-col gap-4">
-                {specifications.map((field, index) => (
+                {specifications?.map((field, index) => (
                   <div className="grid grid-cols-1 gap-2 @lg:grid-cols-2" key={index}>
                     <dt>
                       <strong>{field.name}</strong>
@@ -75,7 +75,7 @@ const getProduct = (product: any) => {
         },
       ]
       : []),
-    ...(product.warranty
+    ...(product?.warranty
       ? [
         {
           title: t('warranty'),
@@ -90,7 +90,7 @@ const getProduct = (product: any) => {
   const categories = (product?.categories) ? removeEdgesAndNodes(product?.categories) : [];
 
   // Find the category with the longest breadcrumb trail
-  const categoryWithMostBreadcrumbs = categories.reduce((longest, current) => {
+  const categoryWithMostBreadcrumbs = categories?.reduce((longest, current) => {
     const longestLength = longest?.breadcrumbs?.edges?.length || 0;
     const currentLength = current?.breadcrumbs?.edges?.length || 0;
     return currentLength > longestLength ? current : longest;
@@ -114,27 +114,27 @@ const getProduct = (product: any) => {
     }
     : null;
   return {
-    id: product.entityId.toString(),
-    title: product.name,
-    description: <div dangerouslySetInnerHTML={{ __html: product.description }} />,
-    plainTextDescription: product.plainTextDescription,
-    href: product.path,
-    images: product.defaultImage
-      ? [{ src: product.defaultImage.url, alt: product.defaultImage.altText }, ...images]
+    id: product?.entityId.toString(),
+    title: product?.name,
+    description: <div dangerouslySetInnerHTML={{ __html: product?.description }} />,
+    plainTextDescription: product?.plainTextDescription,
+    href: product?.path,
+    images: product?.defaultImage
+      ? [{ src: product?.defaultImage.url, alt: product?.defaultImage?.altText }, ...images]
       : images,
     productData: product,
-    price: pricesTransformer(product.prices, format),
-    subtitle: product.brand?.name,
-    rating: product.reviewSummary.averageRating,
+    price: pricesTransformer(product?.prices, format),
+    subtitle: product?.brand?.name,
+    rating: product?.reviewSummary.averageRating,
     accordions,
-    sku: product.sku,
+    sku: product?.sku,
     breadcrumbs: categoryWithBreadcrumbs,
     redirectToCheckout: redirectToCheckout,
   };
 };
 
 const getFields = async (product: any) => {
-  return await productOptionsTransformer(product.productOptions);
+  return await productOptionsTransformer(product?.productOptions);
 };
 
 const getCtaLabel = async (product: any) => {
