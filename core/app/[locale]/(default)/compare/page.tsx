@@ -221,7 +221,7 @@ export default async function Compare(props: Props) {
             </tr>
             <tr>
               {products.map((product) => (
-                <td className="px-4 align-top text-xl font-bold lg:text-2xl" key={product.entityId}>
+                <td className="px-4 align-top text-base font-bold font-robotoslab lg:text-base" key={product.entityId}>
                   <Link href={product.path}>{product.name}</Link>
                 </td>
               ))}
@@ -234,7 +234,7 @@ export default async function Compare(props: Props) {
                 return (
                   <td className="px-4 py-4 align-bottom text-base" key={product.entityId}>
                     {product.prices && (
-                      <p className="w-36 shrink-0">
+                      <p className="w-36 shrink-0 font-robotoslab font-bold text-[#1a2348] -800">
                         {showPriceRange ? (
                           <>
                             {format.number(product.prices.priceRange.min.value, {
