@@ -29,7 +29,6 @@ const DialogDemo = ({
   handleModalClose?: any
   from:string;
 }) => {
-  console.log("data", data)
   const [counterSec, setCounterSec] = useState(10);
   
   useEffect(() => {
@@ -49,7 +48,6 @@ const DialogDemo = ({
     const format = useFormatter();
     productPrice = pricesTransformer(data?.prices, format);
   }
-  console.log("111111", from)
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>

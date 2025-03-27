@@ -20,7 +20,6 @@ import { ProductDetail } from '../../sections/product-detail';
 
 interface QuickViewProps {
   product: any;
-  originalPdata?: any
 }
 
 const getProduct = (product: any) => {
@@ -242,7 +241,6 @@ const QuickView = ({
               <button
                 className="absolute right-4 top-4 rounded-full p-2 hover:bg-gray-100 z-[10000]"
                 onClick={() => {
-                  console.log("Close button clicked");
                   setIsOpen(false);
                 }}
                 type="button"

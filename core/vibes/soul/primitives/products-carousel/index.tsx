@@ -71,8 +71,6 @@ export function ProductsCarousel({
           );
         }
 
-        console.log(products,"products>>>>>>>>>>>>")
-
         return (
           <Carousel className={className} hideOverflow={hideOverflow}>
             <CarouselContent className="mb-10 flex overflow-x-auto gap-4 snap-x snap-mandatory">

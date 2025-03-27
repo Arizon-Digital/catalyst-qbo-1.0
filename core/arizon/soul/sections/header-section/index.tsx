@@ -179,7 +179,6 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
         if (cartData?.lineItems?.physicalItems && cartData.lineItems.physicalItems.length > 0) {
           // Debug the first item to see its structure
-          console.log("First cart item structure:", cartData.lineItems.physicalItems[0]);
           setCartItems(cartData);
           setHasItems(cartData?.lineItems?.physicalItems.length > 0);
         } else {
