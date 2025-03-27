@@ -135,11 +135,11 @@ export interface CartEmptyState {
 export function CartEmptyState({ title, subtitle, cta }: CartEmptyState) {
   return (
     <SectionLayout className="text-center">
-      <h1 className="mb-3 text-center font-heading text-3xl leading-none text-foreground @xl:text-4xl">
+      <h1 className="mb-3 text-center font-robotoslab text-2xl leading-none text-foreground @xl:text-2xl">
         {title}
       </h1>
-      <p className="mb-6 text-center leading-normal text-contrast-500 @3xl:text-lg">{subtitle}</p>
-      <ButtonLink href={cta.href}>{cta.label}</ButtonLink>
+      <p className="mt-6 mb-6 text-center leading-normal font-robotoslab @3xl:text-base">{subtitle}</p>
+    
     </SectionLayout>
   );
 }

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { getFormProps, getInputProps, SubmissionResult, useForm } from '@conform-to/react';
@@ -7,7 +6,7 @@ import { clsx } from 'clsx';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { startTransition, useActionState, useEffect, useOptimistic, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import Link from 'next/link'; // Import Next.js Link component
+import Link from 'next/link';
 
 import { Button } from '@/vibes/soul/primitives/button';
 import { toast } from '@/vibes/soul/primitives/toaster';
@@ -27,7 +26,7 @@ export interface CartLineItem {
   subtitle: string;
   quantity: number;
   price: string;
-  href: string; // Direct URL to the product
+  href: string;
 }
 
 export interface CartSummaryItem {
@@ -78,6 +77,14 @@ const defaultEmptyState = {
   subtitle: 'Add some products to get started.',
   cta: { label: 'Continue shopping', href: '#' },
 };
+
+
+function formatPrice(price) {
+  if (typeof price === 'string') {
+    return price.replace(/CA\$/g, 'C$');
+  }
+  return price;
+}
 
 export function CartClient<LineItem extends CartLineItem>({
   title = 'Cart',
@@ -150,7 +157,28 @@ export function CartClient<LineItem extends CartLineItem>({
     return <CartEmptyState {...emptyState} />;
   }
 
-  // New design matching the images provided
+ 
+  const processedSummaryItems = [];
+  const discountLabels = new Set();
+  
+  for (const item of cart.summaryItems) {
+    if (item.label && item.label.toLowerCase().includes('discount')) {
+      discountLabels.add(item.label);
+    }
+  }
+  
+  const addedDiscounts = new Set();
+  for (const item of cart.summaryItems) {
+    if (item.label && item.label.toLowerCase().includes('discount')) {
+      if (!addedDiscounts.has(item.label)) {
+        processedSummaryItems.push(item);
+        addedDiscounts.add(item.label);
+      }
+    } else {
+      processedSummaryItems.push(item);
+    }
+  }
+
   return (
     <div className="w-full px-4 sm:px-6 md:px-0 max-w-[1580px] mx-auto mt-8 mb-8">
       <div className="flex items-center text-sm text-gray-500 mb-3 font-robotoslab">
@@ -164,7 +192,7 @@ export function CartClient<LineItem extends CartLineItem>({
       </h1>
       
       <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
-        {/* Cart Items Column */}
+       
         <div className="w-full lg:w-8/12">
           <div className="border border-gray-200 overflow-x-auto">
             <table className="w-full">
@@ -200,7 +228,7 @@ export function CartClient<LineItem extends CartLineItem>({
                           <div className="text-sm sm:text-base font-medium font-robotoslab">
                             <Link 
                               href={lineItem.href} 
-                              className="hover:text-[#CA9618] -600 transition-colors"
+                              className="hover:text-[#CA9618] transition-colors"
                             >
                               {lineItem.title}
                             </Link>
@@ -209,7 +237,7 @@ export function CartClient<LineItem extends CartLineItem>({
                       </div>
                     </td>
                     <td className="p-2 sm:p-4 text-sm sm:text-base font-robotoslab">
-                      {lineItem.price}
+                      {formatPrice(lineItem.price)}
                     </td>
                     <td className="p-2 sm:p-4 text-center">
                       <QuantityControl
@@ -227,7 +255,7 @@ export function CartClient<LineItem extends CartLineItem>({
                       />
                     </td>
                     <td className="p-2 sm:p-4 pr-2 sm:pr-4 text-sm sm:text-base font-robotoslab">
-                      {lineItem.price}
+                      {formatPrice(lineItem.price)}
                     </td>
                   </tr>
                 ))}
@@ -241,13 +269,14 @@ export function CartClient<LineItem extends CartLineItem>({
           <div className="border border-gray-200 p-4 sm:p-6">
             <div className="flex justify-between mb-4">
               <span className="font-medium font-robotoslab">Subtotal:</span>
-              <span className="font-medium font-robotoslab">{cart.total}</span>
+              <span className="font-medium font-robotoslab">{formatPrice(cart.total)}</span>
             </div>
             
-            {cart.summaryItems.map((summaryItem, index) => (
+            {/* Use the processed summary items instead of original cart.summaryItems */}
+            {processedSummaryItems.map((summaryItem, index) => (
               <div className="flex justify-between py-2" key={index}>
                 <dt className='font-robotoslab'>{summaryItem.label}</dt>
-                <dd className="font-medium font-robotoslab">{summaryItem.value}</dd>
+                <dd className="font-medium font-robotoslab">{formatPrice(summaryItem.value)}</dd>
               </div>
             ))}
             
@@ -255,12 +284,12 @@ export function CartClient<LineItem extends CartLineItem>({
 
             <div className="py-3 flex justify-between font-bold text-lg sm:text-xl font-robotoslab">
               <span className='font-robotoslab'>Grand Total:</span>
-              <span className=' font-robotoslab'>{cart.total}</span>
+              <span className='font-robotoslab'>{formatPrice(cart.total)}</span>
             </div>
             
             <CheckoutButton 
               action={checkoutAction} 
-              className="mt-4 w-full bg-[#CA9618] -600 text-white py-2 sm:py-3 px-4 font-medium hover:bg-[#CA9618] -700 transition-colors uppercase text-center"
+              className="mt-4 w-full bg-[#CA9618] text-white py-2 sm:py-3 px-4 font-medium hover:bg-[#CA9618] transition-colors uppercase text-center"
             >
               {checkoutLabel}
             </CheckoutButton>
@@ -293,7 +322,7 @@ export function CartClient<LineItem extends CartLineItem>({
                   height="32"
                   viewBox="0 0 54 32"
                 >
-                  <path d="M48.366 15.193c.6 0 .9.437.9 1.282 0 1.28-.546 2.21-1.337 2.21-.6 0-.9-.437-.9-1.31 0-1.282.572-2.183 1.336-2.183zm-10.09 3.082c0-.655.49-1.01 1.472-1.01.11 0 .19.028.382.028-.027.982-.545 1.636-1.227 1.636-.382 0-.628-.246-.628-.656zm-11.998-2.427v.327h-1.91c.165-.763.546-1.173 1.092-1.173.518 0 .818.3.818.845zM38.06.002c8.838 0 16.003 7.165 16.003 16.002s-7.165 16-16.003 16c-3.834 0-7.324-1.345-10.08-3.595 2.102-2.032 3.707-4.568 4.568-7.44h-1.33c-.833 2.552-2.297 4.806-4.2 6.626-1.89-1.816-3.34-4.078-4.17-6.62h-1.33c.857 2.856 2.434 5.4 4.52 7.432-2.75 2.22-6.223 3.594-10.036 3.594C7.165 32.002 0 24.84 0 16.002s7.164-16 16.002-16c3.814 0 7.287 1.377 10.036 3.603-2.087 2.023-3.664 4.568-4.52 7.424h1.33c.83-2.543 2.28-4.805 4.17-6.608 1.904 1.808 3.368 4.06 4.2 6.614h1.33c-.86-2.872-2.466-5.413-4.568-7.443C30.737 1.343 34.226 0 38.06 0zM7.217 20.212h1.69l1.337-8.043H7.572l-1.637 4.99-.082-4.99H3.4l-1.337 8.043h1.582l1.037-6.135.136 6.135H5.99l2.21-6.19zm7.253-.735l.054-.408.382-2.32c.11-.735.136-.98.136-1.308 0-1.254-.79-1.91-2.263-1.91-.628 0-1.2.083-2.046.328l-.246 1.473.163-.028.247-.08c.382-.11.928-.165 1.418-.165.79 0 1.09.164 1.09.6 0 .11 0 .19-.054.41-.272-.028-.517-.055-.708-.055-1.91 0-3 .927-3 2.536 0 1.065.628 1.774 1.555 1.774.79 0 1.364-.246 1.8-.79l-.027.68h1.418l.027-.163.027-.245zm3.518-3.163c-.736-.327-.82-.41-.82-.71 0-.354.3-.518.846-.518.328 0 .79.028 1.227.082l.247-1.5c-.436-.082-1.118-.137-1.5-.137-1.91 0-2.59 1.01-2.563 2.21 0 .817.382 1.39 1.282 1.827.71.327.818.436.818.71 0 .408-.3.6-.982.6-.518 0-.982-.083-1.527-.246l-.246 1.5.08.028.3.054c.11.027.247.055.465.055.382.054.71.054.928.054 1.8 0 2.645-.68 2.645-2.18 0-.9-.354-1.418-1.2-1.828zm3.762 2.427c-.41 0-.573-.135-.573-.463 0-.082 0-.164.027-.273l.463-2.726h.873l.218-1.61h-.873l.19-.98h-1.69l-.737 4.47-.082.52-.11.653c-.026.192-.054.41-.054.574 0 .954.49 1.445 1.364 1.445.382 0 .764-.056 1.227-.22l.218-1.444c-.108.054-.272.054-.463.054zm3.982.11c-.982 0-1.5-.38-1.5-1.144 0-.055 0-.11.027-.19h3.38c.164-.683.22-1.146.22-1.637 0-1.447-.9-2.374-2.32-2.374-1.717 0-2.972 1.663-2.972 3.9 0 1.935.982 2.944 2.89 2.944.628 0 1.173-.082 1.773-.273l.274-1.636c-.6.3-1.145.41-1.773.41zm5.426-3.326h.11c.163-.79.38-1.363.654-1.88l-.055-.028h-.164c-.573 0-.9.273-1.418 1.064l.164-1.01h-1.555l-1.064 6.545h1.72c.626-4.008.79-4.69 1.608-4.69zm4.964 4.61l.3-1.828c-.545.273-1.036.41-1.445.41-1.01 0-1.61-.738-1.61-1.964 0-1.773.9-3.027 2.183-3.027.49 0 .928.136 1.528.436l.3-1.744c-.163-.054-.218-.082-.436-.163l-.682-.164c-.218-.055-.49-.083-.79-.083-2.264 0-3.846 2.018-3.846 4.88 0 2.155 1.146 3.49 3 3.49.463 0 .872-.08 1.5-.245zm5.4-1.065l.354-2.32c.136-.735.136-.98.136-1.308 0-1.254-.763-1.91-2.236-1.91-.627 0-1.2.083-2.045.328l-.245 1.473.164-.028.217-.08c.382-.11.955-.165 1.446-.165.79 0 1.09.164 1.09.6 0 .11-.026.19-.08.41-.247-.028-.492-.055-.683-.055-1.91 0-3 .927-3 2.536 0 1.065.627 1.774 1.555 1.774.79 0 1.363-.246 1.8-.79l-.028.68h1.418v-.163l.027-.245.054-.327zm2.126 1.144c.627-4.008.79-4.69 1.608-4.69h.11c.163-.79.38-1.363.654-1.88l-.055-.028H45.8c-.57 0-.9.273-1.417 1.064l.164-1.01h-1.554l-1.037 6.545h1.69zm5.18 0h1.61l1.308-8.044h-1.69l-.383 2.29c-.464-.6-.955-.9-1.637-.9-1.5 0-2.782 1.855-2.782 4.036 0 1.636.818 2.7 2.073 2.7.627 0 1.118-.218 1.582-.71zM11.307 18.28c0-.656.492-1.01 1.447-1.01.136 0 .218.027.382.027-.027.982-.518 1.636-1.228 1.636-.382 0-.6-.245-.6-.655z"></path>
+                  <path d="M48.366 15.193c.6 0 .9.437.9 1.282 0 1.28-.546 2.21-1.337 2.21-.6 0-.9-.437-.9-1.31 0-1.282.572-2.183 1.336-2.183zm-10.09 3.082c0-.655.49-1.01 1.472-1.01.11 0 .19.028.382.028-.027.982-.545 1.636-1.227 1.636-.382 0-.628-.246-.628-.656zm-11.998-2.427v.327h-1.91c.165-.763.546-1.173 1.092-1.173.518 0 .818.3.818.845zM38.06.002c8.838 0 16.003 7.165 16.003 16.002s-7.165 16-16.003 16c-3.834 0-7.324-1.345-10.08-3.595 2.102-2.032 3.707-4.568 4.568-7.44h-1.33c-.833 2.552-2.297 4.806-4.2 6.626-1.89-1.816-3.34-4.078-4.17-6.62h-1.33c.857 2.856 2.434 5.4 4.52 7.432-2.75 2.22-6.223 3.594-10.036 3.594C7.165 32.002 0 24.84 0 16.002s7.164-16 16.002-16c3.814 0 7.287 1.377 10.036 3.603-2.087 2.023-3.664 4.568-4.52 7.424h1.33c.83-2.543 2.28-4.805 4.17-6.608 1.904 1.808 3.368 4.06 4.2 6.614h1.33c-.86-2.872-2.466-5.413-4.568-7.443C30.737 1.343 34.226 0 38.06 0zM7.217 20.212h1.69l1.337-8.043H7.572l-1.637 4.99-.082-4.99H3.4l-1.337 8.043h1.582l1.037-6.135.136 6.135H5.99l2.21-6.19zm7.253-.735l.054-.408.382-2.32c.11-.735.136-.98.136-1.308 0-1.254-.79-1.91-2.263-1.91-.628 0-1.2.083-2.046.328l-.246 1.473.163-.028.247-.08c.382-.11.928-.165 1.418-.165.79 0 1.09.164 1.09.6 0 .11 0 .19-.054.41-.272-.028-.517-.055-.708-.055-1.91 0-3 .927-3 2.536 0 1.065.628 1.774 1.555 1.774.79 0 1.364-.246 1.8-.79l-.027.68h1.418l.027-.163.027-.245zm3.518-3.163c-.736-.327-.82-.41-.82-.71 0-.354.3-.518.846-.518.328 0 .79.028 1.227.082l.247-1.5c-.436-.082-1.118-.137-1.5-.137-1.91 0-2.59 1.01-2.563 2.21 0 .817.382 1.39 1.282 1.827.71.327.818.436.818.71 0 .408-.3.6-.982.6-.518 0-.982-.083-1.527-.246l-.246 1.5.08.028.3.054c.11.027.247.055.465.055.382.054.71.054.928.054 1.8 0 2.645-.68 2.645-2.18 0-.9-.354-1.418-1.2-1.828zm3.762 2.427c-.41 0-.573-.135-.573-.463 0-.082 0-.164.027-.273l.463-2.726h.873l.218-1.61h-.873l.19-.98h-1.69l-.737 4.47-.082.52-.11.653c-.026.192-.054.41-.054.574 0 .954.49 1.445 1.364 1.445.382 0 .764-.056 1.227-.22l.218-1.444c-.108.054-.272.054-.463.054zm3.982.11c-.982 0-1.5-.38-1.5-1.144 0-.055 0-.11.027-.19h3.38c.164-.683.22-1.146.22-1.637 0-1.447-.9-2.374-2.32-2.374-1.717 0-2.972 1.663-2.972 3.9 0 1.935.982 2.944 2.89 2.944.628 0 1.173-.082 1.773-.273l.274-1.636c-.6.3-1.145.41-1.773.41zm5.426-3.326h.11c.163-.79.38-1.363.654-1.88l-.055-.028h-.164c-.573 0-.9.273-1.418 1.064l.164-1.01h-1.555l-1.064 6.545h1.72c.626-4.008.79-4.69 1.608-4.69zm4.964 4.61l.3-1.828c-.545.273-1.036.41-1.445.41-1.01 0-1.61-.738-1.61-1.964 0-1.773.9-3.027 2.183-3.027.49 0 .928.136 1.528.436l.3-1.744c-.163-.054-.218-.082-.436-.163l-.682-.164c-.218-.055-.49-.083-.79-.083-2.264 0-3.846 2.018-3.846 4.88 0 2.155 1.146 3.49 3 3.49.463 0 .872-.08 1.5-.245zm5.4-1.065l.354-2.32c.136-.735.136-.98.136-1.308 0-1.254-.763-1.91-2.236-1.91-.627 0-1.2.083-2.045.328l-.245 1.473.164-.028.217-.08c.382-.11.955-.165 1.446-.165.79 0 1.09.164 1.09.6 0 .11-.026.19-.08.41-.247-.028-.492-.055-.683-.055-1.91 0-3 .927-3 2.536 0 1.065.627 1.774 1.555 1.774.79 0 1.363-.246 1.8-.79l-.028.68h1.418v-.163l.027-.245.054-.327zm2.126 1.144c.627-4.008.79-4.69 1.608-4.69h.11c.163-.79.38-1.363.654-1.88l-.055-.028h-.164c-.573 0-.9.273-1.418 1.064l.164-1.01h-1.555l-1.064 6.545h1.72zm5.18 0h1.61l1.308-8.044h-1.69l-.383 2.29c-.464-.6-.955-.9-1.637-.9-1.5 0-2.782 1.855-2.782 4.036 0 1.636.818 2.7 2.073 2.7.627 0 1.118-.218 1.582-.71zM11.307 18.28c0-.656.492-1.01 1.447-1.01.136 0 .218.027.382.027-.027.982-.518 1.636-1.228 1.636-.382 0-.6-.245-.6-.655z"></path>
                 </svg>
               </article>
               <article className="opacity-50 transition-opacity duration-500">
@@ -384,8 +413,8 @@ function QuantityControl({
           <button
             aria-label={decrementLabel}
             className={clsx(
-              'flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-[#CA9618] -600 text-white rounded',
-              lineItem.quantity === 1 ? 'opacity-50' : 'hover:bg-[#CA9618] -700',
+              'flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-[#CA9618] text-white rounded',
+              lineItem.quantity === 1 ? 'opacity-50' : 'hover:bg-[#CA9618]',
             )}
             disabled={lineItem.quantity === 1}
             name="intent"
@@ -402,7 +431,7 @@ function QuantityControl({
           
           <button
             aria-label={incrementLabel}
-            className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-[#CA9618] -600 text-white rounded hover:bg-[#CA9618] -700"
+            className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-[#CA9618] text-white rounded hover:bg-[#CA9618]"
             name="intent"
             type="submit"
             value="increment"
@@ -414,7 +443,7 @@ function QuantityControl({
           <button
             aria-label={deleteLabel}
             className="ml-1 sm:ml-2 text-gray-500 hover:text-black"
-            type="button" // Changed to button type
+            type="button" 
             onClick={handleDeleteClick}
           >
             <Trash2 size={14} className="sm:hidden" />
@@ -423,7 +452,7 @@ function QuantityControl({
         </div>
       </form>
       
-      {/* Delete Confirmation Popup */}
+      
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
