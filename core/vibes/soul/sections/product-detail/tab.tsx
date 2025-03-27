@@ -27,13 +27,13 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
   };
 
   const tabContent = {
-    Description: { data: product.description, label: 'Description' },
-    TechnicalData: { data: product.techdata, label: 'Technical Data' },
-    BulkPricing: { data: product.Bulkprice, label: 'Bulk Pricing' },
-    DeliveryInformation: { data: product.DelivaryInformation, label: 'Delivery Information' },
-    Reviews: { data: product.reviews, label: 'Reviews' },
-    ...(product.warranty && {
-      SpareParts: { data: product.warranty, label: 'Spare Parts' }
+    Description: { data: product?.description, label: 'Description' },
+    TechnicalData: { data: product?.techdata, label: 'Technical Data' },
+    BulkPricing: { data: product?.Bulkprice, label: 'Bulk Pricing' },
+    DeliveryInformation: { data: product?.DelivaryInformation, label: 'Delivery Information' },
+    Reviews: { data: product?.reviews, label: 'Reviews' },
+    ...(product?.warranty && {
+      SpareParts: { data: product?.warranty, label: 'Spare Parts' }
     })
   };
 
