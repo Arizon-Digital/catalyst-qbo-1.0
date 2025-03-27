@@ -22,6 +22,7 @@ import DoofinderScriptLoader from '../product-detail/Doofinder';
 import miniCartIcon from '~/public/minicart/mini-cart-icon.a78bafe5.png'
 import * as Dialog from '@radix-ui/react-dialog';
 import { CheckoutButton } from '../cart/client';
+import { getPreferredCurrencyCode } from '~/lib/currency';
 
 type CurrencyAction = (state: any, payload: FormData) => any | Promise<any>;
 
@@ -418,130 +419,138 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   <ViewedItemsPopover />
                 </div>
 
-                {/* MiniCart Component */}
-                <div className="relative" ref={cartRef}>
-                  <button
-                    onClick={() => loadMiniBag()}
-                    className="relative flex items-end gap-1 p-1 rounded-full mini-cart-btn"
-                    aria-label="Shopping cart"
-                  >
-                    {miniCartIcon ? (
-                      <BcImage
-                        src={miniCartIcon}
-                        alt="mini-cart"
-                        width={50}
-                        height={50}
-                      />
-                    ) : (
-                      <ShoppingBag size={30} className="text-blue-900" />
-                    )}
+               {/* MiniCart Component */}
+<div className="relative" ref={cartRef}>
+  <button
+    onClick={() => loadMiniBag()}
+    className="relative flex items-end gap-1 p-1 rounded-full mini-cart-btn"
+    aria-label="Shopping cart"
+  >
+    {miniCartIcon ? (
+      <BcImage
+        src={miniCartIcon}
+        alt="mini-cart"
+        width={50}
+        height={50}
+      />
+    ) : (
+      <ShoppingBag size={30} className="text-blue-900" />
+    )}
 
-                    <span className="absolute right-1.5 mini-cart-count top-3 h-[20px] w-[30px] flex items-center justify-center rounded-full bg-[#1c2541] text-white text-xs font-bold mini-cart-badge">
-                      {navigation.cartCount || 0}
-                    </span>
+    <span className="absolute right-1.5 mini-cart-count top-3 h-[20px] w-[30px] flex items-center justify-center rounded-full bg-[#1c2541] text-white text-xs font-bold mini-cart-badge">
+      {navigation.cartCount || 0}
+    </span>
 
-                    <span className="text-[#1a2348] mini-cart-text block font-light text-sm font-robotoslab">Cart</span>
-                  </button>
+    <span className="text-[#1a2348] mini-cart-text block font-light text-sm font-robotoslab">Cart</span>
+  </button>
 
-                  {isCartOpen && (
-                    <div className="absolute right-0 top-12 w-96 z-50 bg-white rounded-lg border border-gray-200 shadow-sm card-cart">
-                      <div className="p-4">
-                        <div className="mb-4">
-                          <h2 className="text-lg font-bold font-robotoslab">Shopping Cart</h2>
-                          {removeError && (
-                            <p className="text-red-500 text-sm">{removeError}</p>
-                          )}
+  {isCartOpen && (
+    <div className="absolute right-0 top-12 w-96 z-50 bg-white rounded-lg border border-gray-200 shadow-sm card-cart">
+      <div className="p-4">
+        <div className="mb-4">
+          <h2 className="text-lg font-bold font-robotoslab">Shopping Cart</h2>
+          {removeError && (
+            <p className="text-red-500 text-sm">{removeError}</p>
+          )}
+        </div>
+
+        <div className="max-h-96 overflow-y-auto">
+          {hasItems && cartItems?.lineItems?.physicalItems?.length > 0 ? (
+            <>
+              {cartItems.lineItems.physicalItems.map((item: any, index: number) => (
+                <div key={`cart-item-${item.id || index}`} className="py-4 border-b">
+                  <div className="flex">
+                    <div className="w-20 h-20 bg-gray-100 rounded mr-3">
+                      {item.imageUrl ? (
+                        <Link href={item.productUrl || item.url || `/product/${item.productId || item.id}` || '#'}>
+                          <img
+                            src={item.imageUrl}
+                            alt={item.name || 'Product'}
+                            className="w-full h-full object-contain"
+                          />
+                        </Link>
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                          No Image
                         </div>
-
-                        <div className="max-h-96 overflow-y-auto">
-                          {hasItems && cartItems?.lineItems?.physicalItems?.length > 0 ? (
-                            <>
-                              {cartItems.lineItems.physicalItems.map((item: any, index: number) => (
-                                <div key={`cart-item-${item.id || index}`} className="py-4 border-b">
-                                  <div className="flex">
-                                    <div className="w-20 h-20 bg-gray-100 rounded mr-3">
-                                      {item.imageUrl ? (
-                                        <Link href={item.productUrl || item.url || `/product/${item.productId || item.id}` || '#'}>
-                                          <img
-                                            src={item.imageUrl}
-                                            alt={item.name || 'Product'}
-                                            className="w-full h-full object-contain"
-                                          />
-                                        </Link>
-                                      ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
-                                          No Image
-                                        </div>
-                                      )}
-                                    </div>
-                                    <div className="flex-1">
-                                      <div className="text-sm text-gray-600 font-robotoslab">{item.brand || ''}</div>
-                                      <Link
-                                        href={item.productUrl || item.url || `/product/${item.productId || item.id}` || '#'}
-                                        className="text-blue-600 font-medium block font-robotoslab"
-                                      >
-                                        {item.name || 'Product Name'}
-                                      </Link>
-                                      <div className="text-sm text-gray-600 mt-1 font-robotoslab">
-                                        SKU: {item.entityId || ''}
-                                      </div>
-                                      <div className="mt-2">
-                                        <span className="text-sm">{item.quantity || 0} x </span>
-                                        <span className="font-bold">
-                                          {item.extendedSalePrice?.currencyCode || 'C$'}
-                                          {parseFloat(item.extendedSalePrice?.value || 0).toFixed(2)}
-                                        </span>
-                                      </div>
-                                    </div>
-                                    <div className="ml-4">
-                                      <form onSubmit={(e) => handleRemoveItem(e, item.entityId || item.id || '')}>
-                                        <input type="hidden" name="lineItemEntityId" value={item.entityId || item.id || ''} />
-                                        <button
-                                          type="submit"
-                                          className="text-gray-500 hover:text-red-500"
-                                          aria-label="Remove item"
-                                        >
-                                          <Trash2 size={20} />
-                                        </button>
-                                      </form>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </>
-                          ) : (
-                            <>
-                              {loading ? (
-                                <div className="text-center py-4 font-robotoslab">Loading cart data...</div>
-                              ) : (
-                                <div className="text-center py-8 text-gray-500 font-robotoslab">
-                                  Your cart is empty
-                                </div>
-                              )}
-                            </>
-                          )}
-                        </div>
-
-                        {hasItems && cartItems?.lineItems?.physicalItems?.length > 0 && (
-                          <div className="mt-4 flex flex-row gap-[10px]">
-                            <CheckoutButton
-                              action={navigation?.redirectToCheckout}
-                              className="w-full bg-[#ca9618] text-white font-bold text-sm text-center py-3 rounded-sm uppercase"
-                            >
-                              PROCEED TO CHECKOUT
-                            </CheckoutButton>
-                            <Link
-                              href="/cart"
-                              className="w-full bg-white border border-gray-300 text-gray-700 font-medium text-sm text-center py-3 rounded-sm uppercase"
-                            >
-                              VIEW CART
-                            </Link>
-                          </div>
-                        )}
-                      </div>
+                      )}
                     </div>
-                  )}
+                    <div className="flex-1">
+                      <div className="text-sm text-gray-600 font-robotoslab">{item.brand || ''}</div>
+                      <Link
+                        href={item.productUrl || item.url || `/product/${item.productId || item.id}` || '#'}
+                        className="text-blue-600 font-medium block font-robotoslab"
+                      >
+                        {item.name || 'Product Name'}
+                      </Link>
+                      <div className="text-sm text-gray-600 mt-1 font-robotoslab">
+                        SKU: {item.entityId || ''}
+                      </div>
+                      <div className="mt-2">
+  <span className="text-sm">{item.quantity || 0} x </span>
+  <span className="font-bold">
+    {(item.extendedSalePrice?.currencyCode === 'USD') ? '$' : 'C$'} 
+    {parseFloat(item.extendedSalePrice?.value || 0).toFixed(2)}
+  </span>
+</div>
+                    </div>
+                    <div className="ml-4">
+                      <form onSubmit={(e) => handleRemoveItem(e, item.entityId || item.id || '')}>
+                        <input type="hidden" name="lineItemEntityId" value={item.entityId || item.id || ''} />
+                        <button
+                          type="submit"
+                          className="text-gray-500 hover:text-red-500"
+                          aria-label="Remove item"
+                        >
+                          <Trash2 size={20} />
+                        </button>
+                      </form>
+                    </div>
+                  </div>
                 </div>
+              ))}
+            </>
+          ) : (
+            <>
+              {loading ? (
+                <div className="text-center py-4 font-robotoslab">Loading cart data...</div>
+              ) : (
+                <div className="text-center py-8 text-gray-500 font-robotoslab">
+                  Your cart is empty
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        {hasItems && cartItems?.lineItems?.physicalItems?.length > 0 && (
+  <div className="mt-2 flex justify-between px-1 gap-2">
+    <div style={{ width: '48%' }}>
+      {/* Preserve the original CheckoutButton component but add custom styling */}
+      <CheckoutButton
+        action={navigation?.redirectToCheckout}
+        className="w-full bg-[#ca9618] text-white font-bold text-[11px]  rounded-sm uppercase"
+        style={{ minWidth: '100%', display: 'block', textOverflow: 'visible', whiteSpace: 'nowrap' }}
+      >
+        CHECKOUT
+      </CheckoutButton>
+    </div>
+    <div style={{ width: '48%' }}>
+      <Link
+        href="/cart"
+        className="block w-full bg-white border border-gray-300 text-gray-700 font-medium text-[11px] text-center mt-1 gap-x-3 px-6 py-4 rounded-sm uppercase"
+      >
+        VIEW CART
+      </Link>
+    </div>
+  </div>
+)}
+
+        
+      </div>
+    </div>
+  )}
+</div>
               </div>
             </div>
 

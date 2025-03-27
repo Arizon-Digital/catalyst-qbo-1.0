@@ -289,7 +289,7 @@ export function CartClient<LineItem extends CartLineItem>({
             
             <CheckoutButton 
               action={checkoutAction} 
-              className="mt-4 w-full bg-[#CA9618] text-white py-2 sm:py-3 px-4 font-medium hover:bg-[#CA9618] transition-colors uppercase text-center"
+              className="mt-4 w-full bg-[#CA9618] text-white   px-4 font-medium hover:bg-[#CA9618] transition-colors uppercase text-center"
             >
               {checkoutLabel}
             </CheckoutButton>
