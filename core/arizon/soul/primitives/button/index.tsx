@@ -110,7 +110,7 @@ export function Button({
 
       <span
         className={clsx(
-          'absolute inset-0 grid place-content-center transition-all duration-300 ease-in-out',
+          'absolute inset-0 grid place-content-center transition-all duration-300 ease-in-out hidden',
           loading ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0',
         )}
       >
