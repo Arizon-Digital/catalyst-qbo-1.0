@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+
+
 'use client';
 
 import { clsx } from 'clsx';
@@ -116,23 +115,32 @@ export function FiltersPanelInner({
   );
   const [isPending, startTransition] = useTransition();
   const [optimisticParams, setOptimisticParams] = useOptimistic(params);
-  const [accordionItems, setAccordionItems] = useState(() =>
-    filters
-      .filter((filter) => filter.type !== 'link-group')
-      .map((filter, index) => ({
-        key: index.toString(),
-        value: index.toString(),
-        filter,
-        expanded: index < 3,
-      })),
-  );
+  
+  // Only use the accordion filters (non-link-group)
+  const accordionFilters = filters.filter((filter) => filter.type !== 'link-group');
+  
+  // Initialize expanded state - all collapsed by default
+  const [expandedFilters, setExpandedFilters] = useState<string[]>([]);
+
+  // Toggle a filter's expanded state
+  const toggleFilterExpanded = (filterId: string) => {
+    setExpandedFilters(current => 
+      current.includes(filterId) 
+        ? current.filter(id => id !== filterId) 
+        : [...current, filterId]
+    );
+  };
 
   if (filters.length === 0) return null;
 
   const linkGroupFilters = filters.filter((filter) => filter.type === 'link-group');
 
   return (
-    <div className={clsx('space-y-5 border border-[#dcdcdc] !important rounded-[4px] shadow-[0_3px_0_#dcdcdc]', className)} data-pending={isPending ? true : null}>
+    <div 
+      className={clsx('border border-[#dcdcdc] !important rounded-[4px] shadow-[0_3px_0_#dcdcdc]', className)}
+      data-pending={isPending ? true : null}
+    >
+      
       {linkGroupFilters.map((linkGroup, index) => (
         <div key={index.toString()}>
           <h3 className="py-4 font-mono text-sm uppercase text-contrast-400 ml-8">{linkGroup.label}</h3>
@@ -150,167 +158,194 @@ export function FiltersPanelInner({
           </ul>
         </div>
       ))}
-      <Accordions
-        onValueChange={(items) =>
-          setAccordionItems((prevItems) =>
-            prevItems.map((prevItem) => ({
-              ...prevItem,
-              expanded: items.includes(prevItem.value),
-            })),
-          )
-        }
-        type="multiple"
-        value={accordionItems.filter((item) => item.expanded).map((item) => item.value)}
-      >
-        {accordionItems.map((accordionItem) => {
-          const { key, value, filter } = accordionItem;
-
-          switch (filter.type) {
-            case 'toggle-group':
-              return (
-                <Accordion
-                  key={key}
-                  title={`${filter.label}${getParamCountLabel(optimisticParams, filter.paramName)}`}
-                  value={value}
+      
+     
+      <div>
+        {accordionFilters.map((filter, index) => {
+          const filterId = `filter-${index}`;
+          const isExpanded = expandedFilters.includes(filterId);
+          
+          return (
+            <div key={filterId} className="relative">
+             
+              <button
+                onClick={() => toggleFilterExpanded(filterId)}
+                className="w-full py-3 px-4 flex justify-between items-center text-left font-mono text-sm uppercase text-contrast-400 hover:bg-gray-50"
+              >
+                <span>
+                  {filter.label}
+                  {filter.type === 'toggle-group' && getParamCountLabel(optimisticParams, filter.paramName)}
+                </span>
+                <svg 
+                  className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
                 >
-                  <ToggleGroup
-                    onValueChange={(toggleGroupValues) => {
-                      startTransition(async () => {
-                        const nextParams = {
-                          ...optimisticParams,
-                          [startCursorParamName]: null,
-                          [endCursorParamName]: null,
-                          [filter.paramName]:
-                            toggleGroupValues.length === 0 ? null : toggleGroupValues,
-                        };
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+             
+              {isExpanded && (
+                <div className="p-4">
+                  {filter.type === 'toggle-group' && (
+                    <div className="flex flex-col">
+                      {filter.options.map((option, optionIndex) => (
+                        <div key={optionIndex} className="flex items-center py-1">
+                          <Checkbox
+                            checked={
+                              (optimisticParams[filter.paramName] ?? []).includes(option.value)
+                            }
+                            disabled={option.disabled}
+                            onCheckedChange={(checked) => {
+                              startTransition(async () => {
+                                const currentValues = new Set(optimisticParams[filter.paramName] ?? []);
+                                
+                                if (checked === true) {
+                                  currentValues.add(option.value);
+                                } else {
+                                  currentValues.delete(option.value);
+                                }
+                                
+                                const nextParams = {
+                                  ...optimisticParams,
+                                  [startCursorParamName]: null,
+                                  [endCursorParamName]: null,
+                                  [filter.paramName]: 
+                                    currentValues.size === 0 ? null : Array.from(currentValues),
+                                };
+                                
+                                setOptimisticParams(nextParams);
+                                await setParams(nextParams);
+                              });
+                            }}
+                            id={`option-${filter.paramName}-${option.value}`}
+                          />
+                          <label 
+                            htmlFor={`option-${filter.paramName}-${option.value}`}
+                            className="ml-2 flex items-center cursor-pointer"
+                          >
+                            <span>{option.label}</span>
+                            {option.value && (
+                              <span className="ml-2 text-gray-500 text-sm">{option.value}</span>
+                            )}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {filter.type === 'range' && (
+                    <RangeInput
+                      applyLabel={rangeFilterApplyLabel}
+                      disabled={filter.disabled}
+                      max={filter.max}
+                      maxLabel={filter.maxLabel}
+                      maxName={filter.maxParamName}
+                      maxPlaceholder={filter.maxPlaceholder}
+                      maxPrepend={filter.maxPrepend}
+                      min={filter.min}
+                      minLabel={filter.minLabel}
+                      minName={filter.minParamName}
+                      minPlaceholder={filter.minPlaceholder}
+                      minPrepend={filter.minPrepend}
+                      onChange={({ min, max }) => {
+                        startTransition(async () => {
+                          const nextParams = {
+                            ...optimisticParams,
+                            [filter.minParamName]: min,
+                            [filter.maxParamName]: max,
+                            [startCursorParamName]: null,
+                            [endCursorParamName]: null,
+                          };
 
-                        setOptimisticParams(nextParams);
-                        await setParams(nextParams);
-                      });
-                    }}
-                    options={filter.options}
-                    type="multiple"
-                    value={optimisticParams[filter.paramName] ?? []}
-                  />
-                </Accordion>
-              );
+                          setOptimisticParams(nextParams);
+                          await setParams(nextParams);
+                        });
+                      }}
+                      value={{
+                        min: optimisticParams[filter.minParamName] ?? null,
+                        max: optimisticParams[filter.maxParamName] ?? null,
+                      }}
+                    />
+                  )}
+                  
+                  {filter.type === 'rating' && (
+                    <div className="space-y-3">
+                      {[5, 4, 3, 2, 1].map((rating) => (
+                        <Checkbox
+                          checked={
+                            optimisticParams[filter.paramName]?.includes(rating.toString()) ?? false
+                          }
+                          disabled={filter.disabled}
+                          key={rating}
+                          label={<Rating rating={rating} showRating={false} />}
+                          onCheckedChange={(checked) =>
+                            startTransition(async () => {
+                              const ratings = new Set(optimisticParams[filter.paramName]);
 
-            case 'range':
-              return (
-                <Accordion key={key} title={filter.label} value={value}>
-                  <RangeInput
-                    applyLabel={rangeFilterApplyLabel}
-                    disabled={filter.disabled}
-                    max={filter.max}
-                    maxLabel={filter.maxLabel}
-                    maxName={filter.maxParamName}
-                    maxPlaceholder={filter.maxPlaceholder}
-                    maxPrepend={filter.maxPrepend}
-                    min={filter.min}
-                    minLabel={filter.minLabel}
-                    minName={filter.minParamName}
-                    minPlaceholder={filter.minPlaceholder}
-                    minPrepend={filter.minPrepend}
-                    onChange={({ min, max }) => {
-                      startTransition(async () => {
-                        const nextParams = {
-                          ...optimisticParams,
-                          [filter.minParamName]: min,
-                          [filter.maxParamName]: max,
-                          [startCursorParamName]: null,
-                          [endCursorParamName]: null,
-                        };
+                              if (checked === true) ratings.add(rating.toString());
+                              else ratings.delete(rating.toString());
 
-                        setOptimisticParams(nextParams);
-                        await setParams(nextParams);
-                      });
-                    }}
-                    value={{
-                      min: optimisticParams[filter.minParamName] ?? null,
-                      max: optimisticParams[filter.maxParamName] ?? null,
-                    }}
-                  />
-                </Accordion>
-              );
+                              const nextParams = {
+                                ...optimisticParams,
+                                [filter.paramName]: Array.from(ratings),
+                                [startCursorParamName]: null,
+                                [endCursorParamName]: null,
+                              };
 
-            case 'rating':
-              return (
-                <Accordion key={key} title={filter.label} value={value}>
-                  <div className="space-y-3">
-                    {[5, 4, 3, 2, 1].map((rating) => (
-                      <Checkbox
-                        checked={
-                          optimisticParams[filter.paramName]?.includes(rating.toString()) ?? false
-                        }
-                        disabled={filter.disabled}
-                        key={rating}
-                        label={<Rating rating={rating} showRating={false} />}
-                        onCheckedChange={(checked) =>
-                          startTransition(async () => {
-                            const ratings = new Set(optimisticParams[filter.paramName]);
-
-                            if (checked === true) ratings.add(rating.toString());
-                            else ratings.delete(rating.toString());
-
-                            const nextParams = {
-                              ...optimisticParams,
-                              [filter.paramName]: Array.from(ratings),
-                              [startCursorParamName]: null,
-                              [endCursorParamName]: null,
-                            };
-
-                            setOptimisticParams(nextParams);
-                            await setParams(nextParams);
-                          })
-                        }
-                      />
-                    ))}
-                  </div>
-                </Accordion>
-              );
-
-            default:
-              return null;
-          }
+                              setOptimisticParams(nextParams);
+                              await setParams(nextParams);
+                            })
+                          }
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
         })}
-      </Accordions>
+      </div>
 
-      <Button
-        onClick={() => {
-          startTransition(async () => {
-            const nextParams = {
-              ...Object.fromEntries(Object.entries(optimisticParams).map(([key]) => [key, null])),
-              [startCursorParamName]: optimisticParams[startCursorParamName],
-              [endCursorParamName]: optimisticParams[endCursorParamName],
-            };
+    
+      <div className="p-4">
+        <Button
+          onClick={() => {
+            startTransition(async () => {
+              const nextParams = {
+                ...Object.fromEntries(Object.entries(optimisticParams).map(([key]) => [key, null])),
+                [startCursorParamName]: optimisticParams[startCursorParamName],
+                [endCursorParamName]: optimisticParams[endCursorParamName],
+              };
 
-            setOptimisticParams(nextParams);
-            await setParams(nextParams);
-          });
-        }}
-        size="small"
-        variant="secondary"
-      >
-        {resetFiltersLabel}
-      </Button>
+              setOptimisticParams(nextParams);
+              await setParams(nextParams);
+            });
+          }}
+          size="small"
+          variant="secondary"
+        >
+          {resetFiltersLabel}
+        </Button>
+      </div>
     </div>
   );
 }
 
 export function FiltersSkeleton() {
   return (
-    <div className="space-y-5 ">
-      <AccordionSkeleton>
-        <ToggleGroupSkeleton options={4} seed={2} />
-      </AccordionSkeleton>
-      <AccordionSkeleton>
-        <ToggleGroupSkeleton options={3} seed={1} />
-      </AccordionSkeleton>
-      <AccordionSkeleton>
-        <RangeSkeleton />
-      </AccordionSkeleton>
-      {/* Reset Filters Button */}
-      <div className="h-10 w-[10ch] animate-pulse rounded-full bg-contrast-100" />
+    <div className="space-y-0 border border-[#dcdcdc] rounded-[4px] shadow-[0_3px_0_#dcdcdc]">
+      {Array.from({ length: 5 }, (_, i) => (
+        <div key={i} className="p-4">
+          <div className="h-5 w-32 animate-pulse rounded-sm bg-contrast-100" />
+        </div>
+      ))}
+      <div className="p-4">
+        <div className="h-10 w-[10ch] animate-pulse rounded-full bg-contrast-100" />
+      </div>
     </div>
   );
 }
@@ -338,7 +373,7 @@ function ToggleGroupSkeleton({ options, seed = 0 }: { options: number; seed?: nu
           <div
             className="h-12 w-[var(--width)] animate-pulse rounded-full bg-contrast-100 px-4"
             key={i}
-            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+            
             style={{ '--width': `${width}ch` } as React.CSSProperties}
           />
         );
