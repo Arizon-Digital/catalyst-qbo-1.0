@@ -13,14 +13,14 @@ interface Props {
 }
 
 export const Gallery = ({ product }: Props) => {
-  const images = (product.images) ? removeEdgesAndNodes(product.images) : [];
+  const images = (product?.images) ? removeEdgesAndNodes(product.images) : [];
 
   // Pick the top-level default image
-  const topLevelDefaultImg = images.find((image) => image.isDefault);
+  const topLevelDefaultImg = images?.find((image) => image?.isDefault);
 
   // If product.defaultImage exists, and product.defaultImage.url is not equal to the url of the isDefault image in images,
   // mark the existing isDefault image to "isDefault = false" and append the correct default image to images
-  if (product.defaultImage && topLevelDefaultImg?.url !== product.defaultImage.url) {
+  if (product?.defaultImage && topLevelDefaultImg?.url !== product?.defaultImage.url) {
     images.forEach((image) => {
       image.isDefault = false;
     });
