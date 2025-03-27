@@ -1,3 +1,5 @@
+
+
 import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
 import { Metadata } from 'next';
 import { getFormatter, getTranslations } from 'next-intl/server';
@@ -38,7 +40,6 @@ const CompareParamsSchema = z.object({
     .transform((value) => value?.map((id) => parseInt(id, 10))),
 });
 
-// Helper function to format currency
 const formatPrice = (price: number, currencyCode: string, format: any) => {
   const formattedPrice = format.number(price, {
     style: 'currency',
@@ -325,14 +326,21 @@ export default async function Compare(props: Props) {
               </th>
             </tr>
             <tr>
-              {products.map((product) => (
-                <td
-                  className="border-b px-4 pb-8 pt-20"
-                  dangerouslySetInnerHTML={{ __html: product.description }}
-                  headers="product-description"
-                  key={product.entityId}
-                />
-              ))}
+              {products.map((product) => {
+                let processedDescription = product.description;
+                if (processedDescription) {
+                  processedDescription = processedDescription.replace(/<table[^>]*>[\s\S]*?<\/table>/gi, '');
+                }
+                
+                return (
+                  <td
+                    className="border-b px-4 pb-8 pt-20"
+                    dangerouslySetInnerHTML={{ __html: processedDescription }}
+                    headers="product-description"
+                    key={product.entityId}
+                  />
+                );
+              })}
             </tr>
             <tr className="absolute mt-6">
               <th className="sticky start-0 top-0 m-0 ps-4 text-start" id="product-rating">
