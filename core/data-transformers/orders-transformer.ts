@@ -23,7 +23,7 @@ export const ordersTransformer = (
             return {
               id: lineItem.entityId.toString(),
               href:
-                lineItem.baseCatalogProduct?.path ?? `/product/${String(lineItem.productEntityId)}`,
+                lineItem.baseCatalogProduct?.path ?? undefined,
               title: lineItem.name,
               subtitle: lineItem.brand ?? undefined,
               price: format.number(lineItem.subTotalListPrice.value, {
