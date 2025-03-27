@@ -142,7 +142,7 @@ export const Details = ({ product }: Props) => {
 
  
  
-<div className="product-payments flex gap-[10px]">
+<div className="product-payments flex gap-[10px] mb-4">
               <article className="product-payment opacity-[0.5] transition-opacity duration-500 ">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
