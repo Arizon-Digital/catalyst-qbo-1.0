@@ -6,7 +6,7 @@ import { Price, PriceLabel } from '@/arizon/soul/primitives/price-label';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 import { Compare } from './compare';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import QuickView from '@/arizon/soul/primitives/product-card/Quickview';
 import { Button } from '@/arizon/soul/primitives/button';
 import { useFormStatus } from 'react-dom';
@@ -51,9 +51,10 @@ export function ProductCard({
   imageSizes = '(min-width: 80rem) 20vw, (min-width: 64rem) 25vw, (min-width: 42rem) 33vw, (min-width: 24rem) 50vw, 100vw',
 }: Props) {
   const [count, setCount] = useState(1);
-  const [isMobile, setIsMobile] = useState(false);
   const { id, title, subtitle, badge, price, image, href, entityId } = product;
   const [open, setOpen] = useState(false);
+  
+  const isMobile = false; 
   
   const quickViewProduct = {
     ...product,
@@ -67,16 +68,6 @@ export function ProductCard({
     prices: price,
     originalPdata: product?.originalPdata
   };
-
- 
-  useEffect(() => {
-    const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkIsMobile();
-    window.addEventListener('resize', checkIsMobile);
-    return () => window.removeEventListener('resize', checkIsMobile);
-  }, []);
 
   function SubmitButton({ children, disabled }: { children: React.ReactNode; disabled?: boolean }) {
     const { pending } = useFormStatus();
@@ -98,11 +89,12 @@ export function ProductCard({
     setOpen(false);
   };
 
-  
   const handleBuyNowClick = () => {
     setOpen(true);
   };
-const from = "plp";
+  
+  const from = "plp";
+  
   return (
     <div className={clsx('@container border border-[#dcdcdc] rounded-[4px] shadow-[0_3px_0_#dcdcdc] flex flex-col items-center', className)}>
       <div className="relative w-full">
@@ -162,11 +154,13 @@ const from = "plp";
           </div>
         </Link>
 
-      
+       
+
+       
         {isMobile && (
           <div className="relative -mt-10 mb-2 px-2 z-10">
             <div className="flex items-center gap-2">
-              {/* Simple button to open dialog - no server action */}
+           
               <button
                 className="flex-1 bg-[#CA9618] text-white font-semibold py-2 px-2 rounded-l flex items-center justify-center"
                 onClick={handleBuyNowClick}
@@ -285,7 +279,7 @@ const from = "plp";
       {/* Dialog for Add to Cart */}
       {open && (
         <DialogDemo 
-        from={from}
+          from={from}
           data={product} 
           open={open} 
           setOpen={setOpen} 
