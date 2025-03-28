@@ -39,7 +39,7 @@ export function PriceLabel({ className, colorScheme = 'light', price }: Props) {
     return (
       <span
         className={clsx(
-          'block font-semibold text-[#1A2348]',
+          'block font-semibold font-robotoslab price mb-1 text-[#1A2348]',
           // {
           //   light: 'text-[var(--price-light-text,hsl(var(--foreground)))]',
           //   dark: 'text-[var(--price-dark-text,hsl(var(--background)))]',
