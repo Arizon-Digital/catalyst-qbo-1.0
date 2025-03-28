@@ -200,7 +200,7 @@ export function CartClient<LineItem extends CartLineItem>({
                 <tr className="border-b border-gray-200">
                   <th className="text-left font-semibold p-2 sm:p-4 pl-2 sm:pl-4 font-robotoslab">ITEM</th>
                   <th className="text-left font-semibold p-2 sm:p-4 w-24 sm:w-32 font-robotoslab">UNIT PRICE</th>
-                  <th className="text-center font-semibold p-2 sm:p-4 w-24 sm:w-28 font-robotoslab">QUANTITY</th>
+                  <th className="text-center font-semibold pr-[34px] sm:p-4 w-24 sm:w-28 font-robotoslab">QUANTITY</th>
                   <th className="text-left font-semibold p-2 sm:p-4 pr-2 sm:pr-4 w-24 sm:w-32 font-robotoslab">TOTAL</th>
                 </tr>
               </thead>
@@ -222,7 +222,7 @@ export function CartClient<LineItem extends CartLineItem>({
                           />
                         </Link>
                         <div>
-                          <div className="text-xs sm:text-sm text-gray-500 font-robotoslab">
+                          <div className="text-xs sm:text-sm text-gray-500 font-robotoslab mt-4">
                             {lineItem.subtitle}
                           </div>
                           <div className="text-sm sm:text-base font-medium font-robotoslab">
