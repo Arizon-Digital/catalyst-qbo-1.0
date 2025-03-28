@@ -25,7 +25,7 @@ export const SearchForm = ({ initialTerm = '' }: Props) => {
       <Form action="/search" className="flex" method="get">
         <Field className="me-4 w-full" name="search">
           <FieldControl asChild>
-            <Input defaultValue={initialTerm} name="term" placeholder={t('searchPlaceholder')} />
+            <Input defaultValue={initialTerm} name="term" id="search_query" placeholder={t('searchPlaceholder')} />
           </FieldControl>
         </Field>
         <FormSubmit asChild>
