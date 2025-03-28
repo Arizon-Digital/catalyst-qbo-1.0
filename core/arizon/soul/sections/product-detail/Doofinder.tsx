@@ -31,7 +31,11 @@ const DoofinderScriptLoader = ({value, currencyCode}: {value: any, currencyCode:
         s = l.getElementsByTagName(a)[0];
         s.parentNode.insertBefore(r, s);
       })(document, 'script', 'https://eu1-config.doofinder.com/2.x/'+value+'.js');
-    }
+
+      (function(w, k) {w[k] = window[k] || function () { (window[k].q = window[k].q || []).push(arguments) }})(window, "doofinderApp")
+        doofinderApp("config", "language", "en")
+        doofinderApp("config", "currency", currencyCode) 
+      }
   }, [currencyCode]);
 
   return <div></div>;
