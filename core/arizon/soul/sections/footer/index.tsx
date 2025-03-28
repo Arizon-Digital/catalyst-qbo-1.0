@@ -7,6 +7,8 @@ import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { Logo } from '@/arizon/soul/primitives/logo';
 import { Link } from '~/components/link';
 import { ChevronUp } from 'lucide-react';
+import { NewsLetterSubscriptions } from '~/components/footer/news-letter-subscription';
+import { getChannelIdFromLocale } from '~/channels.config';
 
 interface Image {
   src: string;
@@ -83,16 +85,10 @@ export const Footer = forwardRef(function Footer(
           <div className="flex-1 text-sm md:text-base px-4 hidden md:block font-robotoslab">
             Be the first to know about exclusive deals, new product lines, company announcements, and industry news.
           </div>
-          <div className="flex w-full md:w-auto">
-            <input 
-              type="email" 
-              placeholder="Your email address" 
-              className="px-4 py-2 bg-white text-black border-none w-full md:w-64"
-            />
-            <button className="bg-[#daa520] text-white px-4 py-2 font-semibold whitespace-nowrap font-robotoslab">
-              SUBSCRIBE
-            </button>
-          </div>
+          
+            
+           <NewsLetterSubscriptions channelId={getChannelIdFromLocale()}/>
+      
         </div>
       </div>
 
