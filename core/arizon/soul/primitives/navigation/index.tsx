@@ -117,6 +117,9 @@ interface Props<S extends SearchResult> {
   openSearchPopupLabel?: string;
   searchLabel?: string;
   mobileMenuTriggerLabel?: string;
+  redirectToCheckout?: any;
+  currencyCode?: string;
+  doofinderKey?: string;
 }
 
 const MobileMenuButton = forwardRef<
@@ -284,6 +287,8 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
     searchLabel = 'Search',
     mobileMenuTriggerLabel = 'Toggle navigation',
     redirectToCheckout,
+    currencyCode,
+    doofinderKey,
   }: Props<S>,
   ref: Ref<HTMLDivElement>,
 ) {

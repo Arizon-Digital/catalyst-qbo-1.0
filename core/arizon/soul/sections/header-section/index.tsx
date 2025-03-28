@@ -13,11 +13,9 @@ import { Banner } from '@/vibes/soul/primitives/banner';
 import { Navigation } from '@/arizon/soul/primitives/navigation';
 import { Link } from '~/components/link';
 import { Logo } from '@/arizon/soul/primitives/logo';
-import { Stream } from '@/vibes/soul/lib/streamable';
 import { getCartData, getCartId } from '~/components/common-functions';
 import ViewedItemsPopover from './Recently Viewed Products Popover';
 import { BcImage } from '~/components/bc-image';
-import { Button } from '~/components/ui/button/button';
 import DoofinderScriptLoader from '../product-detail/Doofinder';
 import miniCartIcon from '~/public/minicart/mini-cart-icon.a78bafe5.png'
 import * as Dialog from '@radix-ui/react-dialog';
@@ -36,7 +34,6 @@ interface Props {
   banner?: React.ComponentPropsWithoutRef<typeof Banner>;
 
 }
-const dooFinderKey = process.env.DOOFINDER_KEY
 
 export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
   ({ navigation, banner }, ref) => {
@@ -362,7 +359,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     className="absolute right-0 top-0 h-full px-3 md:px-4 rounded-r text-white bg-gradient-to-r from-blue-900 to-blue-900/70"
                     aria-label={navigation.searchLabel || 'Search'}
                   >
-                    <DoofinderScriptLoader value={dooFinderKey} />
+                    <DoofinderScriptLoader currencyCode={navigation?.currencyCode} value={navigation?.doofinderKey} />
                     <Search size={20} />
                   </button>
                 </form>
@@ -700,38 +697,38 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                       )}
                     </div>
 
-            {activeDropdown === index && item.groups && (
-              <div className="mt-2 pl-4 pr-2 pb-2 overflow-visible font-robotoslab">
-                {item.groups.map((group, groupIndex) => (
-                  <div key={groupIndex} className="mb-3">
-                    {group.label && (
-                      <Link
-                        href={group.href || '#'}
-                        className="block font-semibold font-robotoslab text-white -800 mb-2 hover:text-blue-800"
-                        onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
-                      >
-                        {group.label}
-                      </Link>
+                    {activeDropdown === index && item.groups && (
+                      <div className="mt-2 pl-4 pr-2 pb-2 overflow-visible font-robotoslab">
+                        {item.groups.map((group, groupIndex) => (
+                          <div key={groupIndex} className="mb-3">
+                            {group.label && (
+                              <Link
+                                href={group.href || '#'}
+                                className="block font-semibold font-robotoslab text-white -800 mb-2 hover:text-blue-800"
+                                onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
+                              >
+                                {group.label}
+                              </Link>
+                            )}
+                            <div className="space-y-1 pl-2 font-robotoslab">
+                              {group.links && group.links.map((link, linkIndex) => (
+                                <Link
+                                  key={linkIndex}
+                                  href={link.href || '#'}
+                                  className="block text-white -600 py-1 text-sm hover:text-blue-800"
+                                  onClick={() => setMobileMenuOpen(false)}
+                                >
+                                  {link.label}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     )}
-                    <div className="space-y-1 pl-2 font-robotoslab">
-                      {group.links && group.links.map((link, linkIndex) => (
-                        <Link
-                          key={linkIndex}
-                          href={link.href || '#'}
-                          className="block text-white -600 py-1 text-sm hover:text-blue-800"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
-                    </div>
                   </div>
                 ))}
               </div>
-            )}
-          </div>
-        ))}
-      </div>
 
               <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
                 <Link href="/about-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>

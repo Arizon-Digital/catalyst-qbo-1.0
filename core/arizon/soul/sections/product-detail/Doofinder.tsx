@@ -1,27 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { getPreferredCurrencyCode } from "~/lib/currency";
+import React, { useEffect } from "react";
 
-const DoofinderScriptLoader = ({value}: {value: any}) => {
-  const [currency, setCurrency] = useState('CAD');
+const DoofinderScriptLoader = ({value, currencyCode}: {value: any, currencyCode: any}) => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const isInIframe = window.self !== window.top;
       if (isInIframe) return
     }
-    const getCurrencyCode = async() => {
-      let currencyCode: any = await getPreferredCurrencyCode();
-      if(currencyCode != currency) {
-        setCurrency(currencyCode);
-      }
-    }
-    getCurrencyCode();
     if (typeof window !== "undefined") {
       let dfLayerOptions = {
         installationId: value,
         zone: 'eu1',
-        currency: currency
+        currency: currencyCode
       };
 
       // Dynamically inject the script
@@ -41,7 +32,7 @@ const DoofinderScriptLoader = ({value}: {value: any}) => {
         s.parentNode.insertBefore(r, s);
       })(document, 'script', 'https://eu1-config.doofinder.com/2.x/'+value+'.js');
     }
-  }, [currency, setCurrency]);
+  }, [currencyCode]);
 
   return <div></div>;
 };
