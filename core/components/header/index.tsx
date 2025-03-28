@@ -124,7 +124,7 @@ export const Header = async () => {
   const t = await getTranslations('Components.Header');
   const locale = await getLocale();
   const currencyCode = await getPreferredCurrencyCode();
-
+  const dooFinderKey = process.env.DOOFINDER_KEY;
   const locales = routing.locales.map((enabledLocales) => ({
     id: enabledLocales,
     label: enabledLocales.toLocaleUpperCase(),
@@ -158,6 +158,8 @@ export const Header = async () => {
         activeCurrencyId,
         currencyAction: switchCurrency,
         redirectToCheckout: redirectToCheckout,
+        currencyCode: currencyCode,
+        doofinderKey: dooFinderKey,
       }}
     />
   );
