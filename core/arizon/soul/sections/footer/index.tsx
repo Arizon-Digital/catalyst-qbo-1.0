@@ -316,9 +316,9 @@ export const Footer = forwardRef(function Footer(
       </div>
 
       {/* Copyright and Payment Section - Darker Black Background */}
-      <div className="w-full py-4 bg-[#1A2348] text-white">
+      <div className="w-full py-4 bg-[#1c1c1c] bor text-white">
         <div className="max-w-screen-xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center font-robotoslab">
-          <p className="text-gray-400 text-sm mb-4 md:mb-0 font-robotoslab text-center md:text-left font-robotoslab">
+          <p className="text-gray-400 text-sm mb-4 md:mb-0  text-center md:text-left font-robotoslab">
             © 2025 Quality Bearings Online – All rights reserved.
           </p>
 

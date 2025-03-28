@@ -170,7 +170,7 @@ export function FiltersPanelInner({
              
               <button
                 onClick={() => toggleFilterExpanded(filterId)}
-                className="w-full py-3 px-4 flex justify-between items-center text-left font-mono text-sm uppercase text-contrast-400 hover:bg-gray-50"
+                className="w-full py-3 px-4 flex justify-between items-center text-left font-robotoslab text-sm uppercase text-contrast-400 hover:bg-gray-50"
               >
                 <span>
                   {filter.label}
@@ -224,11 +224,11 @@ export function FiltersPanelInner({
                           />
                           <label 
                             htmlFor={`option-${filter.paramName}-${option.value}`}
-                            className="ml-2 flex items-center cursor-pointer"
+                            className="ml-2 flex items-center cursor-pointer font-robotoslab"
                           >
                             <span>{option.label}</span>
                             {option.value && (
-                              <span className="ml-2 text-gray-500 text-sm">{option.value}</span>
+                              <span className="ml-2 text-gray-500 text-sm font-robotoslab">{option.value}</span>
                             )}
                           </label>
                         </div>

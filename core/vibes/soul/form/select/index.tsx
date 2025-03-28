@@ -53,7 +53,7 @@ export function Select({
         <SelectPrimitive.Trigger
           aria-label={label}
           className={clsx(
-            'flex h-fit w-full select-none items-center justify-between gap-3 border bg-white p-2 px-5 py-3 text-sm font-medium text-foreground ring-primary transition-colors hover:border-contrast-300 hover:bg-contrast-100 focus-visible:outline-none focus-visible:ring-2',
+            'flex h-fit w-full select-none font-robotoslab items-center justify-between gap-3 border bg-white p-2 px-5 py-3 text-sm font-medium text-foreground ring-primary transition-colors hover:border-contrast-300 hover:bg-contrast-100 focus-visible:outline-none focus-visible:ring-2',
             variant === 'rectangle' ? 'rounded-lg' : 'rounded-full',
             errors && errors.length > 0 ? 'border-error' : 'border-contrast-100',
           )}

@@ -30,7 +30,7 @@ const ProductCountFilter = () => {
 
   if (!isClient) {
     return (
-      <div className='rounded-[4px] border border-[#dcdcdc] px-[10px] py-2'>
+      <div className='rounded-[4px] border border-[#dcdcdc] px-[10px] py-2 font-robotoslab'>
         <span>Products Per Page: 20</span>
       </div>
     );
