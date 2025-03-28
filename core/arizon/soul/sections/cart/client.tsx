@@ -273,12 +273,12 @@ export function CartClient<LineItem extends CartLineItem>({
             </div>
             
             {/* Use the processed summary items instead of original cart.summaryItems */}
-            {processedSummaryItems.map((summaryItem, index) => (
+            {/* {processedSummaryItems.map((summaryItem, index) => (
               <div className="flex justify-between py-2" key={index}>
                 <dt className='font-robotoslab'>{summaryItem.label}</dt>
                 <dd className="font-medium font-robotoslab">{formatPrice(summaryItem.value)}</dd>
               </div>
-            ))}
+            ))} */}
             
             <hr className="my-4 border-gray-200" />
 
@@ -289,9 +289,9 @@ export function CartClient<LineItem extends CartLineItem>({
             
             <CheckoutButton 
               action={checkoutAction} 
-              className="mt-4 w-full bg-[#CA9618] text-white   px-4 font-medium hover:bg-[#CA9618] transition-colors uppercase text-center"
+              className="mt-4 w-full bg-[#CA9618] text-white font-robotoslab text-xl  px-4 font-medium hover:bg-[#CA9618] transition-colors uppercase text-center"
             >
-              {checkoutLabel}
+              CHECKOUT NOW
             </CheckoutButton>
             
             <div className="text-center mt-4 text-sm">
