@@ -451,7 +451,8 @@ function QuantityControl({
           </button>
         </div>
       </form>
-      
+      <div id="feefo-service-review-carousel-widgetId" className="feefo-review-carousel-widget-service order-last"></div>
+      <div id="feefo-service-review-floating-widgetId" className="order-last"></div>
       
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

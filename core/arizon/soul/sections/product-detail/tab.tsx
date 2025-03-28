@@ -22,9 +22,10 @@ interface TabComponentProps {
     reviews: any;
     sku: string;
   }|any;
+  makeswiftDeliveryInfo?:any;
 }
 
-const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
+const TabComponent: React.FC<TabComponentProps> = ({ product, makeswiftDeliveryInfo }) => {
   const [activeTab, setActiveTab] = useState('Description');
 
  
@@ -78,7 +79,7 @@ const TabComponent: React.FC<TabComponentProps> = ({ product }) => {
       case 'BulkPricing':
         return <Bulk product={product} />;
       case 'DeliveryInformation':
-        return <Deliveryinformation product={product} />;
+        return makeswiftDeliveryInfo;
       case 'Reviews':
         return <FeefoReview sku={product.sku} />;
       case 'SpareParts':

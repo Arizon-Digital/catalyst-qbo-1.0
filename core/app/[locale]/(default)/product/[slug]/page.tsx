@@ -19,6 +19,7 @@ import { PaginationSearchParamNames, Reviews } from './_components/reviews';
 import { getProductData, getRelatedProductData } from '@/arizon/soul/pages/product/[slug]/page-data';
 import TabComponent from '@/arizon/soul/sections/product-detail/tab';
 import { redirectToCheckout } from '../../cart/_actions/redirect-to-checkout';
+import { Page as MakeswiftPage } from '~/lib/makeswift';
 
 const cachedProductDataVariables = cache(
   async (productId: string, searchParams: Props['searchParams']) => {
@@ -288,7 +289,7 @@ export default async function Product(props: Props) {
       <Stream fallback={null} value={getProductData(variables)}>
         {(product) => (
           <div className="lg:col-span-2" id="tabsection">
-            <TabComponent product={product} />
+            <TabComponent product={product} makeswiftDeliveryInfo={<MakeswiftPage locale={locale} path="/delivery-information" />} />
           </div>
         )}
       </Stream>
