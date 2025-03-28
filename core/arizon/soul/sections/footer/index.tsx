@@ -216,7 +216,7 @@ export const Footer = forwardRef(function Footer(
                     <img 
                       src="https://cdn11.bigcommerce.com/s-ur7wjnshy8/images/stencil/original/image-manager/footer-logo.png" 
                       alt="Lloyds Bank British Business Excellence" 
-                      className="h-12 object-contain"
+                      className="h-[6rem] object-contain"
                     />
                   </div>
                   
@@ -225,7 +225,7 @@ export const Footer = forwardRef(function Footer(
                       <img 
                         src="https://cdn11.bigcommerce.com/s-03842/content/../product_images/uploaded_images/sc21.png" 
                         alt="SC21" 
-                        className="h-12 object-contain"
+                        className="h-[6rem] object-contain"
                       />
                       
                     </div>
@@ -235,12 +235,12 @@ export const Footer = forwardRef(function Footer(
                     <img 
                       src="https://cdn11.bigcommerce.com/s-03842/content/../product_images/uploaded_images/Queens_Award_White.png" 
                       alt="Queen's Award" 
-                      className="h-10 object-contain"
+                      className="h-20 w-[39rem] object-contain"
                     />
                     <img 
                       src="https://cdn11.bigcommerce.com/s-03842/content/../content/Investers_In_People_23_24-01.jpg" 
                       alt="Investors in People" 
-                      className="h-10 object-contain"
+                      className="h-20 w-[39rem] object-contain"
                     />
                   </div>
                   
