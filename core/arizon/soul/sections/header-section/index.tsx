@@ -1,4 +1,6 @@
 
+
+
 'use client';
 
 import { forwardRef, useEffect, useState, useRef } from 'react';
@@ -32,7 +34,6 @@ interface Currency {
 interface Props {
   navigation: React.ComponentPropsWithoutRef<typeof Navigation>;
   banner?: React.ComponentPropsWithoutRef<typeof Banner>;
-
 }
 
 export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
@@ -42,15 +43,21 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
     const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
     const [activeDesktopMenu, setActiveDesktopMenu] = useState<number | null>(null);
     const pathname = usePathname();
-
     const [customerAccessToken, setCustomerAccessToken] = useState<string | null>(null);
+    const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
 
+    // MiniCart states
+    const [isCartOpen, setIsCartOpen] = useState(false);
+    const [removeError, setRemoveError] = useState<string | null>(null);
+    const [cartItems, setCartItems] = useState<any>({ lineItems: { physicalItems: [] } });
+    const [hasItems, setHasItems] = useState(false);
+    const cartRef = useRef<HTMLDivElement>(null);
+    const [cartId, setCartId] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-
       const checkIfLoggedIn = () => {
         try {
-
           if (pathname && pathname.includes('/account')) {
             setCustomerAccessToken('logged-in');
             return;
@@ -64,7 +71,6 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               return;
             }
           }
-
 
           for (const key of localStorageKeys) {
             const token = sessionStorage.getItem(key);
@@ -81,12 +87,10 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
             return;
           }
 
-
           if (window.location.href.includes('/account/')) {
             setCustomerAccessToken('account-page');
             return;
           }
-
 
           setCustomerAccessToken(null);
         } catch (error) {
@@ -96,16 +100,6 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
       checkIfLoggedIn();
     }, [pathname]);
-
-
-    // MiniCart states
-    const [isCartOpen, setIsCartOpen] = useState(false);
-    const [removeError, setRemoveError] = useState<string | null>(null);
-    const [cartItems, setCartItems] = useState<any>({ lineItems: { physicalItems: [] } });
-    const [hasItems, setHasItems] = useState(false);
-    const cartRef = useRef<HTMLDivElement>(null);
-    const [cartId, setCartId] = useState('');
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
       const handleResize = () => {
@@ -118,27 +112,22 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Add this effect to close menus when the route changes
     useEffect(() => {
-      // Close all menus when pathname changes
       setMobileMenuOpen(false);
       setActiveDropdown(null);
       setActiveDesktopMenu(null);
       setIsCartOpen(false);
     }, [pathname]);
 
-    // Initialize cart and set up outside click handler
     useEffect(() => {
       if (typeof window !== "undefined") {
         const isInIframe = window.self !== window.top;
-        if (isInIframe) return
+        if (isInIframe) return;
       }
       const initCart = async () => {
         try {
           const cartIdData = await getCartId();
           setCartId(cartIdData);
-
-
         } catch (error) {
           console.error('Error getting cart ID:', error);
         }
@@ -165,18 +154,13 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       setActiveDropdown(activeDropdown === index ? null : index);
     };
 
-    // Load mini cart data
     const loadMiniBag = async () => {
       setIsCartOpen(true);
       setLoading(true);
 
       try {
-        // Get real cart data from your API
         const cartData = await getCartData();
-
-
         if (cartData?.lineItems?.physicalItems && cartData.lineItems.physicalItems.length > 0) {
-          // Debug the first item to see its structure
           setCartItems(cartData);
           setHasItems(cartData?.lineItems?.physicalItems.length > 0);
         } else {
@@ -192,22 +176,19 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       }
     };
 
-    // Handle removing item from cart
     const handleRemoveItem = async (e: React.FormEvent<HTMLFormElement>, lineItemEntityId: string) => {
       e.preventDefault();
+      setDeletingItemId(lineItemEntityId);
       setLoading(true);
 
       try {
-        // Import the removeItem function dynamically to avoid import errors
         const removeItemModule = await import('~/app/[locale]/(default)/cart/_actions/remove-item');
         const removeItem = removeItemModule.removeItem;
 
-        // Call the removeItem function with the correct parameters
         const result = await removeItem({
           lineItemEntityId,
         });
 
-        // After removal, reload the cart data
         await loadMiniBag();
 
         if (result.status === 'error') {
@@ -219,11 +200,10 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       } catch (error) {
         console.error('Error removing item:', error);
         setRemoveError('Failed to remove item');
-
-        // Fallback: If the import fails, manually reload the cart
         await loadMiniBag();
       } finally {
         setLoading(false);
+        setDeletingItemId(null);
       }
     };
 
@@ -280,7 +260,6 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 bg-black/50 z-[99999]" />
                 <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm shadow-lg z-[100000] w-[90vw] max-w-md">
-                  {/* Header with title and close button */}
                   <div className="border-b border-b-[#e5e5e5] bg-white">
                     <div className="flex items-center justify-between p-4">
                       <Dialog.Title className="flex-1 text-center text-[#000000] text-xl font-bold">
@@ -294,7 +273,6 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     </div>
                   </div>
 
-                  {/* Body with phone number */}
                   <div className="bg-gray-100 p-6">
                     <div className="text-center">
                       <Dialog.Description className="text-base text-[#131313]">
@@ -366,9 +344,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               </div>
 
               <div className="flex items-center gap-2 md:gap-6 lg:gap-8">
-
                 {customerAccessToken ? (
-                  <div className="flex items-center hidden sm:flex"> {/* Added 'hidden sm:flex' */}
+                  <div className="flex items-center hidden sm:flex">
                     <div className='user-icon'>
                       <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
@@ -393,7 +370,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center hidden sm:flex"> {/* Added 'hidden sm:flex' */}
+                  <div className="flex items-center hidden sm:flex">
                     <div className='user-icon'>
                       <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="6" r="4" stroke="#000000" strokeWidth="1"></circle>
@@ -416,138 +393,142 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                   <ViewedItemsPopover />
                 </div>
 
-               {/* MiniCart Component */}
-<div className="relative" ref={cartRef}>
-  <button
-    onClick={() => loadMiniBag()}
-    className="relative flex items-end gap-1 p-1 rounded-full mini-cart-btn"
-    aria-label="Shopping cart"
-  >
-    {miniCartIcon ? (
-      <BcImage
-        src={miniCartIcon}
-        alt="mini-cart"
-        width={50}
-        height={50}
-      />
-    ) : (
-      <ShoppingBag size={30} className="text-blue-900" />
-    )}
+                <div className="relative" ref={cartRef}>
+                  <button
+                    onClick={() => loadMiniBag()}
+                    className="relative flex items-end gap-1 p-1 rounded-full mini-cart-btn"
+                    aria-label="Shopping cart"
+                  >
+                    {miniCartIcon ? (
+                      <BcImage
+                        src={miniCartIcon}
+                        alt="mini-cart"
+                        width={50}
+                        height={50}
+                      />
+                    ) : (
+                      <ShoppingBag size={30} className="text-blue-900" />
+                    )}
 
-    <span className="absolute right-1.5 mini-cart-count top-3 h-[20px] w-[30px] flex items-center justify-center rounded-full bg-[#1c2541] text-white text-xs font-bold mini-cart-badge">
-      {navigation.cartCount || 0}
-    </span>
+                    <span className="absolute right-1.5 mini-cart-count top-3 h-[20px] w-[30px] flex items-center justify-center rounded-full bg-[#1c2541] text-white text-xs font-bold mini-cart-badge">
+                      {navigation.cartCount || 0}
+                    </span>
 
-    <span className="text-[#1a2348] mini-cart-text block font-light text-sm font-robotoslab">Cart</span>
-  </button>
+                    <span className="text-[#1a2348] mini-cart-text block font-light text-sm font-robotoslab">Cart</span>
+                  </button>
 
-  {isCartOpen && (
-    <div className="absolute right-0 top-12 w-96 z-50 bg-white rounded-lg border border-gray-200 shadow-sm card-cart">
-      <div className="p-4">
-        <div className="mb-4">
-          <h2 className="text-lg font-bold font-robotoslab">Shopping Cart</h2>
-          {removeError && (
-            <p className="text-red-500 text-sm">{removeError}</p>
-          )}
-        </div>
-
-        <div className="max-h-96 overflow-y-auto">
-          {hasItems && cartItems?.lineItems?.physicalItems?.length > 0 ? (
-            <>
-              {cartItems.lineItems.physicalItems.map((item: any, index: number) => (
-                <div key={`cart-item-${item.id || index}`} className="py-4 border-b">
-                  <div className="flex">
-                    <div className="w-20 h-20 bg-gray-100 rounded mr-3">
-                      {item.imageUrl ? (
-                        <Link href={item.productUrl || item.url || `/product/${item.productId || item.id}` || '#'}>
-                          <img
-                            src={item.imageUrl}
-                            alt={item.name || 'Product'}
-                            className="w-full h-full object-contain"
-                          />
-                        </Link>
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
-                          No Image
+                  {isCartOpen && (
+                    <div className="absolute right-0 top-12 w-96 z-50 bg-white rounded-lg border border-gray-200 shadow-sm card-cart">
+                      <div className="p-4">
+                        <div className="mb-4">
+                          <h2 className="text-lg font-bold font-robotoslab">Shopping Cart</h2>
+                          {removeError && (
+                            <p className="text-red-500 text-sm">{removeError}</p>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-sm text-gray-600 font-robotoslab">{item.brand || ''}</div>
-                      <Link
-                        href={item.productUrl || item.url || `/product/${item.productId || item.id}` || '#'}
-                        className="text-blue-600 font-medium block font-robotoslab"
-                      >
-                        {item.name || 'Product Name'}
-                      </Link>
-                      <div className="text-sm text-gray-600 mt-1 font-robotoslab">
-                        SKU: {item.entityId || ''}
+
+                        <div className="max-h-96 overflow-y-auto">
+                          {hasItems && cartItems?.lineItems?.physicalItems?.length > 0 ? (
+                            <>
+                              {cartItems.lineItems.physicalItems.map((item: any, index: number) => (
+                                <div key={`cart-item-${item.id || index}`} className="py-4 border-b">
+                                  <div className="flex">
+                                    <div className="w-20 h-20 bg-gray-100 rounded mr-3">
+                                      {item.imageUrl ? (
+                                        <Link href={item.productUrl || item.url || `/product/${item.productId || item.id}` || '#'}>
+                                          <img
+                                            src={item.imageUrl}
+                                            alt={item.name || 'Product'}
+                                            className="w-full h-full object-contain"
+                                          />
+                                        </Link>
+                                      ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                                          No Image
+                                        </div>
+                                      )}
+                                    </div>
+                                    <div className="flex-1">
+                                      <div className="text-sm text-gray-600 font-robotoslab">{item.brand || ''}</div>
+                                      <Link
+                                        href={item.productUrl || item.url || `/product/${item.productId || item.id}` || '#'}
+                                        className="text-blue-600 font-medium block font-robotoslab"
+                                      >
+                                        {item.name || 'Product Name'}
+                                      </Link>
+                                      <div className="text-sm text-gray-600 mt-1 font-robotoslab">
+                                        SKU: {item.entityId || ''}
+                                      </div>
+                                      <div className="mt-2">
+                                        <span className="text-sm">{item.quantity || 0} x </span>
+                                        <span className="font-bold">
+                                          {(item.extendedSalePrice?.currencyCode === 'USD') ? '$' : 'C$'} 
+                                          {parseFloat(item.extendedSalePrice?.value || 0).toFixed(2)}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="ml-4">
+                                      <form onSubmit={(e) => handleRemoveItem(e, item.entityId || item.id || '')}>
+                                        <input type="hidden" name="lineItemEntityId" value={item.entityId || item.id || ''} />
+                                        <button
+                                          type="submit"
+                                          className="text-gray-500 hover:text-red-500 min-w-[20px] flex items-center justify-center"
+                                          aria-label="Remove item"
+                                          disabled={deletingItemId === (item.entityId || item.id || '')}
+                                        >
+                                          {deletingItemId === (item.entityId || item.id || '') ? (
+                                            <svg className="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                          ) : (
+                                            <Trash2 size={20} />
+                                          )}
+                                        </button>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </>
+                          ) : (
+                            <>
+                              {loading ? (
+                                <div className="text-center py-4 font-robotoslab">Loading cart data...</div>
+                              ) : (
+                                <div className="text-center py-8 text-gray-500 font-robotoslab">
+                                  Your cart is empty
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </div>
+
+                        {hasItems && cartItems?.lineItems?.physicalItems?.length > 0 && (
+                          <div className="mt-2 flex justify-between px-1 gap-2">
+                            <div style={{ width: '48%' }}>
+                              <CheckoutButton
+                                action={navigation?.redirectToCheckout}
+                                className="w-full bg-[#ca9618] text-white font-bold text-[11px] rounded-sm uppercase"
+                                style={{ minWidth: '100%', display: 'block', textOverflow: 'visible', whiteSpace: 'nowrap' }}
+                              >
+                                CHECKOUT
+                              </CheckoutButton>
+                            </div>
+                            <div style={{ width: '48%' }}>
+                              <Link
+                                href="/cart"
+                                className="block w-full bg-white border border-gray-300 text-gray-700 font-medium text-[11px] text-center mt-1 gap-x-3 px-6 py-4 rounded-sm uppercase"
+                              >
+                                VIEW CART
+                              </Link>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <div className="mt-2">
-  <span className="text-sm">{item.quantity || 0} x </span>
-  <span className="font-bold">
-    {(item.extendedSalePrice?.currencyCode === 'USD') ? '$' : 'C$'} 
-    {parseFloat(item.extendedSalePrice?.value || 0).toFixed(2)}
-  </span>
-</div>
                     </div>
-                    <div className="ml-4">
-                      <form onSubmit={(e) => handleRemoveItem(e, item.entityId || item.id || '')}>
-                        <input type="hidden" name="lineItemEntityId" value={item.entityId || item.id || ''} />
-                        <button
-                          type="submit"
-                          className="text-gray-500 hover:text-red-500"
-                          aria-label="Remove item"
-                        >
-                          <Trash2 size={20} />
-                        </button>
-                      </form>
-                    </div>
-                  </div>
+                  )}
                 </div>
-              ))}
-            </>
-          ) : (
-            <>
-              {loading ? (
-                <div className="text-center py-4 font-robotoslab">Loading cart data...</div>
-              ) : (
-                <div className="text-center py-8 text-gray-500 font-robotoslab">
-                  Your cart is empty
-                </div>
-              )}
-            </>
-          )}
-        </div>
-
-        {hasItems && cartItems?.lineItems?.physicalItems?.length > 0 && (
-  <div className="mt-2 flex justify-between px-1 gap-2">
-    <div style={{ width: '48%' }}>
-      {/* Preserve the original CheckoutButton component but add custom styling */}
-      <CheckoutButton
-        action={navigation?.redirectToCheckout}
-        className="w-full bg-[#ca9618] text-white font-bold text-[11px]  rounded-sm uppercase"
-        style={{ minWidth: '100%', display: 'block', textOverflow: 'visible', whiteSpace: 'nowrap' }}
-      >
-        CHECKOUT
-      </CheckoutButton>
-    </div>
-    <div style={{ width: '48%' }}>
-      <Link
-        href="/cart"
-        className="block w-full bg-white border border-gray-300 text-gray-700 font-medium text-[11px] text-center mt-1 gap-x-3 px-6 py-4 rounded-sm uppercase"
-      >
-        VIEW CART
-      </Link>
-    </div>
-  </div>
-)}
-
-        
-      </div>
-    </div>
-  )}
-</div>
               </div>
             </div>
 
@@ -575,7 +556,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
             <nav className="relative hidden lg:block" style={{ backgroundColor: '#1a2348' }}>
               <div className="container mx-auto">
-                <ul className="flex items-center justify-center  lg:gap-4 flex-wrap navbar-list-blue">
+                <ul className="flex items-center justify-center lg:gap-4 flex-wrap navbar-list-blue">
                   {navigationLinks.map((item, index) => (
                     <li
                       key={index}
@@ -588,7 +569,6 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                         className="block text-white py-4 px-3 xl:px-5 hover:bg-blue-900 transition-colors font-bold text-[15px] whitespace-nowrap"
                         onClick={() => {
                           if (item.href) {
-                            // Close the menu immediately when clicking a link
                             setActiveDesktopMenu(null);
                           }
                         }}
@@ -610,7 +590,6 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                                       href={group.href || '#'}
                                       className="block font-bold text-gray-800 mb-3 text-base hover:text-blue-800"
                                       onClick={() => {
-                                        // Close menu on sublink click too
                                         setActiveDesktopMenu(null);
                                       }}
                                     >
@@ -622,9 +601,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                                       <Link
                                         key={linkIndex}
                                         href={link.href || '#'}
-                                        className="block text-gray -600 py-1 text-sm hover:text-blue-800"
+                                        className="block text-gray-600 py-1 text-sm hover:text-blue-800"
                                         onClick={() => {
-                                          // Close menu on sublink click
                                           setActiveDesktopMenu(null);
                                         }}
                                       >
@@ -652,9 +630,6 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
         <div className="h-[200px] w-full"></div>
 
-        {/* Update the Mobile Menu section to include Sign In/Register or Account/Sign Out */}
-
-        {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden fixed inset-0 z-[9999] flex">
             <div
@@ -667,15 +642,13 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 <h2 className="text-lg font-medium text-blue-900 font-robotoslab">Menu</h2>
               </div>
 
-              {/* Remove the authentication section from here */}
-
               <div className="divide-y divide-gray-100 overflow-y-auto flex-grow">
                 {navigationLinks.map((item, index) => (
                   <div key={index} className="py-2">
                     <div className="flex items-center justify-between px-4 font-robotoslab">
                       <Link
                         href={item.href || '#'}
-                        className="py-2 text-white -900 font-bold text-[15px]"
+                        className="py-2 text-white-900 font-bold text-[15px]"
                         onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
                       >
                         {item.label}
@@ -683,7 +656,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
                       {item.groups && item.groups.length > 0 && (
                         <button
-                          className="p-2 text-white -500"
+                          className="p-2 text-white-500"
                           onClick={() => toggleDropdown(index)}
                           aria-expanded={activeDropdown === index}
                         >
@@ -704,7 +677,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                             {group.label && (
                               <Link
                                 href={group.href || '#'}
-                                className="block font-semibold font-robotoslab text-white -800 mb-2 hover:text-blue-800"
+                                className="block font-semibold font-robotoslab text-white-800 mb-2 hover:text-blue-800"
                                 onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
                               >
                                 {group.label}
@@ -715,7 +688,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                                 <Link
                                   key={linkIndex}
                                   href={link.href || '#'}
-                                  className="block text-white -600 py-1 text-sm hover:text-blue-800"
+                                  className="block text-white-600 py-1 text-sm hover:text-blue-800"
                                   onClick={() => setMobileMenuOpen(false)}
                                 >
                                   {link.label}
@@ -731,35 +704,34 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               </div>
 
               <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
-                <Link href="/about-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/about-us" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
                   About Us
                 </Link>
-                <Link href="/contact-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/contact-us" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
                   Contact Us
                 </Link>
-                <Link href="/customer-service" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/customer-service" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
                   Customer Service
                 </Link>
-                <Link href="/faqs" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/faqs" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
                   FAQs
                 </Link>
-                <Link href="/privacy-policy" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/privacy-policy" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
                   Privacy Policy
                 </Link>
-                <Link href="/about-us" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/about-us" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
                   About Us
                 </Link>
-                <Link href="/customer-reviews" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/customer-reviews" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
                   Customer Reviews
                 </Link>
-                <Link href="/terms-and-conditionss" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/terms-and-conditionss" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
                   Terms & Conditions
                 </Link>
-                <Link href="/blog" className="block py-2 text-white -600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/blog" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
                   Blog
                 </Link>
 
-                {/* Add Authentication Section at the bottom */}
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   {customerAccessToken ? (
                     <div className="flex items-center mb-2">
@@ -820,7 +792,6 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
           </div>
         )}
 
-        {/* Features section - updated with consistent styling */}
         <div className="header-global border-t border-b border-gray-200 bg-white py-4 shadow-md">
           <div className="container mx-auto">
             <div className="flex flex-wrap justify-center md:justify-between items-center px-4">
@@ -967,7 +938,3 @@ function CurrencySelector({
     </DropdownMenu.Root>
   );
 }
-
-
-
-

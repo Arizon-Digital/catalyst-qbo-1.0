@@ -1,7 +1,5 @@
 
 
-
-
 import { clsx } from 'clsx';
 import { Loader2 } from 'lucide-react';
 
@@ -14,34 +12,6 @@ export type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   type?: 'button' | 'submit' | 'reset';
 };
 
-// eslint-disable-next-line valid-jsdoc
-/**
- * This component supports various CSS variables for theming. Here's a comprehensive list, along
- * with their default values:
- *
- * ```css
- * :root {
- *   --button-focus: hsl(var(--primary));
- *   --button-font-family: var(--font-family-body);
- *   --button-primary-background: #D4A017;
- *   --button-primary-background-hover: #BF9117;
- *   --button-primary-foreground: white;
- *   --button-primary-border: #ca9618;
- *   --button-secondary-background: #ca9618;
- *   --button-secondary-background-hover: #BF9117;
- *   --button-secondary-foreground: white;
- *   --button-secondary-border: #ca9618;
- *   --button-tertiary-background:#ca9618;
- *   --button-tertiary-background-hover:#ca9618;
- *   --button-tertiary-foreground: white;
- *   --button-tertiary-border: #ca96187;
- *   --button-ghost-background: #ca9618;
- *   --button-ghost-background-hover: #BF9117;
- *   --button-ghost-foreground: white;
- *   --button-ghost-border: #D4A017;
- * }
- * ```
- */
 export function Button({
   variant = 'primary',
   size = 'large',
@@ -58,7 +28,7 @@ export function Button({
     <button
       aria-busy={loading}
       className={clsx(
-        'border-[var(--button-secondary-border,hsl(var(--foreground)))] bg-[#ca9618] mt-2 text-white after:bg-[#BF9117] font-robotoslab font-bold',
+        'border-[var(--button-secondary-border,hsl(var(--foreground)))] bg-[#ca9618] mt-2 text-white after:bg-[#BF9117] font-robotoslab font-bold relative',
         {
           primary:
             'border-[var(--button-primary-border,hsl(var(--primary)))] bg-[#ca9618] text-[var(--button-primary-foreground)] after:bg-[#BF9117]',
@@ -110,7 +80,7 @@ export function Button({
 
       <span
         className={clsx(
-          'absolute inset-0 grid place-content-center transition-all duration-300 ease-in-out hidden',
+          'absolute inset-0 grid place-content-center transition-all duration-300 ease-in-out',
           loading ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0',
         )}
       >
