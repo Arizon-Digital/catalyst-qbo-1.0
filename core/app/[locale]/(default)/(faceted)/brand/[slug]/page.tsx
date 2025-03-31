@@ -246,7 +246,7 @@ export default async function Brand(props: Props) {
       products={getListProducts(props)}
       rangeFilterApplyLabel={getRangeFilterApplyLabel()}
       resetFiltersLabel={getResetFiltersLabel()}
-      sortDefaultValue="featured"
+      sortDefaultValue="best_selling"
       sortLabel={getSortLabel()}
       sortOptions={getSortOptions()}
       sortParamName="sort"

@@ -135,7 +135,7 @@ export const Compare = ({
         type="button"
       >
         <ArrowLeftRight
-          className={`h-5 w-5 ${isSelected() ? 'text-blue-600' : 'text-gray-500'}`}
+          className={`h-5 w-5 ${isSelected() ? 'text-blue-600' : 'text-white -500 '}`}
           strokeWidth={2}
         />
       </button>

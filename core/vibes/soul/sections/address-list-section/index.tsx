@@ -138,7 +138,7 @@ export function AddressListSection<A extends Address, F extends Field>({
       </div>
       <div>
         {showNewAddressForm && (
-          <div className="border-b border-contrast-200 pb-6 pt-5 justify-center items-center">
+          <div className="border-b border-contrast-200 pb-6 pt-5 justify-center items-center mr-[50rem]">
             <div className="w-[480px] space-y-4 justify-center items-center">
               <DynamicForm
                 action={(_prevState, formData) => {

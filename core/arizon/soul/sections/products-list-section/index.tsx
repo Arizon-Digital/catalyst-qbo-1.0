@@ -77,7 +77,7 @@ export function ProductsListSection({
 
   return (
     <div className="group/products-list-section @container">
-      <div className="mx-auto max-w-screen-2xl px-4 py-10 @xl:px-6 @xl:py-14 @4xl:px-8 @4xl:py-12">
+      <div className="mx-auto max-w-screen-2xl px-4 py-3 @xl:px-6 @xl:py-14 @4xl:px-8 @4xl:py-12 font-robotoslab">
 
         <div>
           <Stream fallback={<BreadcrumbsSkeleton />} value={streamableBreadcrumbs}>
@@ -101,8 +101,8 @@ export function ProductsListSection({
                 </Stream>
                 <Suspense>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-white -400/120 px-8 py-3 rounded">
-                      <h1 className="text-3xl font-bold leading-none text-center text-navy-800 @lg:text-4xl @2xl:text-5xl font-oswald">
+                    <div className="bg-gray-300 px-8 py-3 rounded">
+                      <h1 className="text-3xl font-bold leading-none text-center text-navy-800 @lg:text-4xl @2xl:text-5xl font-robotoslab">
                         <span>{title}</span>
                       </h1>
                       <span className="invisible text-white text-2xl @lg:text-3xl bg-black/50 px-4 py-2 rounded-lg font-robotoslab">
@@ -159,7 +159,7 @@ export function ProductsListSection({
             <div className="w-full hidden md:flex gap-8 @4xl:gap-10">
 
               {/* "Can't Find Product" section - desktop only */}
-              <div className="bg-[#CA9618] rounded px-4 py-3 flex-shrink-0 flex items-center max-w-[240px]">
+              <div className="bg-[#CA9618] rounded px-4  flex-shrink-0 flex items-center max-w-[240px]">
                 <Link
                   className="text-white text-base  hover:text-[#131313] transition-colors duration-200 font-medium font-robotoslab"
                   href="/can't-find-what-are-you-looking-for"
@@ -196,7 +196,7 @@ export function ProductsListSection({
                       ])}
                     >
                       {([label, options, placeholder]) => (
-                        <div className="border rounded">
+                        <div className="border">
                           <Sorting
                             defaultValue={sortDefaultValue}
                             label={label}
