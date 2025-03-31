@@ -60,7 +60,7 @@ export function ProductsList({
 
           return (
             <div className={clsx('w-full @container', className)}>
-              <div className="mx-auto grid grid-cols-2 gap-x-4 gap-y-6 @sm:grid-cols-2 @2xl:grid-cols-3 @2xl:gap-x-5 @2xl:gap-y-8 @5xl:grid-cols-4 @7xl:grid-cols-5">
+              <div className="mx-auto grid grid-cols-2 gap-x-4 gap-y-6 @sm:grid-cols-2 @2xl:grid-cols-3 @2xl:gap-x-5 @2xl:gap-y-8 @5xl:grid-cols-4 @7xl:grid-cols-5 mt-5">
                 {products.map((product) => (
                   <ProductCard
                     aspectRatio={aspectRatio}
