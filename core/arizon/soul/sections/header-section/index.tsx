@@ -792,9 +792,9 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
           </div>
         )}
 
-        <div className="header-global border-t border-b border-gray-200 bg-white py-4 shadow-md">
-          <div className="container mx-auto">
-            <div className="flex flex-wrap justify-center md:justify-between items-center px-4">
+        <div className="header-global border-t border-b border-gray-200 bg-white py-4 shadow-md !w-[1600px] !ml-[180px]">
+          <div className=" mx-auto ml-10">
+            <div className="flex flex-wrap gray image justify-center md:justify-between items-center px-4 ">
               <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
                 <div className="flex items-center">
                   <img

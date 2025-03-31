@@ -29,7 +29,12 @@ export interface ToggleGroupFilter {
   type: 'toggle-group';
   paramName: string;
   label: string;
-  options: Array<{ label: string; value: string; disabled?: boolean }>;
+  options: Array<{ 
+    label: string; 
+    value: string; 
+    count?: number; // Add count property to show number of products
+    disabled?: boolean 
+  }>;
 }
 
 export interface RatingFilter {
@@ -227,8 +232,11 @@ export function FiltersPanelInner({
                             className="ml-2 flex items-center cursor-pointer font-robotoslab"
                           >
                             <span>{option.label}</span>
-                            {option.value && (
-                              <span className="ml-2 text-gray-500 text-sm font-robotoslab">{option.value}</span>
+                            {/* Display product count if available */}
+                            {option.count !== undefined && (
+                              <span className="ml-2 text-gray-500 text-sm font-robotoslab">
+                                ({option.count})
+                              </span>
                             )}
                           </label>
                         </div>
@@ -371,7 +379,7 @@ function ToggleGroupSkeleton({ options, seed = 0 }: { options: number; seed?: nu
 
         return (
           <div
-            className="h-12 w-[var(--width)] animate-pulse rounded-full bg-contrast-100 px-4"
+            className="h-12 w-[var(--width)] animate-pulse rounded-full bg-contrast-100"
             key={i}
             
             style={{ '--width': `${width}ch` } as React.CSSProperties}

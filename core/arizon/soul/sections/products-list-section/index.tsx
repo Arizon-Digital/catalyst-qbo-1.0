@@ -102,8 +102,8 @@ export function ProductsListSection({
                 <Suspense>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-gray-300 px-8 py-3 rounded">
-                      <h1 className="text-3xl font-bold leading-none text-center text-navy-800 @lg:text-4xl @2xl:text-5xl font-robotoslab">
-                        <span>{title}</span>
+                      <h1 className="text-3xl font-bold text-center !text-[#1a2438] @lg:text-4xl @2xl:text-5xl font-robotoslab">
+                        <span className=' !text-[#1a2438]'>{title}</span>
                       </h1>
                       <span className="invisible text-white text-2xl @lg:text-3xl bg-black/50 px-4 py-2 rounded-lg font-robotoslab">
                         <span className="font-normal font-robotoslab">{totalCount}</span> Products

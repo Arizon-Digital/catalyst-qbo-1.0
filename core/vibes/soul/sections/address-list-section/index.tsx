@@ -1,3 +1,5 @@
+
+
 'use client';
 
 import { getFormProps, getInputProps, SubmissionResult, useForm } from '@conform-to/react';
@@ -126,20 +128,19 @@ export function AddressListSection<A extends Address, F extends Field>({
   }, [form.errors]);
 
   return (
-    <div>
-     
-      <div className="text-[25px] mt-11 font-robotoslab text-center underline">
+    <div className="flex flex-col items-center w-full">
+      <div className="w-full flex flex-col items-center mb-6">
         <Title>{title}</Title>
         {!showNewAddressForm && (
-          <Button onClick={() => setShowNewAddressForm(true)} size="small">
+          <Button onClick={() => setShowNewAddressForm(true)} size="small" className="mt-4">
             {showAddFormLabel}
           </Button>
         )}
       </div>
-      <div>
+      <div className="w-full max-w-xl">
         {showNewAddressForm && (
-          <div className="border-b border-contrast-200 pb-6 pt-5 justify-center items-center mr-[50rem]">
-            <div className="w-[480px] space-y-4 justify-center items-center">
+          <div className="border-b border-contrast-200 pb-6 pt-5 flex justify-center">
+            <div className="w-full max-w-md space-y-4">
               <DynamicForm
                 action={(_prevState, formData) => {
                   setShowNewAddressForm(false);
@@ -193,9 +194,9 @@ export function AddressListSection<A extends Address, F extends Field>({
           });
 
           return (
-            <div className="border-b border-contrast-200 pb-6 pt-5 justify-center items-center" key={address.id}>
+            <div className="border-b border-contrast-200 pb-6 pt-5 w-full flex justify-center" key={address.id}>
               {activeAddressIds.includes(address.id) ? (
-                <div className="w-[480px] space-y-4">
+                <div className="w-full max-w-md space-y-4">
                   <DynamicForm
                     action={(_prevState, formData) => {
                       setActiveAddressIds((prev) => prev.filter((id) => id !== address.id));
@@ -222,7 +223,7 @@ export function AddressListSection<A extends Address, F extends Field>({
                   />
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-4 w-full max-w-md">
                   <AddressPreview
                     address={address}
                     isDefault={
@@ -231,7 +232,7 @@ export function AddressListSection<A extends Address, F extends Field>({
                         : undefined
                     }
                   />
-                  <div className="flex gap-1 ml-10">
+                  <div className="flex gap-1 justify-center">
                     <Button
                       aria-label={`${editLabel}: ${address.firstName} ${address.lastName}`}
                       onClick={() => setActiveAddressIds((prev) => [...prev, address.id])}
@@ -302,7 +303,7 @@ function Title({ children }: { children: React.ReactNode }) {
 
 function AddressPreview({ address, isDefault = false }: { address: Address; isDefault?: boolean }) {
   return (
-    <div className="flex gap-10 ml-10 ">
+    <div className="flex justify-between">
       <div className="text-sm">
         <p className="font-bold">
           {address.firstName} {address.lastName}

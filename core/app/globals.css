@@ -18,7 +18,10 @@
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-
+.image{
+  width: 1700px;
+  margin-left: 150px;
+}
 
 .prod-desc-tbl th {
   background: #1a2348;
