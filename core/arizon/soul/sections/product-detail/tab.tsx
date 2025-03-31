@@ -122,13 +122,13 @@ const TabComponent: React.FC<TabComponentProps> = ({ product, makeswiftDeliveryI
       </div>
 
       <div className="block rounded-lg bg-[#fff] md:hidden">
-  <table className="w-full table-auto text-left">
+  <table className="w-full table-auto text-left pl-1 ">
     <tbody className="text-sm text-[#1A2348]">
       {Object.entries(tabContent)
         .filter(([tab]) => tab !== 'TechnicalData') // Filter out TechnicalData for mobile
         .map(([tab, value]) => (
           <tr key={tab} className="border-b border-[#1A2348]/10">
-            <td className="p-4">{renderTabContent(tab)}</td>
+            <td className="p-1">{renderTabContent(tab)}</td>
           </tr>
         ))}
     </tbody>

@@ -86,17 +86,17 @@ export function ProductsListSection({
             }
           </Stream>
 
-          <div className="flex flex-col items-start justify-between gap-4 pb-8 pt-6 text-foreground">
+          <div className="flex flex-col items-start justify-between gap-4  pt-6 text-foreground">
             {/* Updated Banner Image with Centered Title */}
-            <div className="w-full relative mb-8 rounded-lg overflow-hidden">
+            <div className="w-full relative  rounded-lg overflow-hidden">
               <div className="relative">
                 <Stream value={categoryBannerImage} fallback={
-                  <div className="h-48 w-full animate-pulse rounded-lg bg-contrast-100" />
+                  <div className="h-[6px] w-full animate-pulse rounded-lg bg-contrast-100" />
                 }>
                   {(image) => <img
                     src={image?.url?.replace('.original', '')}
                     alt={title}
-                    className="w-full h-48 md:h-64 object-cover"
+                    className="w-full h-18 md:h-64 object-cover"
                   />}
                 </Stream>
                 <Suspense>
@@ -115,7 +115,7 @@ export function ProductsListSection({
             </div>
 
             {/* Mobile: "Can't Find Product" full width */}
-            <div className="w-full block md:hidden mb-4">
+            <div className="w-full block md:hidden ">
               <div className="bg-[#CA9618]  px-4 py-3 w-full flex items-center justify-center">
                 <Link
                   className="text-white text-base  hover:text-[#131313] transition-colors duration-200 font-robotoslab font-medium"

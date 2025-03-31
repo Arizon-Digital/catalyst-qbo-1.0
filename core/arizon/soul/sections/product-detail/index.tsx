@@ -74,7 +74,7 @@ export function ProductDetail<F extends Field>({
         <Stream fallback={<ProductDetailSkeleton />} value={streamableProduct}>
           {(product) =>
             product && (
-              <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @2xl:grid-cols-2 @5xl:gap-x-12 bg-white border border-[#dcdcdc] rounded-md shadow-[0_3px_0_#dcdcdc]">
+              <div className="grid grid-cols-1 ml-3 items-stretch gap-x-8 gap-y-8 @2xl:grid-cols-2 @5xl:gap-x-12 bg-white border border-[#dcdcdc] rounded-md shadow-[0_3px_0_#dcdcdc]">
                 <div className="hidden @2xl:block">
                   <Stream fallback={<ProductGallerySkeleton />} value={product.images}>
                     {(images) => <Gallery product={product?.productData} />}
@@ -82,7 +82,7 @@ export function ProductDetail<F extends Field>({
                 </div>
 
                 {/* Product Details */}
-                <div className="text-foreground">
+                <div className="text-foreground ml-3">
                   {product.subtitle != null && product.subtitle !== '' && (
                     <p className="font-robotoslab font-bold text-sm uppercase text-[#a5a5a5] mt-4">{product.subtitle}</p>
                   )}
