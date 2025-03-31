@@ -18,6 +18,25 @@
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+
+
+.faqtablink:active, .faqtablink:focus, .faqtablink:hover {
+  border-bottom-color: #ca9618;
+  background: #fff;
+  color: #1a2348;
+}
+.faqtablink {
+  background-color: #1a2348;
+  border: none;
+  border-bottom: 2px solid #fff;
+  border-top: 2px solid #fff;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 500;
+  padding: 14px 16px;
+  width: 170px;
+}
 .image{
   width: 1700px;
   margin-left: 150px;
