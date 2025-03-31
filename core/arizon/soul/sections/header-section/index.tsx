@@ -1,6 +1,4 @@
 
-
-
 'use client';
 
 import { forwardRef, useEffect, useState, useRef } from 'react';
@@ -566,7 +564,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     >
                       <Link
                         href={item.href || '#'}
-                        className="block text-white py-4 px-3 xl:px-5 hover:bg-blue-900 transition-colors font-bold text-[15px] whitespace-nowrap"
+                        className={`block text-white py-4 px-3 xl:px-5 hover:bg-blue-900 transition-colors font-bold text-[15px] whitespace-nowrap ${activeDesktopMenu === index ? 'bg-[#ca9618]' : ''}`}
                         onClick={() => {
                           if (item.href) {
                             setActiveDesktopMenu(null);
@@ -580,7 +578,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                       </Link>
 
                       {item.groups && item.groups.length > 0 && activeDesktopMenu === index && (
-                        <div className="absolute left-0 w-full bg-white shadow-lg z-50 border-t border-gray-200 max-w-[90%] ml-[120px]">
+                        <div className="absolute left-0 w-full bg-white shadow-lg z-50 border-t border-gray-200">
                           <div className="container mx-auto py-6" style={{ maxHeight: '80vh', overflowY: 'auto' }}>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 font-robotoslab ml-10">
                               {item.groups.map((group, groupIndex) => (
@@ -638,61 +636,83 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
             ></div>
 
             <div className="relative flex-1 flex flex-col w-full max-w-xs bg-[#1a2348] !text-white h-full overflow-y-auto">
-              <div className="sticky top-0 px-4 py-3 border-b border-gray-200 bg-white z-10">
-                <h2 className="text-lg font-medium text-blue-900 font-robotoslab">Menu</h2>
+              <div className="sticky top-0 flex justify-end p-2 z-10 bg-[#1a2348]">
+                <button
+                  onClick={toggleMobileMenu}
+                  aria-label="Close menu"
+                  className="text-white p-2"
+                >
+                  <X size={24} />
+                </button>
               </div>
 
-              <div className="divide-y divide-gray-100 overflow-y-auto flex-grow">
+              <div className="overflow-y-auto flex-grow">                {/* Main navigation categories */}
                 {navigationLinks.map((item, index) => (
-                  <div key={index} className="py-2">
-                    <div className="flex items-center justify-between px-4 font-robotoslab">
+                  <div key={index}>
+                    <div className="flex items-center justify-between px-4 font-robotoslab py-3">
                       <Link
                         href={item.href || '#'}
-                        className="py-2 text-white-900 font-bold text-[15px]"
-                        onClick={item.href ? () => setMobileMenuOpen(false) : undefined}
+                        className={`font-bold text-[15px] ${activeDropdown === index ? 'text-[#ca9618]' : 'text-white'}`}
+                        onClick={(e) => {
+                          if (item.groups && item.groups.length > 0) {
+                            e.preventDefault();
+                            toggleDropdown(index);
+                          } else if (item.href) {
+                            setMobileMenuOpen(false);
+                          }
+                        }}
                       >
                         {item.label}
                       </Link>
 
                       {item.groups && item.groups.length > 0 && (
                         <button
-                          className="p-2 text-white-500"
+                          className="p-2"
                           onClick={() => toggleDropdown(index)}
                           aria-expanded={activeDropdown === index}
                         >
-                          <ChevronDown
-                            className={clsx(
-                              "h-5 w-5 transition-transform",
-                              activeDropdown === index ? "rotate-180" : ""
-                            )}
-                          />
+                          {activeDropdown === index ? (
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#ca9618]">
+                              <path d="M6 15L12 9L18 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          ) : (
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M6 9L12 15L18 9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          )}
                         </button>
                       )}
                     </div>
 
                     {activeDropdown === index && item.groups && (
-                      <div className="mt-2 pl-4 pr-2 pb-2 overflow-visible font-robotoslab">
+                      <div className="bg-[#1a2348]">
                         {item.groups.map((group, groupIndex) => (
-                          <div key={groupIndex} className="mb-3">
+                          <div key={groupIndex}>
                             {group.label && (
                               <Link
                                 href={group.href || '#'}
-                                className="block font-semibold font-robotoslab text-white-800 mb-2 hover:text-blue-800"
+                                className="block font-bold text-white px-8 py-3 hover:text-[#ca9618]"
                                 onClick={group.href ? () => setMobileMenuOpen(false) : undefined}
                               >
                                 {group.label}
                               </Link>
                             )}
-                            <div className="space-y-1 pl-2 font-robotoslab">
+                            <div>
                               {group.links && group.links.map((link, linkIndex) => (
-                                <Link
-                                  key={linkIndex}
-                                  href={link.href || '#'}
-                                  className="block text-white-600 py-1 text-sm hover:text-blue-800"
-                                  onClick={() => setMobileMenuOpen(false)}
-                                >
-                                  {link.label}
-                                </Link>
+                                <div key={linkIndex} className="px-12 py-3">
+                                  <Link
+                                    href={link.href || '#'}
+                                    className="flex justify-between items-center text-white hover:text-[#ca9618]"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                  >
+                                    <span>{link.label}</span>
+                                    {link.groups && link.groups.length > 0 && (
+                                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6 9L12 15L18 9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                      </svg>
+                                    )}
+                                  </Link>
+                                </div>
                               ))}
                             </div>
                           </div>
@@ -701,99 +721,115 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     )}
                   </div>
                 ))}
-              </div>
-
-              <div className="mt-auto border-t border-gray-200 pt-4 pb-6 px-4">
-                <Link href="/about-us" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-                  About Us
-                </Link>
-                <Link href="/contact-us" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-                  Contact Us
-                </Link>
-                <Link href="/customer-service" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-                  Customer Service
-                </Link>
-                <Link href="/faqs" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-                  FAQs
-                </Link>
-                <Link href="/privacy-policy" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-                  Privacy Policy
-                </Link>
-                <Link href="/about-us" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-                  About Us
-                </Link>
-                <Link href="/customer-reviews" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-                  Customer Reviews
-                </Link>
-                <Link href="/terms-and-conditionss" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-                  Terms & Conditions
-                </Link>
-                <Link href="/blog" className="block py-2 text-white-600 font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
-                  Blog
-                </Link>
-
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  {customerAccessToken ? (
-                    <div className="flex items-center mb-2">
-                      <div className='user-icon mr-2'>
-                        <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                          <circle cx="12" cy="6" r="4" stroke="white" strokeWidth="1"></circle>
-                          <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="white" strokeWidth="1" fill="none"></path>
-                          <line x1="4" y1="20" x2="20" y2="20" stroke="white" strokeWidth="1" strokeLinecap="round"></line>
-                        </svg>
-                      </div>
-                      <div className='flex flex-col'>
-                        <Link
-                          href="/account"
-                          className="text-white font-medium"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          Account
-                        </Link>
-                        <Link
-                          href="/logout"
-                          className="text-white text-sm"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          Sign Out
-                        </Link>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center mb-2">
-                      <div className='user-icon mr-2'>
-                        <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                          <circle cx="12" cy="6" r="4" stroke="white" strokeWidth="1"></circle>
-                          <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="white" strokeWidth="1" fill="none"></path>
-                          <line x1="4" y1="20" x2="20" y2="20" stroke="white" strokeWidth="1" strokeLinecap="round"></line>
-                        </svg>
-                      </div>
-                      <div className='flex flex-col'>
-                        <Link
-                          href="/login"
-                          className="text-white font-medium font-robotoslab"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          Sign In
-                        </Link>
-                        <Link
-                          href="/register/"
-                          className="text-white text-sm font-robotoslab"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          Register
-                        </Link>
-                      </div>
-                    </div>
-                  )}
+                
+                {/* Static links - same styling as main navigation */}
+                <div>
+                  <Link href="/about-us" className="block py-3 px-4 text-white font-bold text-[15px] font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                    About Us
+                  </Link>
                 </div>
+                <div>
+                  <Link href="/contact-us" className="block py-3 px-4 text-white font-bold text-[15px] font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                    Contact Us
+                  </Link>
+                </div>
+                <div>
+                  <Link href="/customer-service" className="block py-3 px-4 text-white font-bold text-[15px] font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                    Customer Service
+                  </Link>
+                </div>
+                <div>
+                  <Link href="/faqs" className="block py-3 px-4 text-white font-bold text-[15px] font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                    FAQs
+                  </Link>
+                </div>
+                <div>
+                  <Link href="/privacy-policy" className="block py-3 px-4 text-white font-bold text-[15px] font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                    Privacy Policy
+                  </Link>
+                </div>
+                <div>
+                  <Link href="/delivery-information" className="block py-3 px-4 text-white font-bold text-[15px] font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                    Delivery Information
+                  </Link>
+                </div>
+                <div>
+                  <Link href="/customer-reviews" className="block py-3 px-4 text-white font-bold text-[15px] font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                    Customer Reviews
+                  </Link>
+                </div>
+                <div>
+                  <Link href="/terms-and-conditions" className="block py-3 px-4 text-white font-bold text-[15px] font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                    Terms & Conditions
+                  </Link>
+                </div>
+                <div>
+                  <Link href="/blog" className="block py-3 px-4 text-white font-bold text-[15px] font-robotoslab" onClick={() => setMobileMenuOpen(false)}>
+                    Blog
+                  </Link>
+                </div></div>
+
+              <div className="mt-4 pt-4 px-4">
+                {customerAccessToken ? (
+                  <div className="flex items-center mb-2">
+                    <div className='user-icon mr-2'>
+                      <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="6" r="4" stroke="white" strokeWidth="1"></circle>
+                        <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="white" strokeWidth="1" fill="none"></path>
+                        <line x1="4" y1="20" x2="20" y2="20" stroke="white" strokeWidth="1" strokeLinecap="round"></line>
+                      </svg>
+                    </div>
+                    <div className='flex flex-col'>
+                      <Link
+                        href="/account"
+                        className="text-white font-medium"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Account
+                      </Link>
+                      <Link
+                        href="/logout"
+                        className="text-white text-sm"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Sign Out
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center mb-2">
+                    <div className='user-icon mr-2'>
+                      <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="6" r="4" stroke="white" strokeWidth="1"></circle>
+                        <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="white" strokeWidth="1" fill="none"></path>
+                        <line x1="4" y1="20" x2="20" y2="20" stroke="white" strokeWidth="1" strokeLinecap="round"></line>
+                      </svg>
+                    </div>
+                    <div className='flex flex-col'>
+                      <Link
+                        href="/login"
+                        className="text-white font-medium font-robotoslab"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        href="/register/"
+                        className="text-white text-sm font-robotoslab"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Register
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         )}
 
-        <div className="header-global border-t border-b border-gray-200 bg-white py-4 shadow-md !w-[1600px] !ml-[180px]">
-          <div className=" mx-auto ml-10">
+        <div className="header-global border-t border-b border-gray-200 bg-white py-4 shadow-md !w-full !ml-0">
+          <div className="container mx-auto">
             <div className="flex flex-wrap gray image justify-center md:justify-between items-center px-4 ">
               <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
                 <div className="flex items-center">
