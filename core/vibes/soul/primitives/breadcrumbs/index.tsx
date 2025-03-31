@@ -21,7 +21,7 @@ export function Breadcrumbs({ breadcrumbs: streamableBreadcrumbs, className }: B
           <div className={clsx('min-h-[1lh]', className)} />
         ) : (
           <nav aria-label="breadcrumb" className={clsx(className)}>
-            <ol className="flex flex-wrap items-center gap-x-1.5 text-sm @xl:text-base">
+            <ol className="flex flex-wrap items-center font-robotoslab mt-8 gap-x-1.5 text-sm @xl:text-base">
               {breadcrumbs.map(({ label, href }, idx) => {
                 if (idx < breadcrumbs.length - 1) {
                   return (

@@ -116,7 +116,7 @@ export function ProductsListSection({
 
             {/* Mobile: "Can't Find Product" full width */}
             <div className="w-full block md:hidden mb-4">
-              <div className="bg-[#CA9618] rounded px-4 py-3 w-full flex items-center justify-center">
+              <div className="bg-[#CA9618]  px-4 py-3 w-full flex items-center justify-center">
                 <Link
                   className="text-white text-base  hover:text-[#131313] transition-colors duration-200 font-robotoslab font-medium"
                   href="/can't-find-what-are-you-looking-for"
@@ -134,7 +134,7 @@ export function ProductsListSection({
                   <Button
                     size="medium"
                     variant="secondary"
-                    className="w-full bg-[#CA9618] text-white rounded flex items-center justify-center gap-2 py-3 px-6"
+                    className="w-[60%] bg-[#CA9618] text-white  flex items-center justify-center gap-2 py-3 px-6"
                   >
                     <Filter size={20} />
                     Show Filters
