@@ -866,7 +866,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
               <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
                 <div className="flex items-center">
                   <img
-                    className="w-12 h-12 mr-3"
+                    className=" h-12 mr-3"
                     src="https://store-03842.mybigcommerce.com/content/Queens_Award_Logo_black.png"
                     alt="Queen's Award For Enterprise"
                   />

@@ -129,6 +129,29 @@ export function AddressListSection<A extends Address, F extends Field>({
 
   return (
     <div className="flex flex-col items-center w-full">
+      {/* Breadcrumbs navigation */}
+      <nav className="flex font-robotoslab text-black font-bold max-w-2xl mx-auto mt-9">
+        <ol className="flex items-center space-x-2 text-sm">
+          <li className="text-contrast-500">
+            <a href="/account/orders/" className="hover:text-contrast-700">
+              Orders
+            </a>
+          </li>
+          <li className="text-contrast-500">/</li>
+          <li className="text-contrast-800 font-medium">
+            <a href="/account/addresses" className="border-b-2 border-primary-500 pb-1">
+              Addresses
+            </a>
+          </li>
+          <li className="text-contrast-500">/</li>
+          <li className="text-contrast-500">
+            <a href="/account/settings/" className="hover:text-contrast-700">
+              Account settings
+            </a>
+          </li>
+        </ol>
+      </nav>
+      
       <div className="w-full flex flex-col items-center mb-6">
         <Title>{title}</Title>
         {!showNewAddressForm && (
