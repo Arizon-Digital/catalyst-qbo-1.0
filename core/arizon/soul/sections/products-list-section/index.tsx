@@ -102,8 +102,8 @@ export function ProductsListSection({
                 <Suspense>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-gray-300 px-8 py-3 rounded">
-                      <h1 className="text-3xl font-bold text-center !text-[#1a2438] @lg:text-4xl @2xl:text-5xl font-robotoslab">
-                        <span className=' !text-[#1a2438]'>{title}</span>
+                      <h1 className="text-3xl text-center !text-[#1a2438] @lg:text-4xl @2xl:text-5xl font-robotoslab mt-2">
+                        <span className=' !text-[#1a2438] font-robotoslab'>{title}</span>
                       </h1>
                       <span className="invisible text-white text-2xl @lg:text-3xl bg-black/50 px-4 py-2 rounded-lg font-robotoslab">
                         <span className="font-normal font-robotoslab">{totalCount}</span> Products
@@ -159,7 +159,7 @@ export function ProductsListSection({
             <div className="w-full hidden md:flex gap-8 @4xl:gap-10">
 
               {/* "Can't Find Product" section - desktop only */}
-              <div className="bg-[#CA9618] rounded px-4  flex-shrink-0 flex items-center max-w-[240px]">
+              <div className="bg-[#CA9618] rounded px-4  flex-shrink-0 flex items-center max-w-[240px] h-24 mt-4">
                 <Link
                   className="text-white text-base  hover:text-[#131313] transition-colors duration-200 font-medium font-robotoslab"
                   href="/can't-find-what-are-you-looking-for"
@@ -228,12 +228,12 @@ export function ProductsListSection({
         </div>
 
         <div className="flex items-stretch gap-8 @4xl:gap-10">
-          <aside className="hidden w-52 @3xl:block @4xl:w-60">
+          <aside className="hidden w-52 @3xl:block @4xl:w-60 mt-5">
             <Stream value={streamableFiltersPanelTitle}>
               {(filtersPanelTitle) => <h2 className="sr-only">{filtersPanelTitle}</h2>}
             </Stream>
             <FiltersPanel
-              className="sticky top-4"
+              className="sticky mt-2"
               filters={filters}
               paginationInfo={paginationInfo}
               rangeFilterApplyLabel={rangeFilterApplyLabel}
