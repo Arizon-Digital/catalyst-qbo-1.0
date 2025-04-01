@@ -91,12 +91,12 @@ export function ProductsListSection({
             <div className="w-full relative  rounded-lg overflow-hidden">
               <div className="relative">
                 <Stream value={categoryBannerImage} fallback={
-                  <div className="h-[6px] w-full animate-pulse rounded-lg bg-contrast-100" />
+                  <div className="h-48 w-full animate-pulse rounded-lg bg-contrast-100" />
                 }>
                   {(image) => <img
                     src={image?.url?.replace('.original', '')}
                     alt={title}
-                    className="w-full h-18 md:h-64 object-cover"
+                    className="w-full  md:h-64 object-cover"
                   />}
                 </Stream>
                 <Suspense>
