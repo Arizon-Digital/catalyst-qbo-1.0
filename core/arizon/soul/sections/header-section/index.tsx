@@ -284,7 +284,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
           </div>
 
           <div className="bg-white">
-            <div className="container mx-auto py-3 md:py-5 flex items-center justify-between px-4">
+            <div className="container mx-auto  md:py-5 flex items-center justify-between px-4">
               <button
                 className="lg:hidden flex items-center mr-2"
                 onClick={toggleMobileMenu}
