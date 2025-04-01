@@ -16,8 +16,8 @@ interface CarouselProps extends React.ComponentPropsWithoutRef<'div'> {
   opts?: CarouselOptions;
   plugins?: CarouselPlugin;
   setApi?: (api: CarouselApi) => void;
-  carouselScrollbarLabel?: string;
   hideOverflow?: boolean;
+  maxDesktopCards?: number;
 }
 
 type CarouselContextProps = {
@@ -50,7 +50,24 @@ function Carousel({
   hideOverflow = true,
   ...rest
 }: CarouselProps) {
-  const [carouselRef, api] = useEmblaCarousel(opts, plugins);
+  // Simplify options to bare minimum
+  const defaultOpts = {
+    align: 'start',
+    loop: false,
+    skipSnaps: false,
+    draggable: true,
+    // Important: ensures proper grid layout
+    breakpoints: {
+      '(min-width: 768px)': {
+        enabled: false
+      }
+    }
+  };
+
+  // Merge user options with our default options
+  const mergedOpts = { ...defaultOpts, ...opts };
+  
+  const [carouselRef, api] = useEmblaCarousel(mergedOpts, plugins);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
@@ -63,25 +80,10 @@ function Carousel({
   }, []);
 
   const scrollPrev = useCallback(() => api?.scrollPrev(), [api]);
-
   const scrollNext = useCallback(() => api?.scrollNext(), [api]);
-
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === 'ArrowLeft') {
-        event.preventDefault();
-        scrollPrev();
-      } else if (event.key === 'ArrowRight') {
-        event.preventDefault();
-        scrollNext();
-      }
-    },
-    [scrollPrev, scrollNext],
-  );
 
   useEffect(() => {
     if (!api || !setApi) return;
-
     setApi(api);
   }, [api, setApi]);
 
@@ -111,10 +113,9 @@ function Carousel({
     >
       <div
         {...rest}
-        aria-roledescription="carousel"
-        className={clsx('relative @container', hideOverflow && 'overflow-hidden', className)}
-        onKeyDownCapture={handleKeyDown}
+        className={clsx('relative', className)}
         role="region"
+        aria-roledescription="carousel"
       >
         {children}
       </div>
@@ -122,12 +123,19 @@ function Carousel({
   );
 }
 
+// Using a grid approach instead of flex for better control
 function CarouselContent({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
   const { carouselRef } = useCarousel();
-
+  
   return (
-    <div className="w-full" ref={carouselRef}>
-      <div {...rest} className={clsx('-ml-4 flex @2xl:-ml-5', className)} />
+    <div className="w-full overflow-hidden" ref={carouselRef}>
+      <div 
+        {...rest} 
+        className={clsx(
+          'grid grid-cols-2 gap-2',
+          className
+        )} 
+      />
     </div>
   );
 }
@@ -136,187 +144,53 @@ function CarouselItem({ className, ...rest }: React.HTMLAttributes<HTMLDivElemen
   return (
     <div
       {...rest}
-      aria-roledescription="slide"
-      className={clsx('min-w-0 shrink-0 grow-0 pl-4 @2xl:pl-5', className)}
+      className={clsx(className)}
       role="group"
+      aria-roledescription="slide"
     />
   );
 }
 
-/**
- * This component supports various CSS variables for theming. Here's a comprehensive list, along
- * with their default values:
- *
- * ```css
- * :root {
-    --carousel-focus: hsl(var(--primary));
-    --carousel-light-button: hsl(var(--foreground));
-    --carousel-dark-button: hsl(var(--background));
- * }
- * ```
- */
-function CarouselButtons({
-  className,
-  colorScheme = 'light',
-  previousLabel = 'Previous',
-  nextLabel = 'Next',
-  ...rest
-}: React.HTMLAttributes<HTMLDivElement> & {
-  colorScheme?: 'light' | 'dark';
-  previousLabel?: string;
-  nextLabel?: string;
-}) {
+function CarouselControls({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   const { scrollPrev, scrollNext, canScrollPrev, canScrollNext } = useCarousel();
 
+  if (!canScrollPrev && !canScrollNext) {
+    return null;
+  }
+
   return (
-    <div
-      {...rest}
-      className={clsx(
-        'flex gap-2',
-        {
-          light: 'text-[var(--carousel-light-button,hsl(var(--foreground)))]',
-          dark: 'text-[var(--carousel-dark-button,hsl(var(--background)))]',
-        }[colorScheme],
-        className,
-      )}
-    >
+    <div className={clsx('flex items-center justify-end gap-1 mt-2', className)} {...props}>
       <button
-        className="rounded-lg ring-[var(--carousel-focus,hsl(var(--primary)))] transition-colors duration-300 focus-visible:outline-0 focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-25"
-        disabled={!canScrollPrev}
         onClick={scrollPrev}
-        title={previousLabel}
+        disabled={!canScrollPrev}
+        className={clsx(
+          'flex items-center justify-center w-6 h-6 rounded border',
+          !canScrollPrev && 'opacity-50 cursor-not-allowed'
+        )}
+        aria-label="Previous slide"
       >
-        <ArrowLeft strokeWidth={1.5} />
+        <ArrowLeft size={14} />
       </button>
       <button
-        className="rounded-lg ring-[var(--carousel-focus,hsl(var(--primary)))] transition-colors duration-300 focus-visible:outline-0 focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-25"
-        disabled={!canScrollNext}
         onClick={scrollNext}
-        title={nextLabel}
+        disabled={!canScrollNext}
+        className={clsx(
+          'flex items-center justify-center w-6 h-6 rounded border',
+          !canScrollNext && 'opacity-50 cursor-not-allowed'
+        )}
+        aria-label="Next slide"
       >
-        <ArrowRight strokeWidth={1.5} />
+        <ArrowRight size={14} />
       </button>
     </div>
   );
 }
 
-/**
- * This component supports various CSS variables for theming. Here's a comprehensive list, along
- * with their default values:
- *
- * ```css
- * :root {
-    --carousel-light-scrollbar: hsl(var(--foreground));
-    --carousel-dark-scrollbar: hsl(var(--background));
- * }
- * ```
- */
-function CarouselScrollbar({
-  className,
-  colorScheme = 'light',
-  label = 'Carousel scrollbar',
-}: React.HTMLAttributes<HTMLDivElement> & { label?: string; colorScheme?: 'light' | 'dark' }) {
-  const { api, canScrollPrev, canScrollNext } = useCarousel();
-  const [progress, setProgress] = useState(0);
-  const [scrollbarPosition, setScrollbarPosition] = useState({ width: 0, left: 0 });
-
-  const findClosestSnap = useCallback(
-    (nextProgress: number) => {
-      if (!api) return 0;
-
-      const point = nextProgress / 100;
-      const snapList = api.scrollSnapList();
-
-      if (snapList.length === 0) return -1;
-
-      const closestSnap = snapList.reduce((prev, curr) =>
-        Math.abs(curr - point) < Math.abs(prev - point) ? curr : prev,
-      );
-
-      return snapList.findIndex((snap) => snap === closestSnap);
-    },
-    [api],
-  );
-
-  useEffect(() => {
-    if (!api) return;
-
-    const snapList = api.scrollSnapList();
-    const closestSnapIndex = findClosestSnap(progress);
-    const scrollbarWidth = 100 / snapList.length;
-    const scrollbarLeft = (closestSnapIndex / snapList.length) * 100;
-
-    setScrollbarPosition({ width: scrollbarWidth, left: scrollbarLeft });
-
-    api.scrollTo(closestSnapIndex);
-  }, [progress, api, findClosestSnap]);
-
-  useEffect(() => {
-    if (!api) return;
-
-    function onScroll() {
-      if (!api) return;
-
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      setProgress(api.scrollSnapList()[api.selectedScrollSnap()]! * 100);
-    }
-
-    api.on('select', onScroll);
-    api.on('scroll', onScroll);
-    api.on('reInit', onScroll);
-
-    return () => {
-      api.off('select', onScroll);
-      api.off('scroll', onScroll);
-      api.off('reInit', onScroll);
-    };
-  }, [api]);
-
+function CarouselHeader({ title, ...props }: React.HTMLAttributes<HTMLDivElement> & { title?: string }) {
   return (
-    <div
-      className={clsx(
-        'relative flex h-6 w-full max-w-56 items-center overflow-hidden',
-        !canScrollPrev && !canScrollNext && 'pointer-events-none invisible',
-        className,
-      )}
-    >
-      <input
-        aria-label={label}
-        aria-orientation="horizontal"
-        aria-valuenow={progress}
-        aria-valuetext={`${Math.round(progress)}%`}
-        className="absolute h-full w-full cursor-pointer appearance-none bg-transparent opacity-0"
-        max={100}
-        min={0}
-        onChange={(e) => setProgress(e.currentTarget.valueAsNumber)}
-        type="range"
-        value={progress}
-      />
-      {/* Track */}
-      <div
-        className={clsx(
-          'pointer-events-none absolute h-1 w-full rounded-full opacity-10',
-          {
-            light: 'bg-[var(--carousel-light-scrollbar,hsl(var(--foreground)))]',
-            dark: 'bg-[var(--carousel-dark-scrollbar,hsl(var(--background)))]',
-          }[colorScheme],
-        )}
-      />
-
-      {/* Bar */}
-      <div
-        className={clsx(
-          'pointer-events-none absolute h-1 rounded-full transition-all ease-out',
-          {
-            light: 'bg-[var(--carousel-light-scrollbar,hsl(var(--foreground)))]',
-            dark: 'bg-[var(--carousel-dark-scrollbar,hsl(var(--background)))]',
-          }[colorScheme],
-        )}
-        style={{
-          width: `${scrollbarPosition.width}%`,
-          left: `${scrollbarPosition.left}%`,
-        }}
-      />
+    <div className="flex items-center justify-between mb-2" {...props}>
+      {title && <h2 className="text-xl font-bold">{title}</h2>}
+      <CarouselControls />
     </div>
   );
 }
@@ -326,9 +200,6 @@ export {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselButtons,
-  CarouselScrollbar,
+  CarouselControls,
+  CarouselHeader,
 };
-
-
-
