@@ -101,7 +101,7 @@ export function ProductsListSection({
                 </Stream>
                 <Suspense>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-gray-300 px-8 py-3 rounded">
+                    <div className="bg-gray-300 px-8 py-3  h-[55px] sm:h-auto rounded">
                       <h1 className="text-3xl text-center !text-[#1a2438] @lg:text-4xl @2xl:text-5xl font-robotoslab mt-2">
                         <span className=' !text-[#1a2438] font-robotoslab'>{title}</span>
                       </h1>

@@ -89,7 +89,7 @@ export function ProductCard({
         >
           <div
             className={clsx(
-              'relative overflow-hidden rounded-[4px]  w-48',
+              'relative overflow-hidden rounded-[4px]  w-36',
               {
                 '5:6': 'aspect-[5/6]',
                 '3:4': 'aspect-[3/4]',
