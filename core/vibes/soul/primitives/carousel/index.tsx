@@ -27,6 +27,8 @@ type CarouselContextProps = {
   scrollNext: () => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
+  isDesktop: boolean;
+  maxDesktopCards: number;
 } & CarouselProps;
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
@@ -48,20 +50,32 @@ function Carousel({
   className,
   children,
   hideOverflow = true,
+  maxDesktopCards = 5,
   ...rest
 }: CarouselProps) {
-  // Simplify options to bare minimum
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [totalSlides, setTotalSlides] = useState(0);
+
+  // Check if we're on desktop
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    
+    return () => {
+      window.removeEventListener('resize', checkDesktop);
+    };
+  }, []);
+
+  // Carousel options
   const defaultOpts = {
     align: 'start',
     loop: false,
     skipSnaps: false,
-    draggable: true,
-    // Important: ensures proper grid layout
-    breakpoints: {
-      '(min-width: 768px)': {
-        enabled: false
-      }
-    }
+    draggable: true
   };
 
   // Merge user options with our default options
@@ -70,6 +84,22 @@ function Carousel({
   const [carouselRef, api] = useEmblaCarousel(mergedOpts, plugins);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+
+  // Get total number of slides
+  useEffect(() => {
+    if (!api) return;
+    
+    const slides = api.slideNodes();
+    setTotalSlides(slides.length);
+    
+    // Disable scrolling on desktop if fewer slides than maxDesktopCards
+    if (isDesktop && slides.length <= maxDesktopCards) {
+      api.reInit({
+        ...mergedOpts,
+        draggable: false,
+      });
+    }
+  }, [api, isDesktop, maxDesktopCards, mergedOpts]);
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const onSelect = React.useCallback((api: CarouselApi) => {
@@ -99,6 +129,9 @@ function Carousel({
     };
   }, [api, onSelect]);
 
+  // Only show navigation on mobile or if more than maxDesktopCards on desktop
+  const shouldShowNavigation = !isDesktop || (isDesktop && totalSlides > maxDesktopCards);
+
   return (
     <CarouselContext.Provider
       value={{
@@ -107,8 +140,10 @@ function Carousel({
         opts,
         scrollPrev,
         scrollNext,
-        canScrollPrev,
-        canScrollNext,
+        canScrollPrev: shouldShowNavigation && canScrollPrev,
+        canScrollNext: shouldShowNavigation && canScrollNext,
+        isDesktop,
+        maxDesktopCards,
       }}
     >
       <div
@@ -123,16 +158,18 @@ function Carousel({
   );
 }
 
-// Using a grid approach instead of flex for better control
 function CarouselContent({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
-  const { carouselRef } = useCarousel();
+  const { carouselRef, isDesktop } = useCarousel();
   
   return (
     <div className="w-full overflow-hidden" ref={carouselRef}>
       <div 
         {...rest} 
         className={clsx(
+          // Mobile: Always use grid with 2 columns
           'grid grid-cols-2 gap-2',
+          // Desktop: Switch to flex layout with proper item widths
+          isDesktop && 'lg:grid-cols-5 lg:gap-4',
           className
         )} 
       />
@@ -141,10 +178,16 @@ function CarouselContent({ className, ...rest }: React.HTMLAttributes<HTMLDivEle
 }
 
 function CarouselItem({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
+  const { isDesktop } = useCarousel();
+  
   return (
     <div
       {...rest}
-      className={clsx(className)}
+      className={clsx(
+        // Desktop specific sizing
+        isDesktop && 'lg:col-span-1',
+        className
+      )}
       role="group"
       aria-roledescription="slide"
     />
@@ -187,11 +230,36 @@ function CarouselControls({ className, ...props }: React.HTMLAttributes<HTMLDivE
 }
 
 function CarouselHeader({ title, ...props }: React.HTMLAttributes<HTMLDivElement> & { title?: string }) {
+  const { canScrollPrev, canScrollNext } = useCarousel();
+  
   return (
     <div className="flex items-center justify-between mb-2" {...props}>
       {title && <h2 className="text-xl font-bold">{title}</h2>}
-      <CarouselControls />
+      {(canScrollPrev || canScrollNext) && <CarouselControls />}
     </div>
+  );
+}
+
+// Let's add a media query helper component for direct CSS control
+function ResponsiveCarouselStyle() {
+  return (
+    <style jsx global>{`
+      /* Mobile: 2 cards layout */
+      .carousel-content {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      
+      /* Desktop: 5 cards layout */
+      @media (min-width: 1024px) {
+        .carousel-content {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 16px;
+        }
+      }
+    `}</style>
   );
 }
 
@@ -202,4 +270,5 @@ export {
   CarouselItem,
   CarouselControls,
   CarouselHeader,
+  ResponsiveCarouselStyle,
 };
