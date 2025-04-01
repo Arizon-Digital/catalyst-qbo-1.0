@@ -67,7 +67,7 @@ export default function BulkPricing({ product }: BulkPricingProps) {
   return (
     <div className="mt-4">
       <p className="mb-3 mt-2 f text-base font-semibold font-robotoslab uppercase leading-none @xl:mb-4 @xl:text-base @4xl:text-base">
-        Bulk Pricing :
+      <span className="uppercase">BULK PRICING:</span>{" "}
       
       
       <span className="font-robotoslab font-normal">

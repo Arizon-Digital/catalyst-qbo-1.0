@@ -124,6 +124,8 @@ export const Footer = forwardRef(function Footer(
                   <Link href="/faqs" className="hover:text-white transition-colors font-robotoslab">FAQs</Link>
                   <Link href="/privacy-policy" className="hover:text-white transition-colors font-robotoslab">Privacy Policy</Link>
                   <Link href="/customer-reviews" className="hover:text-white transition-colors font-robotoslab">Customer Reviews</Link>
+                  <Link href="/terms-and-conditions" className="text-white opacity-50 hover:opacity-100 transition-opacity font-robotoslab">Terms & Conditions</Link>
+                  <Link href="/blog" className="text-white opacity-50 hover:opacity-100 transition-opacity font-robotoslab">Blog</Link>
                 </div>
               </div>
               
