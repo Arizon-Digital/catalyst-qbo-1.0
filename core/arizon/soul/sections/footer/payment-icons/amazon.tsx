@@ -11,4 +11,3 @@ export const AmazonIcon: React.FC<React.ComponentPropsWithoutRef<'svg'>> = ({ ..
   </svg>
 
   );
-foot
