@@ -833,9 +833,9 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
         )}
 
         <div className=" border-t border-b border-gray-200 bg-white py-4 shadow-md !w-full !ml-0 hidden sm:block">
-          <div className="container mx-auto">
-            <div className="flex flex-wrap gray  justify-center md:justify-between items-center px-4 ">
-              <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
+          <div className="graybox ">
+            <div className="flex flex-wrap gray justify-center items-center feefo-star">
+              <div className="w-fit   flex justify-center md:justify-start mb-4 md:mb-0">
                 <div className="flex items-center">
                   <img
                     src="https://www.qualitybearingsonline.com/content/NewSite/Customer-Service.png"
@@ -851,7 +851,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 </div>
               </div>
 
-              <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
+              <div className="w-fit   flex justify-center md:justify-start mb-4 md:mb-0">
                 <div className="flex items-center">
                   <img
                     src="https://www.qualitybearingsonline.com/content/NewSite/UK-Delivery.png"
@@ -867,7 +867,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 </div>
               </div>
 
-              <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
+              <div className="w-fit   flex justify-center md:justify-start mb-4 md:mb-0">
                 <div className="flex items-center">
                   <img
                     className=" h-12 mr-3"
@@ -883,7 +883,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 </div>
               </div>
 
-              <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start mb-4 md:mb-0">
+              <div className="w-fit   flex justify-center md:justify-start mb-4 md:mb-0">
                 <div className="flex items-center">
                   <img
                     src="https://www.qualitybearingsonline.com/content/NewSite/qms.png"
@@ -899,7 +899,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                 </div>
               </div>
 
-              <div className="w-full sm:w-1/2 md:w-1/5 flex justify-center md:justify-start">
+              <div className="w-fit   flex justify-center md:justify-start">
                 <div className="flex items-center">
                   <Link href="https://www.feefo.com/reviews/quality-bearings-online" target="_blank" rel="noopener noreferrer">
                     <img

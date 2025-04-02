@@ -188,3 +188,7 @@ table {
 .searchbox {
   background: linear-gradient(90deg, #1a2348, rgba(26, 35, 72, .7)) !important;
 }
+
+.feefo-star{
+  gap: 10%;
+}
