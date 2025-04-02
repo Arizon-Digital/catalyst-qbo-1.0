@@ -55,7 +55,7 @@ export default function Account() {
         <AccountItem href="/account/settings" title='Account settings'>
           <Settings className="me-8" size={48} strokeWidth={1.5} />
         </AccountItem>
-        <AccountItem href="/account/return-form" title="Return Form">
+        <AccountItem href="/account/return-form" title="Returns Form">
           <Package className="me-8" size={48} strokeWidth={1.5} />
         </AccountItem>
       </div>
