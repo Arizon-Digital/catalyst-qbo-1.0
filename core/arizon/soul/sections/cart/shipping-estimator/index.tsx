@@ -20,6 +20,7 @@ interface Props {
 
 
 export const ShippingEstimator = ({ checkout, shippingCountries }: Props) => {
+  console.log("in--",checkout);
   const t = useTranslations('Cart.CheckoutSummary');
   const format = useFormatter();
 

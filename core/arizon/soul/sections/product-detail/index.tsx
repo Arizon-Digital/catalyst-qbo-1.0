@@ -103,7 +103,7 @@ export function ProductDetail<F extends Field>({
                   )}
                   <Stream fallback={<PriceLabelSkeleton />} value={product.price}>
                     {(price) => (
-                      <PriceLabel className="mb-3  text-4xl  !text-[#1a2348] font-bold font-robotoslab   @4xl:text-4xl" price={price?.replace('CA', 'C') ?? ''} />
+                      <PriceLabel className="mb-3   !text-[#1a2348] font-bold font-robotoslab   @4xl:text-4xl" price={price?.replace('CA', 'C') ?? ''} />
                     )}
                   </Stream>
                   <div className="mb-8 @2xl:hidden">

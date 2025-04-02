@@ -127,7 +127,23 @@ const MoneyFieldsFragment = graphql(`
     value
   }
 `);
-
+export const GeographyFragment = graphql(
+  `
+    fragment GeographyFragment on Geography {
+      countries {
+        entityId
+        name
+        code
+        statesOrProvinces {
+          entityId
+          name
+          abbreviation
+        }
+      }
+    }
+  `,
+  [],
+);
 const CartPageQuery = graphql(
   `
     query CartPageQuery($cartId: String) {
@@ -170,9 +186,12 @@ const CartPageQuery = graphql(
           }
         }
       }
+        geography {
+        ...GeographyFragment
+        }
     }
   `,
-  [PhysicalItemFragment, DigitalItemFragment, MoneyFieldsFragment],
+  [PhysicalItemFragment, DigitalItemFragment, MoneyFieldsFragment,GeographyFragment],
 );
 
 type Variables = VariablesOf<typeof CartPageQuery>;

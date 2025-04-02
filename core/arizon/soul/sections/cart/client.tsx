@@ -74,7 +74,7 @@ export interface Props<LineItem extends CartLineItem> {
   couponCode?: CouponCode;
   style?: 'style1' | 'style2';
   geography?: any; // Geography data
-  checkout?: any; // Checkout data
+  cartCheckout?: any; // Checkout data
 }
 
 const defaultEmptyState = {
@@ -105,7 +105,7 @@ export function CartClient<LineItem extends CartLineItem>({
   summaryTitle = 'Subtotal',
   style = 'style1',
   geography, // Add geography prop
-  checkout, // Add checkout prop
+  cartCheckout, // Add checkout prop
 }: Props<LineItem>) {
   const [state, formAction] = useActionState(lineItemAction, {
     lineItems: cart.lineItems,
@@ -205,6 +205,8 @@ export function CartClient<LineItem extends CartLineItem>({
     }
   }
 
+  console.log("checkout,geo------",cartCheckout,cart);
+
   // Mobile cart layout
   if (isMobile) {
     return (
@@ -290,24 +292,24 @@ export function CartClient<LineItem extends CartLineItem>({
                 <span className="font-medium font-robotoslab">{formatPrice(cart.total)}</span>
               </div>
               
-              {geography && checkout && (
+              {geography && cartCheckout && (
                 <ShippingEstimator 
-                  checkout={checkout}
+                  checkout={cartCheckout}
                   shippingCountries={geography?.countries || []}
                 />
               )}
               
-              {checkout && checkout.shippingCostTotal && (
+              {cartCheckout && cartCheckout.shippingCostTotal && (
                 <div className="flex justify-between my-2">
                   <span className="font-medium font-robotoslab">Shipping:</span>
-                  <span className="font-medium font-robotoslab">{formatPrice(checkout.shippingCostTotal)}</span>
+                  <span className="font-medium font-robotoslab">{formatPrice(cartCheckout.shippingCostTotal)}</span>
                 </div>
               )}
               
-              {checkout && checkout.taxTotal && (
+              {cartCheckout && cartCheckout.taxTotal && (
                 <div className="flex justify-between my-2">
                   <span className="font-medium font-robotoslab">Tax:</span>
-                  <span className="font-medium font-robotoslab">{formatPrice(checkout.taxTotal)}</span>
+                  <span className="font-medium font-robotoslab">{formatPrice(cartCheckout.taxTotal)}</span>
                 </div>
               )}
               
@@ -315,7 +317,7 @@ export function CartClient<LineItem extends CartLineItem>({
 
               <div className="py-3 flex justify-between font-bold text-lg font-robotoslab">
                 <span className='font-robotoslab'>Grand Total:</span>
-                <span className='font-robotoslab'>{checkout && checkout.grandTotal ? formatPrice(checkout.grandTotal) : formatPrice(cart.total)}</span>
+                <span className='font-robotoslab'>{cartCheckout && cartCheckout.grandTotal ? formatPrice(cartCheckout.grandTotal) : formatPrice(cart.total)}</span>
               </div>
               
               <CheckoutButton 
@@ -469,36 +471,36 @@ export function CartClient<LineItem extends CartLineItem>({
             </table>
           </div>
         </div>
-
+   
         {/* Checkout Summary Column */}
         <div className="w-full lg:w-4/12">
           <div className="border border-gray-200 p-4 sm:p-6">
             <div className="flex justify-between mb-4">
               <span className="font-medium font-robotoslab">Subtotal:</span>
-              <span className="font-medium font-robotoslab">{formatPrice(cart.total)}</span>
+              <span className="font-medium font-robotoslab">{formatPrice(cartCheckout.subtotal.value)}</span>
             </div>
             
         
-            {geography && checkout && (
+            {geography && cartCheckout && (
               <ShippingEstimator 
-                checkout={checkout}
+                checkout={cartCheckout}
                 shippingCountries={geography?.countries || []}
               />
             )}
             
          
-            {checkout && checkout.shippingCostTotal && (
+            {cartCheckout && cartCheckout.shippingCostTotal && (
               <div className="flex justify-between my-2">
                 <span className="font-medium font-robotoslab">Shipping:</span>
-                <span className="font-medium font-robotoslab">{formatPrice(checkout.shippingCostTotal)}</span>
+                <span className="font-medium font-robotoslab">{formatPrice(cartCheckout.shippingCostTotal)}</span>
               </div>
             )}
             
           
-            {checkout && checkout.taxTotal && (
+            {cartCheckout && cartCheckout.taxTotal && (
               <div className="flex justify-between my-2">
                 <span className="font-medium font-robotoslab">Tax:</span>
-                <span className="font-medium font-robotoslab">{formatPrice(checkout.taxTotal)}</span>
+                <span className="font-medium font-robotoslab">{formatPrice(cartCheckout.taxTotal.value)}</span>
               </div>
             )}
             
@@ -506,7 +508,7 @@ export function CartClient<LineItem extends CartLineItem>({
 
             <div className="py-3 flex justify-between font-bold text-lg sm:text-xl font-robotoslab">
               <span className='font-robotoslab'>Grand Total:</span>
-              <span className='font-robotoslab'>{checkout && checkout.grandTotal ? formatPrice(checkout.grandTotal) : formatPrice(cart.total)}</span>
+              <span className='font-robotoslab'>{cartCheckout && cartCheckout.grandTotal ? formatPrice(cartCheckout.grandTotal.value) : formatPrice(cart.total)}</span>
             </div>
             
             <CheckoutButton 

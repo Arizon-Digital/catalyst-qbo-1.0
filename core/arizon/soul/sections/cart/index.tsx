@@ -17,6 +17,7 @@ export function Cart<LineItem extends CartLineItem>({
 }: Omit<CartProps<LineItem>, 'cart'> & {
   cart: Streamable<CartData<LineItem>>;
 }) {
+  console.log("rest---",rest);
   return (
     <Stream
       fallback={<CartSkeleton summaryTitle={summaryTitle} title={title} />}

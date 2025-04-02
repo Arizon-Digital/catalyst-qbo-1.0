@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { getFormatter, getTranslations } from 'next-intl/server';
 
-import { Cart as CartComponent, CartEmptyState } from '@/vibes/soul/sections/cart';
+import { Cart as CartComponent, CartEmptyState } from '@/arizon/soul/sections/cart';
 import { getCartId } from '~/lib/cart';
 import { exists } from '~/lib/utils';
 
@@ -38,6 +38,8 @@ export default async function Cart() {
 
   const cart = data.site.cart;
   const checkout = data.site.checkout;
+  const geography = data.geography;
+  console.log("geo---",data);
 
   if (!cart) {
     return (
@@ -144,6 +146,8 @@ export default async function Cart() {
         key={`${cart.entityId}-${cart.version}`}
         lineItemAction={updateLineItem}
         summaryTitle={t('CheckoutSummary.title')}
+        cartCheckout={checkout}
+        geography={geography}
         title={t('title')}
       />
       <CartViewed

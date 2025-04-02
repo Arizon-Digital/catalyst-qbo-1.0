@@ -45,6 +45,7 @@ interface Props {
 }
 
 export const CheckoutSummary = async ({ checkout, geography }: Props) => {
+  console.log("checkout summary");
   const t = await getTranslations('Cart.CheckoutSummary');
   const format = await getFormatter();
 
