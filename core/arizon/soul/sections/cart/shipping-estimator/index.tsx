@@ -75,7 +75,7 @@ export const ShippingEstimator = ({ checkout, shippingCountries }: Props) => {
           ) : (
             <Button
               aria-controls="shipping-options"
-              className="w-fit p-0 text-primary underline !normal-case shipping-btn"
+              className=""
               onClick={() => setShowShippingInfo((open) => !open)}
               variant="subtle"
             >

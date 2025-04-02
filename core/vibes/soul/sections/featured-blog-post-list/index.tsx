@@ -31,7 +31,7 @@ export function FeaturedBlogPostList({
       {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
 
       <div className="pt-6">
-        <h1 className="mb-3 font-heading text-4xl font-medium leading-none text-foreground @xl:text-5xl @4xl:text-6xl">
+        <h1 className="mb-3  text-4xl font-medium leading-none font-robotoslab text-foreground @xl:text-5xl @4xl:text-6xl">
          Read Our Latest Blogs
         </h1>
 
