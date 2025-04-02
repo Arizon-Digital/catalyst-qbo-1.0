@@ -333,7 +333,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
                     />
                     <button
                       type="submit"
-                      className="absolute right-0 top-0 h-full px-3 md:px-4 rounded-r text-white bg-gradient-to-r from-blue-900 to-blue-900/70"
+                      className="absolute right-0 top-0 h-full px-3 md:px-4 rounded-r text-white searchbox"
                       aria-label={navigation.searchLabel || 'Search'}
                     >
                       <DoofinderScriptLoader currencyCode={navigation?.currencyCode} value={navigation?.doofinderKey} />

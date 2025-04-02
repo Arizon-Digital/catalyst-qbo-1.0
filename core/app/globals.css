@@ -185,4 +185,6 @@ table {
 .mega-menu-banner{
   margin-top: 180px;
 }
-
+.searchbox {
+  background: linear-gradient(90deg, #1a2348, rgba(26, 35, 72, .7)) !important;
+}
